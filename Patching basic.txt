@@ -1,0 +1,194 @@
+patching serevers
+# For Debian-based distributions (e.g. Debian, Ubuntu, Mint), the following commands will let you view available patches and update packages and the operating system:
+#sudo apt-get update
+#sudo apt-get upgrade 
+#sudo apt-get dist-upgrade
+
+#For Red Hat Linux distributions (e.g. RedHat, CentOS, Oracle), the following commands check for updates and patches the system:
+#yum check-update
+#yum update
+
+#For Suse-based Linux (e.g. Suse Linux Enterprise, OpenSuse), the following commands check for updates and patch the system:
+#zypper check-update
+#zypper update
+
+# important ######we are doing only security patching  not  updating the kernel level patching that why we exulde the kernel from patching 
+yum update --security --exculde=kernel*  -y  
+# For update kernel patching  check with below command 
+yum check-update
+
+--------------------------------------REDHAT GUDIES OF KERNEL UPDATE---------------------------------------------------
+
+Prerequisites
+Root permissions
+Procedure
+1. Optionally, check your kernel version:
+# uname -r
+3.10.0-1062.el7.x86_64
+2. Search for a live patching package that corresponds to the version of your kernel:
+# yum search $(uname -r)
+3. Install the live patching package:
+# yum install "kpatch-patch = $(uname -r)"
+The command above installs and applies the latest cumulative live patches for that specific
+kernel only.
+The live patching package contains a patch module, if the package’s version is 1-1 or higher. In
+that case the kernel will be automatically patched during the installation of the live patching
+package.
+The kernel patch module is also installed into the /var/lib/kpatch/ directory to be loaded by the
+systemd system and service manager during the future reboots.
+NOTE
+If there are not yet any live patches available for the given kernel, an empty live
+patching package will be installed. An empty live patching package will have a
+kpatch_version-kpatch_release of 0-0, for example kpatch-patch-3_10_0-1062-
+0-0.el7.x86_64.rpm. The installation of the empty RPM subscribes the system to
+all future live patches for the given kernel.
+4. Optionally, verify that the kernel is patched:
+# kpatch list
+Loaded patch modules:
+kpatch_3_10_0_1062_1_1 [enabled]
+Installed patch modules:
+kpatch_3_10_0_1062_1_1 (3.10.0-1062.el7.x86_64)
+…
+The output shows that the kernel patch module has been loaded into the kernel, which is now
+patched with the latest fixes from the kpatch-patch-3_10_0-1062-1-1.el7.x86_64.rpm
+package.
+Additional resources
+For more information about the kpatch command-line utility, see the kpatch(1) manual page.
+Refer to the relevant sections of the System Administrator’s Guide for further information about
+CHAPTER 6. APPLYING PATCHES WITH KERNEL LIVE PATCHING
+55
+Refer to the relevant sections of the System Administrator’s Guide for further information about
+software packages in RHEL 7.
+6.7. UPDATING KERNEL PATCH MODULES
+Since kernel patch modules are delivered and applied through RPM packages, updating a cumulative
+kernel patch module is like updating any other RPM package.
+Prerequisites
+Root permissions
+The system is subscribed to the live patching stream, as described in Section 6.6.1, “Subscribing
+to the live patching stream”.
+Procedure
+Update to a new cumulative version for the current kernel:
+# yum update "kpatch-patch = $(uname -r)"
+The command above automatically installs and applies any updates that are available for the
+currently running kernel. Including any future released cumulative live patches.
+Alternatively, update all installed kernel patch modules:
+# yum update "kpatch-patch*"
+NOTE
+When the system reboots into the same kernel, the kernel is automatically live patched
+again by the kpatch.service service.
+Additional resources
+For further information about updating software packages, see the relevant sections of System
+Administrator’s Guide.
+6.8. DISABLING KERNEL LIVE PATCHING
+In case system administrators encountered some unanticipated negative effects connected with the
+Red Hat Enterprise Linux kernel live patching solution they have a choice to disable the mechanism. The
+following sections describe the ways how to disable the live patching solution.
+IMPORTANT
+Currently, Red Hat does not support reverting live patches without rebooting your
+system. In case of any issues, contact our support team.
+6.8.1. Removing the live patching package
+The following procedure describes how to disable the Red Hat Enterprise Linux kernel live patching
+solution by removing the live patching package.
+Red Hat Enterprise Linux 7 Kernel Administration Guide
+56
+Prerequisites
+Root permissions
+The live patching package is installed.
+Procedure
+1. Select the live patching package:
+# yum list installed | grep kpatch-patch
+kpatch-patch-3_10_0-1062.x86_64 1-1.el7 @@commandline
+…
+The example output above lists live patching packages that you installed.
+2. Remove the live patching package:
+# yum remove kpatch-patch-3_10_0-1062.x86_64
+When a live patching package is removed, the kernel remains patched until the next reboot, but
+the kernel patch module is removed from disk. After the next reboot, the corresponding kernel
+will no longer be patched.
+3. Reboot your system.
+4. Verify that the live patching package has been removed:
+# yum list installed | grep kpatch-patch
+The command displays no output if the package has been successfully removed.
+5. Optionally, verify that the kernel live patching solution is disabled:
+# kpatch list
+Loaded patch modules:
+The example output shows that the kernel is not patched and the live patching solution is not
+active because there are no patch modules that are currently loaded.
+Additional resources
+For more information about the kpatch command-line utility, see the kpatch(1) manual page.
+For further information about working with software packages, see the relevant sections of
+System Administrator’s Guide.
+6.8.2. Uninstalling the kernel patch module
+The following procedure describes how to prevent the Red Hat Enterprise Linux kernel live patching
+solution from applying a kernel patch module on subsequent boots.
+Prerequisites
+Root permissions
+CHAPTER 6. APPLYING PATCHES WITH KERNEL LIVE PATCHING
+57
+A live patching package is installed.
+A kernel patch module is installed and loaded.
+Procedure
+1. Select a kernel patch module:
+# kpatch list
+Loaded patch modules:
+kpatch_3_10_0_1062_1_1 [enabled]
+Installed patch modules:
+kpatch_3_10_0_1062_1_1 (3.10.0-1062.el7.x86_64)
+…
+2. Uninstall the selected kernel patch module:
+# kpatch uninstall kpatch_3_10_0_1062_1_1
+uninstalling kpatch_3_10_0_1062_1_1 (3.10.0-1062.el7.x86_64)
+Note that the uninstalled kernel patch module is still loaded:
+# kpatch list
+Loaded patch modules:
+kpatch_3_10_0_1062_1_1 [enabled]
+Installed patch modules:
+<NO_RESULT>
+When the selected module is uninstalled, the kernel remains patched until the next reboot,
+but the kernel patch module is removed from disk.
+3. Reboot your system.
+4. Optionally, verify that the kernel patch module has been uninstalled:
+# kpatch list
+Loaded patch modules:
+The example output above shows no loaded or installed kernel patch modules, therefore the
+kernel is not patched and the kernel live patching solution is not active.
+Additional resources
+For more information about the kpatch command-line utility, refer to the kpatch(1) manual
+page.
+6.8.3. Disabling kpatch.service
+The following procedure describes how to prevent the Red Hat Enterprise Linux kernel live patching
+solution from applying all kernel patch modules globally on subsequent boots.
+Prerequisites
+Root permissions
+Red Hat Enterprise Linux 7 Kernel Administration Guide
+58
+A live patching package is installed.
+A kernel patch module is installed and loaded.
+Procedure
+1. Verify kpatch.service is enabled:
+# systemctl is-enabled kpatch.service
+enabled
+2. Disable kpatch.service:
+# systemctl disable kpatch.service
+Removed /etc/systemd/system/multi-user.target.wants/kpatch.service.
+Note that the applied kernel patch module is still loaded:
+# kpatch list
+Loaded patch modules:
+kpatch_3_10_0_1062_1_1 [enabled]
+Installed patch modules:
+kpatch_3_10_0_1062_1_1 (3.10.0-1062.el7.x86_64)
+3. Reboot your system.
+4. Optionally, verify the status of kpatch.service:
+# systemctl status kpatch.service
+● kpatch.service - "Apply kpatch kernel patches"
+Loaded: loaded (/usr/lib/systemd/system/kpatch.service; disabled; vendor preset: disabled)
+Active: inactive (dead)
+The example output testifies that kpatch.service has been disabled and is not running.
+Thereby, the kernel live patching solution is not active.
+5. Verify that the kernel patch module has been unloaded:
+# kpatch list
+Loaded patch modules:
+Installed patch modules:
+kpatch_3_10_0_1062_1_1 (3.10.0-1062.el7.x86_64)
+The example output above shows that the kernel patch module is still installed but the kernel is
+not patched

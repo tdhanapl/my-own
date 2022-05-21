@@ -1,0 +1,27 @@
+FROM  ubuntu:latest
+RUN apt-get update -y \
+    && apt-get install -y  curl \
+    && apt-get install -y  wget \
+    && apt-get install -y  unzip \
+    && curl -LO https://dl.k8s.io/release/v1.21.0/bin/linux/amd64/kubectl \
+    && chmod +x kubectl \
+    && mkdir -p ~/.local/bin \
+    && mv ./kubectl ~/.local/bin/kubectl \
+    &&  curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 \
+    && chmod 700 get_helm.sh \
+    && ./get_helm.sh \
+    && curl --proto '=https' --tlsv1.2 -sSfL https://run.linkerd.io/install | sh \
+    && linkerd version --client
+
+###command for docker bulid 
+#  docker build --tag ubuntu-k8s .
+
+
+###############
+kubernetes down the application with scripts
+kubernetes stoping or start or restart services down the application with scripts
+kubernetes pod in hug state then we try delete pod. it will automatically recreate the new pod with deployments
+If kubernetes are still in hug state then we use rabitmaq for troubleshoot purpose then pod will start 
+checking pod status with watch command and service with script for all service are running or not
+creating new deployments in the cluster  
+

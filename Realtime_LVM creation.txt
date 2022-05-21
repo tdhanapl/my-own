@@ -1,0 +1,36 @@
+##########################################Logical voulme Creation############################
+/dev/sda
+pvcreate /dev/sda
+pvs
+vgcreate vgikt /dev/sda
+vgs
+lvcreate -L 4GB -n logical vgikt
+lvgs
+lsblk
+lvsdisplay vgikt
+# Format the partion
+mkfs.ext4 /dev/vgikt/logical
+#Mounting 
+mkdir ikt
+mount /dev/vgikt/logical ikt
+df -h
+# Perment mount 
+vim /etc/fstab
+/dev/mapper/vgikt/logical /ikt ext4 defaults 0 0
+:wq
+mount -q
+###Extended the volume group
+pvcreate /dev/sda3
+vgextend vgikt /dev/sda3
+lvextend -L +5G /dev/vgikt/logical
+Noted=+ we have mention if not mention it will reduce to 5GB only not adding 5GB and data will also lose.
+ or 
+##assgin full volume group(vg) to logical voulme 
+$lvextend -L +100%FREE /dev/vgikt/logical
+###To update the resize LV
+resize /dev/vgikt/logical
+df -h
+# To change name of logical volume
+lvrename vgikt logical lvdisk
+# To view block UID
+blkid

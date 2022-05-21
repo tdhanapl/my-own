@@ -1,0 +1,121 @@
+#####################syslog configure server site ########################
+1.https://arkit.co.in/rsyslog-server/
+2.https://www.centlinux.com/2018/08/configure-rsyslog-central-logging-server-centos-7.html
+3.https://www.itzgeek.com/how-tos/linux/centos-how-tos/setup-syslog-server-on-centos-7-rhel-7.html
+#######################rsyslog Server Installation and Configuration In RHEL ################################
+What is syslog server
+In computing,  syslog is a standard for message logging. It permits separation of the software that generates messages, the system that stores them,
+ and the software that reports and analyzes them. Each message is labeled with a facility code, indicating the software type generating the message,
+ and assigned a severity label.
+ Server Profile
+ Packages: rsyslog*
+Service / Daemon Name: rsyslog.service
+Port number: 514
+Config File: /etc/rsyslog.conf
+In this article we are using Server IP: 192.168.4.20   Client IP: 192.168.4.21 for demonstrate
+
+rsyslog Server side configuration
+[root@server ~]# hostname
+server.arkit.co.in
+Installing rsyslog packages
+
+[root@server yum.repos.d]# yum install rsyslog*
+
+Dependency Installed:
+ librelp.x86_64 0:1.2.0-3.el7 postgresql-libs.x86_64 0:9.2.7-1.el7
+
+Complete!
+Enable and start the services
+We have to enable the service first because whenever you restart the rsyslog server it should automatically start after the reboot. 
+If you did not enable the service it will not start we have to start service manually.
+
+[root@server ~]# systemctl enable rsyslog.service
+[root@server ~]# systemctl start rsyslog.service
+[root@server ~]# systemctl status rsyslog.service
+Edit config file 
+Before enabling the config #########To  valid the application  services
+
+[root@server ~]# vi /etc/rsyslog.conf
+# rsyslog configuration file
+
+# Provides UDP syslog reception
+#$ModLoad imudp
+#$UDPServerRun 514
+
+# Provides TCP syslog reception
+#$ModLoad imtcp
+#$InputTCPServerRun 514
+After the Change
+
+# Provides UDP syslog reception
+$ModLoad imudp
+$UDPServerRun 514
+
+# Provides TCP syslog reception
+$ModLoad imtcp
+$InputTCPServerRun 514
+
+:wq! (Save & Exit)
+Restart the service to effect the change
+systemctl restart rsyslog.service
+[root@server ~]# systemctl restart rsyslog.service
+Allow firewall ports from server
+Default port number for syslog is 514
+
+[root@server ~]# firewall-cmd --permanent --add-port=514/tcp
+success
+[root@server ~]# firewall-cmd --permanent --add-port=514/udp
+success
+[root@server ~]# firewall-cmd --reload
+success
+Verify Service is listening
+
+[root@server ~]# netstat -antup | grep 514
+---------------------------------------------------------------
+################Client Side#######################################################
+ping to server and verify server is reachable from client
+
+[root@desktop ~]# hostname
+desktop.arkit.co.in
+
+[root@desktop ~]# ping 192.168.4.20
+PING 192.168.4.20 (192.168.4.20) 56(84) bytes of data.
+64 bytes from 192.168.4.20: icmp_seq=1 ttl=64 time=0.481 ms
+
+Edit the config file
+[root@desktop ~]# vi /etc/rsyslog.conf
+
+*.* @@192.168.4.20:514
+
+:wq! (Save & Exit)
+As shown above we have to point the client to send logs. . means all the logs. if would like to specify only particular logs then do not specify . 
+in client config.
+# Log anything (except mail) of level info or higher.
+# Don't log private authentication messages!
+*.info;mail.none;authpriv.none;cron.none /var/log/messages
+
+# The authpriv file has restricted access.
+authpriv.* /var/log/secure
+
+# Log all the mail messages in one place.
+mail.* -/var/log/maillog
+
+# Log cron stuff
+cron.* /var/log/cron
+
+# Everybody gets emergency messages
+*.emerg :omusrmsg:*
+
+# Save news errors of level crit and higher in a special file.
+uucp,news.crit /var/log/spooler
+Restart the service
+
+[root@desktop ~]# systemctl restart rsyslog.service
+[root@desktop ~]# systemctl status rsyslog.service
+Test logs
+open log file in server and switch the users in client machine
+
+[root@server log]# tail -f /var/log/secure
+Apr 23 16:16:02 desktop su: pam_unix(su-l:session): session closed for user atkit
+
+

@@ -1,0 +1,121 @@
+windows Server 1
+IP =192.168.7.150
+user name :Administrator
+pass: Xph@85127##
+######################################
+server 2 linux server
+ip=97.74.4.159
+Username: root
+Password: R00t@Xpheno
+#################################################################
+To all lead IKt
+ITSSProcessteam
+######################################To known all  services status#####################################################
+#systemctl list-units --type=service --state=active
+OR
+# systemctl --type=service --state=active
+# systemctl list-units --type=service
+# systemctl --type=service --state=enbaled
+# systemctl --type=service --state=active 
+# systemctl --type=service --state=stop
+# systemctl --type=service --state=disabled
+OR
+# systemctl --type=service
+
+############################################
+This is duplicated ticket  and we have  one parent ticket ID : 6003134 was attached . Hence we are closing the ticket.
+
+6006380
+
+This activity required application downtime which we have planned on  along with Smax url change activity
+Discussion going on with vendor to clear the logs.
+we are working on this  to clear the logs.
+##################################Fstab configurtion Fromat###############
+LABEL=cloudimg-rootfs   		/      ext4   			defaults      0	 		1
+device name 		    mountpoint    file system type		permission            backup  		fsck(File System Consistency Check)
+############################################yum repository redhat 8 version ################
+mkdir  /opt/yum-repository/BaseOs  /opt/yum-repository/Appstream
+mount /dev/sr0 /mnt
+cp -rvf /mnt/BaseOs/* /opt/yum-repository/BaseOs
+cp -rvf /mnt/BaseOs/* /opt/yum-repository/Appstream
+df -h
+umount /mnt
+cd /opt/yum-repository/BaseOs && ls -l
+cd /opt/yum-repository/Appstream && ls -l
+cd
+vi /etc/yum.repos.d/rhel.repos
+[BaseOs]
+name=BaseOs
+baseurl=file:////opt/yum-repository/BaseOs
+enabled=1
+gpgcheck=0
+
+[Appstream]
+name=Appstream
+baseurl=file:////opt/yum-repository/Appstream
+enabled=1
+gpgcheck=0
+:wq
+yum clean all
+yum repolist all
+
+##########################################Logical voulme Creation ########################
+/dev/sda
+pvcreate /dev/sda
+pvs
+vgcreate vgikt /dev/sda
+vgs
+lvcreate -L 4GB -n logical vgikt
+vgs
+lsblk
+lvsdisplay vgikt
+# Format the partion
+mkfs.ext4 /dev/vgikt/logical
+#Mounting 
+mkdir ikt
+mount /dev/vgikt/logical ikt
+df -h
+# Perment mount 
+vim /etc/fstab
+/dev/mapper/vgikt/logical /ikt ext4 defaults 0 0
+:wq
+mount -q
+# Extended the volume group
+pvcreate /dev/sda3
+vgextend vgikt /dev/sda3
+lvextend -L +5G /dev/vgikt/logical
+# To update the resize LV
+resize /dev/vgikt/logical
+df -h
+# To change name of logical volume
+lvrename vgikt logical lvdisk
+# To view block UID
+blkid
+
+#################### Extended Swap Space########################################
+Add 5GB hard disk
+lsblk
+fdisk /dev/sdc
+comment:n
+		p
+		enter
+		enter
+		+5G
+		p
+		t
+		82
+		p
+		w
+partprobe
+lsblk
+## make swap disk
+swapoff /dev/sdc
+mkswap /dev/sda2
+swapon -a /dev/sda2
+####################################
+Hi Team,
+
+Linux team @Ajay is on leave today, please monitor today Linux ticket from 05:00PM-08:00PM.
+Please reach out to me and  @Ajay in case of any emergency and  ajay will be reach on +91-8686348472. 
+
+@Tech@ZEE-- Please log the case and assign to monitoring team. 

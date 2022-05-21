@@ -1,0 +1,24 @@
+Directory data is stored in the Ntds.dit file on the domain controller. 
+It is recommended that you store this file on an NTFS partition. 
+For more information about the tool used to manage the Active Directory database and log files, see Files in Ntdsutil.
+Lightweight Directory Access Protocol is an application protocol used to access and maintain directory services over a network. 
+LDAP stores objects, such as usernames and passwords, in directory services, such as Active Directory, and shares that object data across the network.
+A domain is a group of objects, such as users or devices, that share the same AD database.
+A forest is a group of multiple trees. A forest consists of shared catalogs, directory schemas, application information and domain configurations.
+Organizational Units (OUs) organize users, groups and devices. Each domain can contain its own OU.
+Trusting terminology
+Active Directory relies on trusts to moderate the access rights of resources between domains. There are several different types of trusts:
+A one-way trust is when a first domain allows access privileges to users on a second domain. However, the second domain does not allow access to users on the first domain.
+A two-way trust is when there are two domains and each domain enables access to users of the other domain.
+A trusted domain is a single domain that enables user access to another domain, which is called the trusting domain.
+#############samba configuration#
+https://www.firewall.cx/linux-knowledgebase-tutorials/system-and-network-services/848-linux-services-samba.html
+
+AD passwords= Se4woLG*5BLO-oC*8Lz=fCp47eKCbwuw
+
+
+
+
+timedatectl set-time 14:12:00
+date +%T%p -s "14:04:00PM"
+two incident created 

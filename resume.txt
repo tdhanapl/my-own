@@ -1,0 +1,29 @@
+RESUME
+                    
+TADUKU DHANAPAL			                                 Email: dhanapal703278@gmail.com
+                Phone: +91-7032780096
+                                                                                            
+Career Objective:-
+To build career in growing organization, where I can get the opportunities to prove my abilities by accepting, fulfilling the organizational goal and climb the career ladder through continuous learning and commitment.
+ Professional Summary:-
+    • Total 2+ years of experience in IT Industry as a Linux Administrator.
+    • Creating tickets and escalating to the concern team.
+    • Configuring and maintaining Active Directory Services on 2012R2, and 2016.
+    • Creating and managing Active Directory (AD) Organizational Units (OU), Group Policy Objects (GPO). creating the users providing the Users Permissions, Configuring GPO'S and DNS.
+    • Managing User and Group Administration in Linux. 
+    • Processes administration and Management like monitoring, start/stop/kill various processes. 
+    • Perform common system administration tasks including but not limited to: adding users, configuring volumes, creating file systems (LVM), configuring various system services, installing packages using YUM and RPM, configuring firewall, monitor system health.
+    • Experience in Installing, and configuring Linux Servers.
+    • Monitoring the servers 24/7 and working on the disk space alerts, system resources, logs, disk usage.
+    • Worked on AWS Services like, EC2, VPC, EBS, IAM, VPC PEERING, LOAD BALANCER, and AUTO SCALING.
+    • Security Patching, Minor OS version of servers, CVE, and  Advisory patching update.
+    • Configuring ACLs (Access Control Lists) for users.
+    • Administration and configuration of NFS, and FTP Servers. 
+    • Remote system administration using tools like SSH,  SCP.
+    • Good Experience on ITIL Process.
+    • Working on Incident, Service Request, and Change Management issues in Linux (Severity 1, 2, 3, 4).
+    • Planning & Resolving the Issues within the specified down time.
+    • Resolving the customer related issues within the SLA target.
+    • Good Knowledge on Scripting languages like Bash.
+    • Good knowledge on Git,  Jenkins,  Ansible, Docker, and  Kubernetes.
+    • Having good knowledge about networking concepts like TCP, UDP and NIC Bonding configuration.
