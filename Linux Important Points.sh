@@ -14,8 +14,8 @@ OR
 #systemctl list-unit-files
 
 #######Entry hostname with FQDN and ip address  in /etc/hosts############
-echo `hostname -i | awk '{print $NF}'`" "`hostname -s`" "`hostname` >> /etc/hosts
 
+ echo `hostname -i | awk '{print $NF}'`" "`hostname`" "`hostname -s ` >> /etc/hosts
 ##################################Fstab configurtion Fromat########################################################
 LABEL=cloudimg-rootfs   		/        ext4   			defaults,discard       0	 		1
 device name 		    mountpoint    file system type		permission            backup  		fsck(File System Consistency Check)
