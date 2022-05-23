@@ -4,7 +4,6 @@
  https://medium.com/@ZiXianZeroX/setting-up-an-on-premise-kubernetes-cluster-from-scratch-8e3a6b415387
  https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
 If you host grafana under subpath make sure your grafana.ini root_url setting includes subpath. If not using a reverse proxy make sure to set serve_from_sub_path to true.
-###################kubernetes-virtualmachine###########
 
 #############what is kubernetes###########
 #Kubernetes, also known as K8s, is an open-source system for automating deployment, scaling, and management of containerized applications.

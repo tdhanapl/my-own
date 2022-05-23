@@ -59,6 +59,10 @@ server {
 		proxy_set_header   X-Forwarded-Proto $scheme;
 	}
 }
+:wq!
+##To check configuration reverse proxy syntax error
+$  nginx -t
+$ systemctl restart nginx
 ########################################Installation  maveen##############################
 wget https://dlcdn.apache.org/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.tar.gz
 tar -xzvf apache-maven-3.8.4-bin.tar.gz

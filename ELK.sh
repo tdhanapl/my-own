@@ -763,16 +763,7 @@ document. It is essentially a get by primary key operation, as follows:
 GET /catalog/_doc/1ZFMpmoBa_wgE5i2FfWV
 The format of this request is GET /<index>/<type>/<id>. 
 
-
-
-
-
-
-
-
-
-
-###############
+###############Create serv for systemctl for binary value start service#################
 cat /etc/systemd/system/logstash.service
 [Unit]
 Description=logstash

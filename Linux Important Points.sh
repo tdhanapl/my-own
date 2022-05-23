@@ -285,11 +285,12 @@ We can implement  Selinux policies in there modes
 1.Enforcing
 2.Permmessive
 3.Disabled
+########permanent SElinux###########
 Configuration file of selinux
 1 /etc/selinux/config ----main configuration file
 2 /etc/sysconfig/seliux ---link file for above configuration 
 SELINUX= can take one of these three values
-
+#####temporary SElimux##########
 # enforcing - SELinux security policy is enforced.
 # permissive - SELinux prints warnings instead of enforcing.
 # disabled - No SELinux policy is loaded

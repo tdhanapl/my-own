@@ -224,7 +224,57 @@ EXPOSE 80
 CMD ["-D", "FOREGROUND"]
 ENTRYPOINT ["/usr/sbin/httpd"]
 :wq
+##################docker shared voulme################
+sharable Docker volumes
+============================
+These volumes are sharabale between multiple containers
 
-curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
-chmod 700 get_helm.sh
-./get_helm.sh
+Create 3 centos containers c1,c2,c3.
+Mount /data as a volume on c1 container ,c2 should use the volume
+used by c1 and c3 should use the volume used by c2
+
+1 Create a centos container c1 and mount /data
+  docker run --name c2 -it -v /data centos
+
+2 Go into the data folder create files in data folder
+  cd data
+  touch f1 f2
+
+3  Come out of the container without exit
+   ctlr+p,ctlr+q
+
+4 Create another centos container c2 and it should used the voluems used by c1
+  docker run --name c2 -it --volumes-from c1 centos
+ 
+5 In the c2 container go into data folder and create some file
+  cd data
+  touch f3 f4
+
+6 Come out of the container without exit
+   ctlr+p,ctlr+q
+
+7 Create another centos container c3 and it should use the volume used by c2
+  docker run --name c3 -it --volumes-from c2 centos
+
+8 In the c3 container go into data folder and create some file
+  cd data
+  touch f5 f6
+
+9 Come out of the container without exit
+   ctlr+p,ctlr+q
+
+10 Go into any of the 3 contianers and we will see all the files
+   docker attach c1
+   cd /data
+  ls
+  exit
+
+12 Identify the location the where the mounted data is stored
+   docker inspect c1
+   Search for "Mounts" section and copy the "Source" path
+
+13 Delete all containers
+   docker rm -f c1 c2 c3
+
+14 Check if the files are still present
+   cd "source_path_from"step12
