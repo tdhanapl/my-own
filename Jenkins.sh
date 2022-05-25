@@ -1,4 +1,9 @@
-###################Reverse Proxy with nginx for jenkin url access########
+#######################Configuration ##############################
+###Home directory for jenkins
+By default, Jenkins stores all of its data in this directory on the file system
+$ ll /var/lib/jenkins
+
+###############Reverse Proxy with nginx for jenkin url access########
 #set hostname with FQDN
 $ hostnamectl set-hostname jenkins.cntech.local
 $ echo `hostname -i | awk '{print $NF}'`" "`hostname`" "`hostname -s ` >> /etc/hosts
@@ -34,35 +39,132 @@ $ yum install nginx
 :wq!
 ##create new file in /etc/nginx/conf.d/jenkins-proxy.conf
 $ vim /etc/nginx/conf.d/jenkins-proxy.conf
+#########
+####reverse proxy configuration link
+#https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/
 upstream jenkins {
-    #server <ip-address:8080;
-	server 35.154.4.51:8080;
+    #server <server-ip-address:8080>;
+	server 35.154.4.51:8080; 
 }
 server {
     listen       80 default;
-    server_name   jenkins.cntech.local;
+    server_name   jenkins.cntech.local; # replace 'jenkins.cntech.local' with your server domain name
 	
 	access_log   /var/log/jenkins.access.log;
 	error_log   /var/log/jenkins.error.log;
-	
-	proxy_buffers 16 64k;
-	proxy_buffer_size 128k;
-	
-	location / {
-	    proxy_pass http://cntech.local
-		proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
-		proxy_redirect off;
-		
-		proxy_set_header   Host              $host;
-		proxy_set_header   X-Real-IP         $remote_addr;
-		proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
-		proxy_set_header   X-Forwarded-Proto $scheme;
+location / {
+    proxy_buffers 16 4k;
+    proxy_buffer_size 2k;
+    proxy_set_header Accept-Encoding "";
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_pass http://jenkins;
+
 	}
 }
+
 :wq!
 ##To check configuration reverse proxy syntax error
 $  nginx -t
 $ systemctl restart nginx
+###################Periodic Backup(plug-in)###############
+#Backup plugin allows archiving and restoring your Jenkins (and Hudson) home directory.
+#With Periodic Backup we schudle cron jobs for backup perpouse
+->Now go to jenkins 
+->manage jenkins->manage plugins->Periodic Backup(search available)->Periodic Backup(select)->install(without restart)
+->now to go jenkins server create a directory for storing jenkins backup data.
+$ mkdir /opt/backup-jenkins-data
+$chown -R jenkins:jenkins /opt/backup-jenkins-data
+->Again to manage jenkins->configure system->Periodic Backup Manager->click here to configure it->
+->Root Directory=/var/lib/jenkins
+->Temporary Directory=/tmp
+->Backup schedule (cron)=30 * * * * (every day  30 minutes)
+->Maximum backups in location=20
+->Store no older than (days)=15
+->File Management Strategy= ConfigOnly/FullBackup
+->Storage Strategy=TarGzStorage
+->Backup Location=/opt/backup-jenkins-data
+->mark enable this location
+->click validate
+->clik save
+###For taking backup 
+-> click Backup Now
+###For restore backup  
+##if any important job deletd means we can restore with this 
+-> click restore
+############### Securirty########
+->Now go to jenkins 
+->manage jenkins->manage plugins->Role-based Authorization Strategy(search available)->Role-based Authorization Strategy(select)->install(without restart)
+
+############LDAP configuration in jenkins##############
+##server LDAP configuration details (deatils for configure LDAP in jenkins###
+objectClass: top
+objectClass: dcObject 
+objectClass: organization
+o: example.com
+dc: example.com
+structuralobjectClass: organization
+entryUID: bies4684-739-1036-8256-33433ee5d363
+creatorsName: cn=admin,dc=example,dc=com
+createTimestamp: 202187210636232
+Security Realm createTimestamp: 287187216636737
+entryCSN: 20210721053623,32521320000000000000000
+modifiersName: cn=admin,dc=example,dc=com
+modifyTimestamp: 282187210636232
+
+dn: cn=admin,dc=example,dc=com
+objectClass simpleSecurityObject 
+objectClass: organizationalRole
+cn: admin
+description: LOAP administrator
+user Password: #INTSEF3atybJZOM VZVVFZIU
+structuralObjectClass: organizationalRole
+entryUID: bies4684-739-1036-8256-33433ee5d363
+creatorsName: cn=admin,dc=example,dc=com
+entryUID: bies4684-739-1036-8256-33433ee5d363
+createTimestamp: 202187210636232 
+entryCSN: 20210721053623,32521320000000000000000
+modifierstime: cn=admin,dc=example,dc=com 
+modifyTimestamp: 202107210636732
+------------------
+#Authentication(LDAP configuration)
+->Security Realm=LDAP
+Server
+->Server= 172.13.43.20:389(Syntax of server field is SERVER or SERVER:PORT or ldaps://SERVER[:PORT])
+->root DN= dc=example,dc=com(Allow blank rootDN)
+->User search base= OU=people
+->User search filter= uid={0}
+->Group search base= OU=groups
+-> Group search filter= empty (leave default)
+->Group membership
+Parse user attribute for list of LDAP groups/Search for LDAP groups containing user
+-> mark Search for LDAP groups containing user
+->Group membership filter= ((member={0})(uniqueMember={0})(memberUid={1}))
+->Manager DN= cn=admin,dc=example,dc=com
+->Manager Password= LDAP password
+->Display Name LDAP attribute= cn <displayname>
+->Email Address LDAP attribute= mail
+-> Environment Properties--leave default
+-> click test LDAP user-> username= dhana->password=dhan@1234
+-> mark Disable Ldap Email Resolver
+-> mark Disable Backward Compatibility for Roles
+->click save
+-> click apply
+##Now go to jenkins  for security
+->manage jenkins->click Configure Global Security
+->Authorization= Role-Based Strategy
+->click save
+-> click apply
+->now again manage jenkins
+->under Security
+-> click Manage and Assign Roles 
+->click Manage Roles
+->Role to add= devops
+->click add
+->again Role to add= devolper
+->click add
+-> here dispaly two user mark the required permission for the user
+
 ########################################Installation  maveen##############################
 wget https://dlcdn.apache.org/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.tar.gz
 tar -xzvf apache-maven-3.8.4-bin.tar.gz
@@ -97,7 +199,8 @@ Step 6: Give your project a name, then choose ‘Pipeline’ and finally, click 
 
 
 ################################Jenkins master--Slave configuration######################
-Introduction
+1. adding agent with Launch method via Launch agents via SSH
+
 ->In a production environment, there are lot and lot of builds need to run in parallel. This is the time Jenkins slave nodes come into the play. We can run builds in separate Jenkins slave nodes. This will reduce build overhead to the Jenkins master and we can run build in parallel. This article contains in the step by step guide to add Jenkins slave node. This step by step guide will help you to add any flavour of Linux machine as a Jenkins slave node. If you haven’t still install Jenkins Master server read this article “Install Production Jenkins on CentOS 7 in 6 Steps”.
 Prepare Slave nodes
 ->Before adding a slave node to the Jenkins master we need to prepare the node. We need to install Java on the slave node. Jenkins will install a client program on the slave node. To run the client program we need to install the same Java version we used to install on Jenkins master. I am going to use this slave node to build Java Maven project. Therefore I need to install Maven as well. According to your production environment, you need to install and configure the necessary tool in the slave node.
@@ -130,7 +233,106 @@ Adding the slave node to the master
 ->Slave node list
 ->Troubleshooting
 ->You can click on the slave node and from there you can view the log. Fix any error shown in the log
-
+2. ########Configure Clouds agent(EC2 instance)
+->Now go to jenkins 
+->click manage jenkins->manage plugins->Amazon ec2 instance, docker and kubernetes (search available)->Amazon ec2 instance, docker and kubernetes (select)->install(without restart)
+###Now go aws console for create IAM group and user assigned AmazonEC2FullAccess policy
+1.create group jenkins
+2.add permission (AmazonEC2FullAccess) to jenkins group
+3.create IAM user dhanapal user->download access key and secret key
+4.click add dhanapal user to jenkins group
+###Now create keypair 
+1.click create keypair 
+2. select  .pem
+3.click save 
+->now again click manage jenkins
+->click Manage nodes and clouds
+->click Configure Clouds
+->select Amazon EC2
+->Name= ec2-agent
+->Amazon EC2 Credentials->click add (jenkins)->
+->Add Credentials
+->Domain= Global credentials (unrestricted)
+->Kind= AWS Credentials
+->Scope= Global (Jenkins, nodes, items, all child items, etc)
+->ID= AWS-KEYS
+->Description= AWS-KEYS
+->Access Key ID= AKIA4PNPSPCJNBYNPM4Z (acess key IAM role of dhanapal)
+->Secret Access Key= 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
+->IAM Role Support->click advance
+->IAM Role To Use=
+->External Id To Use=
+->MFA Serial Number=
+->MFA Token= 
+->STS Token Duration= 3600
+->click add
+->Use EC2 instance profile to obtain credentials (leave default=unmark)
+->Alternate EC2 Endpoint(leave deafult)
+->Region= ap-south-1 (select your wish of region)
+->EC2 Key Pairs Private Key->click add (jenkins)->
+->Add Credentials
+->Domain= Global credentials (unrestricted)
+->Kind= SSH Username with private key
+->Scope= Global (Jenkins, nodes, items, all child items, etc)
+->ID= AWS-KEYS
+->Description= AWS-KEYS
+->ID= ec2private-keys
+->Description= ec2private-keys
+-.Username= ec2-user
+->mark Treat username as secret
+->Private Key->Enter directly->Key(add the pem key )
+->click add
+click test connection --here display sucess
+->click AMIs (List of AMIs to be launched as agents)
+->Description= AWS-Ec2-ap-south-1a
+->AMI ID= ami-06a0b4e3b7eb7a300
+->AMI Owners= leave default
+->AMI Users= leave deafult
+->AMI Filters= leave defult
+->Instance Type= T2micro
+->EBS Optimized, Monitoring, T2 Unlimited (leave deafult =unmark)
+->Availability Zone
+->vailability Zone=ap-south-1a
+->Spot configuration (unmark )
+->Security group names= sg-0684a74fe71f043b5
+->Remote FS root= /home/redhat
+->Remote user= redhat
+->AMI Type= unix
+->Root command prefix= sudo
+->Agent command prefix= (leave deafult)
+->Agent command suffix= (leave deafult)
+->Remote ssh port= 22
+->Boot Delay= (leave deafult)
+->Labels= aws-jenkins-agent
+->Usage= Only build jobs with label expressions matching this node
+->Idle termination time= 25 (it delete after 25 minutes and idle time is 25 minutes )
+->Init script= yum install git -y 
+			   yum install maven -y 
+		    yum install  java-1.8.0-openjdk -y 
+->click advance
+->Number of Executors= 2
+->VM Options= leave deafult
+->Stop/Disconnect on Idle Timeout = leave deafult
+->Subnet IDs for VPC= subnet-0913f861258ec54fc
+->Tags
+->EC2 Tag/Value Pairs
+->Minimum number of instances= 0
+->Minimum number of spare instances= 0
+-> Only apply minimum number of instances during specific time range= leave deafult
+->Instance Cap
+->IAM Instance Profile
+->Delete root device on instance termination
+->Use ephemeral devices
+->Encrypt EBS root volume
+->Based on AMI
+->Block device mapping
+->Launch Timeout in seconds
+->Associate= Public IP
+->Tenancy= Default
+->Connection Strategy= Public IP
+-> mark Connect by SSh
+->click apply
+->click save
 ############################################SonarQube intergration with jenkins################################################################
 do not all this things with root and created separate username as sonaruser
 wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-8.9.6.50800.zip
@@ -251,8 +453,8 @@ pipeline {
                 sh """
                     docker build -t dhanapal406/tomcat-$BUILD_NUMBER .
                     docker login -u $DOCKER_LOGIN_USR -p $DOCKER_LOGIN_PSW
-                    docker push dhanapal406/tomcat-$BUILD_NUMBER
-                    docker run -itd -p 8080:8080 -v /dhana:/opt dhanapal406/tomcat-$BUILD_NUMBER
+                    docker opt dhanapapush dhanapal406/tomcat-$BUILD_NUMBER
+                    docker run -itd -p 8080:8080 -v /dhana:/l406/tomcat-$BUILD_NUMBER
                 """
             }
         }
