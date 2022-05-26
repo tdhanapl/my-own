@@ -49,8 +49,8 @@ $vim variable.yml
   tasks:  
    - name: This the copy from content of varible
       copy:
-	    src: /var/www/html/
-		content: "{{ my_content }}"
+        src: /var/www/html/
+      	content: "{{ my_content }}"
 :wq
 ##To check the ansible playbook syntax error
 $ ansible-playbook variable.yml --syntax-check
@@ -177,12 +177,12 @@ handlers: contains handlers which can be invoked by “notify” directives and 
 $ vim apache.ynl
 — — # This is an example playbook to install Apache on Centos
 - hosts: myserver
-remote_user: ansible
-become: yes
-become_method: sudo
-connection: ssh
-gather_facts: yes
-tasks:
+  remote_user: ansible
+  become: yes
+  become_method: sudo
+  connection: ssh
+  gather_facts: yes
+  tasks:
   --- 
 - 
   enabled: true

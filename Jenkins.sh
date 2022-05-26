@@ -2,7 +2,8 @@
 ###Home directory for jenkins
 By default, Jenkins stores all of its data in this directory on the file system
 $ ll /var/lib/jenkins
-
+########jenkins document site
+https://www.jenkins.io/doc/
 ###############Reverse Proxy with nginx for jenkin url access########
 #set hostname with FQDN
 $ hostnamectl set-hostname jenkins.cntech.local
@@ -166,23 +167,48 @@ Parse user attribute for list of LDAP groups/Search for LDAP groups containing u
 -> here dispaly two user mark the required permission for the user
 
 ########################################Installation  maveen##############################
-wget https://dlcdn.apache.org/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.tar.gz
-tar -xzvf apache-maven-3.8.4-bin.tar.gz
-mkdir maveen
-mv apache-maven-3.8.4-bin  maveen
-cd maveen
-cd bin
-echo $PATH
-cd 
-vim .profile
+$ cd /opt
+$ wget  https://dlcdn.apache.org/maven/maven-3/3.8.5/binaries/apache-maven-3.8.5-bin.tar.gz
+$ tar -xzvf apache-maven-3.8.4-bin.tar.gz
+$ mv apache-maven-3.8.4-bin  maven
+$ cd maven
+$ cd bin
+$ ./mvn --version
+$ echo $PATH
+$ cd /etc/profile.d/ ##it will update for all user 
+$ vim maven.sh
 export M2_HOME=/opt/maven/bin
 export PATH=$PATH:$M2_HOME
 :wq!
+$ bash
+	or 
+$ vim .bash_profile ##it will update for  particular user only 
+export M2_HOME=/opt/maven/bin    
+export PATH=$PATH:$M2_HOME
+:wq!
+$ bash
 mvn --version
-cd /maveen/bin/
-./mvn archetype:generate
-mvn archetype:generate -DarchetypeArtifactId=maven-archetype-application
-
+######################configu maven in jebkins#############
+##this use for if it required to bulid in par version only on that time we can add  that version
+#we bulid with particular version
+->Now go to jenkins 
+->manage jenkins->Global Tool Configuration
+->Maven installations
+List of Maven installations on this system
+->Maven
+->Name= maven-3.8.5 (label name of maven ) #3.8.5 is version
+->MAVEN_HOME= /opt/maven/ #/opt/maven/ home of maven path  and/opt/maven/bin path variables
+->click save
+-> click apply
+###add one more maven version 
+->Now go to jenkins 
+->manage jenkins->Global Tool Configuration
+->Maven(under)
+->click add
+->Name= maven-3.8.4 (label name of maven ) #3.8.4 is version
+->MAVEN_HOME= /opt/maven/ #/opt/maven/ home of maven path  and/opt/maven/bin path variables
+->click save
+-> click apply
 #####################Integrate Your GitHub Repository to Your Jenkins Project##################################
 Configuring GitHub
 Step 1: go to your GitHub repository and click on ‘Settings
@@ -425,7 +451,7 @@ pre-requisites
 pipeline {
     agent any
 	tools {
-        maven "maven123"
+        maven "maven-3.8.5"
     }
     options {
         timeout(30)
@@ -680,3 +706,6 @@ $ kubectl set resources deployment tomcat -c = tomcat --limits = cpu = 200m, mem
 $ kubectl top node − It displays CPU/Memory/Storage usage. The top command allows you to see the resource consumption for nodes.
 
 $ kubectl top node [node Name]
+Writing playbooks using YAML, for configure the servers.
+Installing, Configured and management in Ansible Centralized Server and creating the 
+playbooks to support various middleware application servers. 
