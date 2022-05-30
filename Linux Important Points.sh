@@ -15,7 +15,7 @@ OR
 
 #######Entry hostname with FQDN and ip address  in /etc/hosts############
 
- echo `hostname -i | awk '{print $NF}'`" "`hostname`" "`hostname -s ` >> /etc/hosts
+echo `hostname -i | awk '{print $NF}'`" "`hostname`" "`hostname -s`  >> /etc/hosts
 ##################################Fstab configurtion Fromat########################################################
 LABEL=cloudimg-rootfs   		/        ext4   			defaults,discard       0	 		1
 device name 		    mountpoint    file system type		permission            backup  		fsck(File System Consistency Check)
@@ -69,13 +69,13 @@ p   -> proces id file
 
 ##############################Find old 90 or 30 days and remove that files#####################
 find /var/log -type f -mtime +30 -exec ls -lrth {} \;  ##f--means file 
-find /var/log -type f -mtime +30 -exec rm -rv{} \;     ## +30--means more than 90 days
-find /var/log -type f -mtime +7 -exec rm -rv {} \;
+find /var/log -type f -mtime +30 -exec rem -rvf {} \;     ## +30--means more than 90 days
+find /var/log -type f -mtime +7 -exec rem -rvf  {} \;
 find /var/log -type d -mtime +90 -exec ls -lrth {} \;  ###d--means directory,  +90--means more than 90 days
 find /var/log -type d -mtime +30 -exec ls -rv {} \;
 find /var/dtpdev/tmp/ -type f -mtime +15 -exec rm -f {} +
 find /path/to/files/ -type f -name *.php  -mtime +30 -exec rm {} \;
-#####################find more +100m size#######################
+#####################find more +100m size #######################
 find /var/ -type f -size +100M -exec ls -ltr {} \;
 #######################################realtime issue###################################
 1#application is not working and kubernetes pod unable start because of security team blocked /bin/get_secret defaultdb_user_password then we asked va 
@@ -137,8 +137,8 @@ GATEWAY0=172.16.4.254
 502 Bad Gateway server error response code indicates that the server, while acting as a gateway or proxy,
     received an invalid response from the upstream server.
 400 Bad Request response status code indicates that the server cannot or will not process the request due
-     to something that is perceived to be a client error 
-     (for example, malformed request syntax, invalid request message framing, or deceptive request routing).
+    to something that is perceived to be a client error 
+    (for example, malformed request syntax, invalid request message framing, or deceptive request routing).
 ##################login profile##################################
 cat /etc/skel/.
 1- .bashrc
@@ -156,9 +156,9 @@ $ renice -10 16995
   from -20 to +20 
 ################################Find Top Running Processes by Highest Memory and CPU Usage in Linux##################
 #Find Top Running Processes by Highest Memory and CPU Usage in Linux
-  $ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head
-  $ps -eo pid,ppid,%cpu,%mem,cmd --sort=-%mem | head
- ############Find Top 15 Processes by Memory Usage with ‘top’ in Batch Mode######
+ $ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head
+ $ps -eo pid,ppid,%cpu,%mem,cmd --sort=-%mem | head
+############Find Top 15 Processes by Memory Usage with ‘top’ in Batch Mode######
 $top -b -o +%MEM | head -n 22
 $top -b -o +%MEM | head -n 22 > topreport.txt
 ################To know traffic to server or capture traffic##########
@@ -188,7 +188,7 @@ auth    required       pam_listfile.so \
         onerr=succeed  item=user  sense=deny  file=/etc/ssh/deniedusers
 		
 ##########################################Logical voulme Creation############################
- disk /dev/sda
+disk /dev/sda
 pvcreate /dev/sda
 pvs
 vgcreate vgikt /dev/sda
@@ -298,10 +298,10 @@ To change the mode from enforcing to permissive type:
 sudo setenforce 0
 To turn the enforcing mode back on, enter:
 sudo setenforce 1
-########################Zombie process#################################
+########################Zombie process #################################
 
-Zombie is the process which is running without child process .it is identified  with 'z' 
-###########################Linux booting process#################################
+Zombie process which is running without child process .it is identified  with 'z' 
+###########################Linux booting process #################################
 1-BIOS(Basic input/ouput system)-performs some system intergrity checks
 2-MBR(master boot )-MBR is less than 512 bytes in size. It contains information about grub . In simple terms MBR loads and excute boot loader.
 3-GRUB(GRand Unified Bootloader)-It contains multiple kernel images, It will choose which one to be executed.
@@ -459,7 +459,7 @@ Hex code (type L to list all codes): 8e
 Changed type of partition 'Linux' to 'Linux LVM'.
 Command (m for help): wq
 #partprobe # It update kernel without restart after partition creation 
-lsblk
+$  lsblk
 ## making   swap disk partition
 Amount of RAM in the system	Recommended swap space	Recommended swap space if allowing for hibernation
 ⩽ 2 GB		2 times the amount of RAM	        	3 times the amount of RAM
@@ -469,8 +469,8 @@ Amount of RAM in the system	Recommended swap space	Recommended swap space if all
 					or
 If ram size is  lessthan 2GB then RAMx2 times of swap size
 If ram size is  greaterthan 2GB then RAM size + 2 GB
-swapoff /dev/sdc
-mkswap /dev/sda2
+swapoff   /dev/sdc
+mkswap    /dev/sda2
 swapon -a /dev/sda2
 #######################################user administartion##########################
 #usermod --help

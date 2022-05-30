@@ -27,7 +27,6 @@ scp /opt/backup.tar.gz root@172.168.10.44:/data/backupstorage
 else 
 echo "backup failed"
 fi
-
 ####################################To known the login user details###################################
  echo "please enter day (e.g Mon)"
 read day
@@ -238,7 +237,47 @@ cd /opt/Panorama/hedzup/mn/bin
 sed -i 's/Attribute name="ManageableByRemoteAgent" value="true"/Attribute name="ManageableByRemoteAgent" value="false"/gI' /opt/Panorama/hedzup/mn/data/dsa.ml
 ./dsactl start
 netstat -anp | grep “:2111”
- 
+ ########################
+ #!/bin/bash
+host=/home/dhanapal.ikt/hostipaddress #( hostip address in file)
+path=/home/dhanapal.ikt/precheck_patch
+
+for ip in "$(cat $host)"
+do
+ echo "$ip is remotely login"
+  sshpass -p root123 ssh $ip " echo '=======Precheck_outputs========' >> $path ;
+  df -Th >> $path ;
+  echo '=============================================================================================== ' >> $path ;
+  sudo lvs >> $path ;
+  echo '=============================================================================================== ' >> $path ;
+  sudo vgs >> $path ;
+  echo '=============================================================================================== ' >> $path ;
+
+  pvs >> $path ;
+  echo '=============================================================================================== ' >> $path ;
+  cat /etc/fstab >> $path;
+  echo '=============================================================================================== ' >> $path ;
+  cat /etc/resolv.conf >> $path ;
+  echo '=============================================================================================== ' >> $path ;
+  cat /etc/hosts >> $path ;
+  echo '=============================================================================================== ' >> $path ;
+  route -n >> $path ;
+  echo '=============================================================================================== ' >> $path ;
+  netstat -rn >> $path ;
+  echo '=============================================================================================== ' >> $path ;
+  ifconfig -a >> $path ;
+  echo '=============================================================================================== ' >> $path ;
+  cat /etc/os-release >> $path ;
+  echo '=============================================================================================== ' >> $path ;
+  hostnamectl >> $path ;
+  echo '=============================================================================================== ' >> $path ;
+  uname -a >> $path ;
+  echo '=============================================================================================== ' >> $path ;
+  exit"
+ exit
+done
+
+
 
 
 

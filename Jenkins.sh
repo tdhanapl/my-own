@@ -525,7 +525,7 @@ pipeline {
     options {
         buildDiscarder logRotator(artifactDaysToKeepStr: '7', artifactNumToKeepStr: '10', daysToKeepStr: '7', numToKeepStr: '10')
         retry(2)
-        timestamps
+        timestamps()
         warnError('Error messages')
         disableResume()
         disableConcurrentBuilds abortPrevious: true
@@ -871,12 +871,76 @@ pipeline{
         
 }
 17.  ########################run pipeline in parallel##########
-
+pipeline {
+    agent any
+    tools {
+        maven 'maven123'
+    }
+    options {
+        buildDiscarder logRotator(artifactDaysToKeepStr: '7', artifactNumToKeepStr: '10', daysToKeepStr: '7', numToKeepStr: '10')
+        retry(2)
+        timestamps()
+        warnError('Error messages')
+        disableResume()
+        disableConcurrentBuilds abortPrevious: true
+        timeout(activity: true, time: 40)
+    }
+    stages {
+        stage('parallel build the code') {
+            parallel {
+                stage('checkout' ) {
+                    steps {
+                        echo 'checkout of git'
+                    }
+                }
+                stage('build') {
+                    steps {
+                        echo 'build with maven'
+                    }
+                }
+                stage('test') {
+                    steps {
+                        echo 'test the soruce code'
+                    }
+                }
+            }
+        }
+        stage('deploy the code') {
+            parallel {
+                stage('deploy the code to UAT') {
+                    // here without approval it can not move next stage and we are ask approval deploy to UAT
+					input {
+                        message 'Provide your approval to deploy in UAT'
+                    }
+                    steps {
+                        echo 'deploy the code to UAT'
+                    }
+                
+                }
+                stage('deploy the code to DEV') {
+                    steps {
+                        echo 'deploy the code to DEV'
+                    }
+                }
+            }
+            
+        }
+    }
+}
 1. ################################################Integrate Artifactory with Jenkins######################################
 pre-requisites
 ->An Artifactory server 
 ->A Jenkins Server 
-->Integration Steps
+##now login to jfrog artifactory server
+#we need to have common user to communicate between Jenkins and artifactory
+1.login to the Jforg Artifactory console as an administrator.
+http://<jfrog server ip:8081/artifactory>
+2.Go to Admin area navigate to Users Click on “New User” button.
+3. Enter the desired fields and make sure to mark Disable UI Access (We are using this user only for connectivity between Jenkins and Jforg Artifactory not to access the UI)
+4. Click save.
+##3. Creating Maven repository in Jfrog
+
+#Integration Steps
 ->Login to Jenkins to integrate Artifactory with Jenkins
 
 ->Install "Artifactory" plug-in
@@ -884,7 +948,7 @@ pre-requisites
 ->Configure Artifactory server credentials
 ->Manage Jenkins -> Configure System -> Artifactory
 ->Artifactory Servers
-->Server ID : Artifactory-Server
+->Server ID : <Artifactory-Server-ip>
 ->URL : <<<Artifactory Server URL>>>
 ->Username : jenkins
 ->Password : redhat
@@ -924,7 +988,7 @@ pipeline {
         }
 	    stage('create Image') {
             steps {
-                sh '''
+                sh """
                     docker build -t dhanapal406/tomcat-$BUILD_NUMBER .
                     docker login -u $DOCKER_LOGIN_USR -p $DOCKER_LOGIN_PSW
                     docker push dhanapal406/tomcat-$BUILD_NUMBER
