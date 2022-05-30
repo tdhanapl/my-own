@@ -4,7 +4,9 @@ By default, Jenkins stores all of its data in this directory on the file system
 $ ll /var/lib/jenkins
 ########jenkins document site
 https://www.jenkins.io/doc/
-###############Reverse Proxy with nginx for jenkin url access########
+https://www.jenkins.io/doc/book/pipeline/syntax/#options
+
+1. ###############Reverse Proxy with nginx for jenkin url access########
 #set hostname with FQDN
 $ hostnamectl set-hostname jenkins.cntech.local
 $ echo `hostname -i | awk '{print $NF}'`" "`hostname`" "`hostname -s ` >> /etc/hosts
@@ -68,7 +70,7 @@ location / {
 ##To check configuration reverse proxy syntax error
 $  nginx -t
 $ systemctl restart nginx
-###################Periodic Backup(plug-in)###############
+2. ###################Periodic Backup(plug-in)###############
 #Backup plugin allows archiving and restoring your Jenkins (and Hudson) home directory.
 #With Periodic Backup we schudle cron jobs for backup perpouse
 ->Now go to jenkins 
@@ -97,7 +99,7 @@ $chown -R jenkins:jenkins /opt/backup-jenkins-data
 ->Now go to jenkins 
 ->manage jenkins->manage plugins->Role-based Authorization Strategy(search available)->Role-based Authorization Strategy(select)->install(without restart)
 
-############LDAP configuration in jenkins##############
+3. ############LDAP configuration in jenkins##############
 ##server LDAP configuration details (deatils for configure LDAP in jenkins###
 objectClass: top
 objectClass: dcObject 
@@ -166,21 +168,27 @@ Parse user attribute for list of LDAP groups/Search for LDAP groups containing u
 ->click add
 -> here dispaly two user mark the required permission for the user
 
-########################################Installation  maveen##############################
+4. ########################################Installation  maveen##############################
 $ cd /opt
 $ wget  https://dlcdn.apache.org/maven/maven-3/3.8.5/binaries/apache-maven-3.8.5-bin.tar.gz
-$ tar -xzvf apache-maven-3.8.4-bin.tar.gz
-$ mv apache-maven-3.8.4-bin  maven
+$ tar -xzvf apache-maven-3.8.5-bin.tar.gz
+$ mv apache-maven-3.8.5-bin  maven
 $ cd maven
 $ cd bin
 $ ./mvn --version
+##temporary update the binary 
+$ export PATH=$PATH:/opt/maven/bin
 $ echo $PATH
+##permanent update the binary 
 $ cd /etc/profile.d/ ##it will update for all user 
 $ vim maven.sh
-export M2_HOME=/opt/maven/bin
-export PATH=$PATH:$M2_HOME
-:wq!
+	#!/bin/bash
+	export PATH=$PATH:/opt/maven/bin
+	:wq!
+$ chmod 755 /etc/profile.d/maven.sh
+$ echo $PATH
 $ bash
+$ echo $PATH
 	or 
 $ vim .bash_profile ##it will update for  particular user only 
 export M2_HOME=/opt/maven/bin    
@@ -188,7 +196,8 @@ export PATH=$PATH:$M2_HOME
 :wq!
 $ bash
 mvn --version
-######################configu maven in jebkins#############
+
+5. ######################configure maven in jenkins#############
 ##this use for if it required to bulid in par version only on that time we can add  that version
 #we bulid with particular version
 ->Now go to jenkins 
@@ -209,22 +218,28 @@ List of Maven installations on this system
 ->MAVEN_HOME= /opt/maven/ #/opt/maven/ home of maven path  and/opt/maven/bin path variables
 ->click save
 -> click apply
-#####################Integrate Your GitHub Repository to Your Jenkins Project##################################
+6. #####################Integrate Your GitHub Repository to Your Jenkins Project##################################
 Configuring GitHub
 Step 1: go to your GitHub repository and click on ‘Settings
 Step 2: Click on Webhooks and then click on ‘Add webhook’.
-Step 3: In the ‘Payload URL’ field, paste your Jenkins environment URL. At the end of this URL add /github-webhook/. 
-In the ‘Content type’ select: ‘application/json’ and leave the ‘Secret’ field empty.
-Step 4: In the page ‘Which events would you like to trigger this webhook?’ choose ‘Let me select individual events.’ Then, check ‘Pull Requests’ and ‘Pushes’. 
+Step 3: In the ‘Payload URL’ field, paste your Jenkins environment URL.
+ ->At the end of this URL add /github-webhook/. 
+ Payload URL= https://13.127.199.143:8080/github-webhook
+step 4:
+->In the ‘Content type’ select: ‘application/json’ and leave the ‘Secret’ field empty.
+Step 5: 
+Which events would you like to trigger this webhook?
+Just the push event.
+->mark Send me everything.
+In the page ‘Which events would you like to trigger this webhook?’ choose ‘Let me select Send me everything.’ Then, check ‘Pull Requests’ and ‘Pushes’. 
 At the end of this option, make sure that the ‘Active’ option is checked and click on ‘Add webhook’.
-###Configuring Jenkins
+###Configuring from  Jenkins side
 
 Step 5: In Jenkins, click on ‘New Item’ to create a new project.
 Step 6: Give your project a name, then choose ‘Pipeline’ and finally, click on ‘OK’.click pipeline project->click build trigger-
 ------->mark github hook trigger for GITSCM polling----->click apply.
 
-
-################################Jenkins master--Slave configuration######################
+7. ################################Jenkins master--Slave configuration######################
 1. adding agent with Launch method via Launch agents via SSH
 
 ->In a production environment, there are lot and lot of builds need to run in parallel. This is the time Jenkins slave nodes come into the play. We can run builds in separate Jenkins slave nodes. This will reduce build overhead to the Jenkins master and we can run build in parallel. This article contains in the step by step guide to add Jenkins slave node. This step by step guide will help you to add any flavour of Linux machine as a Jenkins slave node. If you haven’t still install Jenkins Master server read this article “Install Production Jenkins on CentOS 7 in 6 Steps”.
@@ -232,19 +247,28 @@ Prepare Slave nodes
 ->Before adding a slave node to the Jenkins master we need to prepare the node. We need to install Java on the slave node. Jenkins will install a client program on the slave node. To run the client program we need to install the same Java version we used to install on Jenkins master. I am going to use this slave node to build Java Maven project. Therefore I need to install Maven as well. According to your production environment, you need to install and configure the necessary tool in the slave node.
 ->Install OpenJDK 8 on the slave node.
 # sudo yum install -y java-1.8.0-openjdk
-->As mention above, now I am going to install apache maven on the slave node. You can download the Apache Maven from their official site.
+-> install apache maven on the slave node. You can download the Apache Maven from their official site.
 # mkdir -p build/software/maven/
-# wget https://www-eu.apache.org/dist/maven/maven-3/3.6.2/binaries/apache-maven-3.6.2-bin.tar.gz --directory /home/centos/build/software/maven/
-# tar -xvf /home/centos/build/software/maven/apache-maven-3.6.2-bin.tar.gz --directory /home/centos/build/software/
-$Configure ssh connectivity to slave node from master
-Log in to the Jenkins master node and create an ssh key-pair. Use the below command to create the key-pair
-# ssh-keygen
-#cat .ssh/id_rsa.pub
-Now to slave node copy of master node .ssh/id_rsa.pub to slave node .ssh/authorized_keys
+$ wget https://www-eu.apache.org/dist/maven/maven-3/3.6.2/binaries/apache-maven-3.6.2-bin.tar.gz 
+###For maven installatin refer above steps 
+##On  both server of master and node put PasswordAuthentication yes
+$ vim /etc/ssh/sshd_config
+PasswordAuthentication yes
+$ systemctl restart sshd
+#Configure ssh connectivity from master to slave node 
+#Log in to the Jenkins master node and create an ssh key-pair. Use the below command to create the key-pair
+$ ssh-keygen
+$ cat .ssh/id_rsa.pub
+Now copy of master node  .ssh/id_rsa.pub file  to slave node of these .ssh/authorized_keys 
 Copy the content and log in to the slave node. Add the copied content to authorized_keys.
 # vim .ssh/authorized_keys
-->From the master ssh to the slave node. It will ask to accept the ssh fingerprint, type yes and enter. If you haven’t done anything wrong you should be able to ssh into the slave node.
-Adding the slave node to the master
+->From the master ssh to the slave node. It will ask to accept the ssh fingerprint, type yes and enter. 
+If you haven’t done anything wrong you should be able to ssh into the slave node.
+		or copy of ssh keys with command
+$ ssh-copy-id  -i /root/.ssh/id_rsa <username@10.10.1.173>
+	---this way we can copy ssh private keys
+##Now in jenkins
+->Adding the slave node to the master
 ->Log in to the Jenkins console via the browser and click on "Manage Jenkins" and scroll down to the bottom. From the list click on "Manage Nodes". In the new window click on "New Node".
 ->Add new node
 ->Give a name to the node, select "Permanent Agent" and click on OK
@@ -252,14 +276,272 @@ Adding the slave node to the master
 ->In the remote root directory field enter a path in the slave node. Note that ssh user must have read/write access to this directory path. Here I use the ssh uses home directory.
 ->Enter the slave nodes IP address in the field.
 ->Set IP and cre
-->Click on the "Add" button near the credentials field. Jenkins will popup a new window to add credentials. Select the kind as "SSH Username with private key" from the drop-down. Enter the user name of the slave node. In the private key field add the Jenkins masters private key. You can find the private key with the below command,
+->Click on the "Add" button near the credentials field.
+->Jenkins will popup a new window to add credentials. 
+->Select the kind as "SSH Username with private key" from the drop-down. 
+->Enter the user name of the slave node. In the private key field add the Jenkins masters private key. 
+->You can find the private key with the below command,
 ->Add new credentials to the Jenkins
 #cat /home/centos/.ssh/id_rsa
 ->Click on add and select the credentials we created from the drop-down. Click on save. If you did all the correct slave node will come to live state within a few seconds.
 ->Slave node list
 ->Troubleshooting
 ->You can click on the slave node and from there you can view the log. Fix any error shown in the log
-2. ########Configure Clouds agent(EC2 instance)
+-------
+8. ##########pipeline-1 running in slave node###########
+-----
+pipeline{
+    agent any
+    tools {
+        maven 'maven123'
+    }
+    stages{
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/dhanapal703278/maven.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh "mvn --version"
+                sh "mvn clean install -DskipTests" //DskipTests-it skip tests in this stage
+            }
+        }
+        stage('Test') {
+            steps {
+                sh "mvn test" //here we are running the tests in this stage
+                junit allowEmptyResults: true, testResults: 'target/surefire-reports-/*.xml'
+            }
+        }
+        
+        stage('Post tasks') {
+            steps {
+                sh "echo send an email"
+            }
+        }
+    }
+}
+9. ##########pipeline-2 running on docker of another agent machine###########
+###build docker image with java, git, maven
+$ Dockerfile
+FROM ubuntu
+LABEL owner="dhanapal"
+LABEL Description="creating image with git, maven, java for docker-jenkins-slave"
+RUN  apt update -y \
+     && apt   install git -y \
+     && apt install wget -y \
+     && apt install openjdk-11-jdk -y \
+     &&  cd /opt \
+     && wget  https://dlcdn.apache.org/maven/maven-3/3.8.5/binaries/apache-maven-3.8.5-bin.tar.gz \
+     && tar -xvf apache-maven-3.8.5-bin.tar.gz \
+     && rm -rf apache-maven-3.8.5-bin.tar.gz  \
+     && mv apache-maven-3.8.5  maven \
+     && ln -s /opt/maven/bin/mvn /usr/bin/mvn \
+     && export PATH=$PATH:/opt/maven/bin \
+     &&  echo $PATH
+CMD  ["mvn", "--version"]
+
+$docker build --tag docker_with_java_git_maven-3.8.5 .
+$ docker image tag docker_with_java_git_maven-3.8.5 dhanapal406/jenkins_java_git_maven-3.8.5
+$ docker push dhanapal406/jenkins_java_git_maven-3.8.5
+->In Pugins we need install Docker Pipeline
+
+#$ vim docker-jenkinsfile 
+-------
+pipeline{
+    agent {
+        docker { 
+            image 'dhanapal406/jenkins_java_git_maven-3.8.5' //docker image 
+            label 'docker-node' //agent label 
+        }
+    }
+	tools {
+        maven 'maven123'
+    }
+    options {
+        //discardbuilds 
+        buildDiscarder logRotator(artifactDaysToKeepStr: '30', artifactNumToKeepStr: '10', daysToKeepStr: '5', numToKeepStr: '5')
+        
+    }
+    stages{
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/dhanapal703278/maven.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh "mvn --version"
+                sh "mvn clean install"
+            }
+        }
+    }
+}
+
+//optional add in docker agent (adding addtional)
+//agent {
+  //docker {
+    //alwaysPull true
+    //customWorkspace '/root'
+    //image 'dhanapal406/jenkins_java_git_maven-3.8.5'
+    //label 'docker-node'
+    //registryCredentialsId 'username=dhana, password=ikt@406'
+    //reuseNode true
+  }
+}
+
+:wq
+
+10. #############stage level assign agent in this pipeline-3 and build-docker image in pipeline#######
+####create credential in 
+->Dashboard->click manage jenkins-> click manage Credentials
+->Stores scoped to Jenkins(under)
+->Jenkins
+->Global credentials (unrestricted)->New credentials
+->Kind= Username with password
+->Scope= Global (Jenkins, nodes, items, all child items, etc)
+->Username= dhanapal406(mark Treat username as secret)
+->Password= •••••••••
+->ID= docker_login
+->Description= docker_login
+->click create
+###Dockerfile in github
+$ vim Dockerfile
+FROM tomcat
+RUN rm -rf /usr/local/tomcat/webapps/ROOT/
+##/root/workspace/pipeline/webapp/target/java-tomcat-maven-example.war
+##FRom this path copying of java-tomcat-maven-example.war
+##default it take upto /root/workspace/pipeline
+COPY webapp.war /usr/local/tomcat/webapps/ROOT/ 
+RUN cd /usr/local/tomcat/webapps/ROOT && unzip java-tomcat-maven-example.war && \
+    rm -rf /usr/local/tomcat/webapps/ROOT/java-tomcat-maven-example.war
+EXPOSE 8080
+CMD ["mvn", "run"]
+#####username and password in pipeline
+#DOCKER_LOGIN = credentials('docker_login')
+1.DOCKER_LOGIN= is varible
+2.docker_login= it is label we mentioned in  global credential 
+3.$DOCKER_LOGIN_USR= it's username for login(USR)
+4.$DOCKER_LOGIN_PSW= it's password for login(PSW)
+
+pipeline {
+    agent any
+    stages {
+        stage('Example Username/Password') {
+            environment {
+                DOCKER_LOGIN = credentials('docker_login')
+            }
+            steps {
+                sh 'echo "Service user is $DOCKER_LOGIN_USR"'
+                sh 'echo "Service password is $DOCKER_LOGIN_PSW"'
+               sh 'docker login -u $DOCKER_LOGIN_USR -p $DOCKER_LOGIN_PSW'
+            }
+        }
+        
+    }
+}
+######stage level assign agent in this pipeline and ########
+
+pipeline{
+    agent none
+    environment {
+        DOCKER_LOGIN = credentials('docker_login')
+        
+    }
+	tools {
+        maven 'maven123'
+    }
+    stages {
+        stage ('Checkout and Build') {
+            agent {
+                docker {
+                    image 'dhanapal406/jenkins_java_git_maven-3.8.5'
+                    label 'docker-node'
+                    
+                }
+                
+            }
+            steps{
+                git 'https://github.com/dhanapal703278/tomcat_maven_app.git'
+                sh "mvn clean package"
+            }
+        }
+        stage('Create  a images'){
+            agent {
+                label 'docker-node'
+            }
+            steps {
+                sh """
+                     //with above docker file we building the docker image
+					 docker build -t dhanapal406/tomcat_sai-$BUILD_NUMBER .
+                     docker login -u $DOCKER_LOGIN_USR -p $DOCKER_LOGIN_PSW
+                     docker push dhanapal406/tomcat_sai-$BUILD_NUMBER
+                     docker run -itd -p 8080:8080 -v /dhana:/l406/tomcat_sai-$BUILD_NUMBER
+                """
+            }
+        }
+    }
+}
+11.#################pipeline-4 of option use##############
+##Available Options
+$ buildDiscarder
+Persist artifacts and console output for the specific number of recent Pipeline runs. For example: options { buildDiscarder(logRotator(numToKeepStr: '1')) }
+
+$checkoutToSubdirectory
+Perform the automatic source control checkout in a subdirectory of the workspace. For example: options { checkoutToSubdirectory('foo') }
+
+$disableConcurrentBuilds
+Disallow concurrent executions of the Pipeline. Can be useful for preventing simultaneous accesses to shared resources, etc. For example: options { disableConcurrentBuilds() }
+
+$disableResume
+Do not allow the pipeline to resume if the controller restarts. For example: options { disableResume() }
+
+$newContainerPerStage
+Used with docker or dockerfile top-level agent. When specified, each stage will run in a new container instance on the same node, rather than all stages running in the same container instance.
+
+$overrideIndexTriggers
+Allows overriding default treatment of branch indexing triggers. If branch indexing triggers are disabled at the multibranch or organization label, options { overrideIndexTriggers(true) } will enable them for this job only. Otherwise, options { overrideIndexTriggers(false) } will disable branch indexing triggers for this job only.
+
+$preserveStashes
+Preserve stashes from completed builds, for use with stage restarting. For example: options { preserveStashes() } to preserve the stashes from the most recent completed build, or options { preserveStashes(buildCount: 5) } to preserve the stashes from the five most recent completed builds.
+
+$quietPeriod
+Set the quiet period, in seconds, for the Pipeline, overriding the global default. For example: options { quietPeriod(30) }
+
+$retry
+On failure, retry the entire Pipeline the specified number of times. For example: options { retry(3) }
+
+$skipDefaultCheckout
+Skip checking out code from source control by default in the agent directive. For example: options { skipDefaultCheckout() }
+
+$skipStagesAfterUnstable
+Skip stages once the build status has gone to UNSTABLE. For example: options { skipStagesAfterUnstable() }
+
+$timeout
+Set a timeout period for the Pipeline run, after which Jenkins should abort the Pipeline. For example: options { timeout(time: 1, unit: 'HOURS') }
+
+pipeline {
+    agent any
+    options {
+        buildDiscarder logRotator(artifactDaysToKeepStr: '7', artifactNumToKeepStr: '10', daysToKeepStr: '7', numToKeepStr: '10')
+        retry(2)
+        timestamps
+        warnError('Error messages')
+        disableResume()
+        disableConcurrentBuilds abortPrevious: true
+        timeout(activity: true, time: 40)
+    }
+
+    stages {
+        stage{
+            steps{
+                echo "this pipeline for how to use  option"
+            }
+        }
+	}
+}
+
+12. ########Configure Clouds agent(EC2 instance)
 ->Now go to jenkins 
 ->click manage jenkins->manage plugins->Amazon ec2 instance, docker and kubernetes (search available)->Amazon ec2 instance, docker and kubernetes (select)->install(without restart)
 ###Now go aws console for create IAM group and user assigned AmazonEC2FullAccess policy
@@ -359,17 +641,18 @@ click test connection --here display sucess
 -> mark Connect by SSh
 ->click apply
 ->click save
-############################################SonarQube intergration with jenkins################################################################
-do not all this things with root and created separate username as sonaruser
-wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-8.9.6.50800.zip
-apt install unzip 
-unzip sonarqube-8.9.6.50800.zip
-ls -lrt
-cd sonarqube-8.9.6.50800
-ls	-lrt
-cd conf/
-ls -lrt
-vi sonar.properties
+13. ############################################SonarQube intergration with jenkins################################################################
+##https://www.jenkins.io/doc/pipeline/steps/sonar/
+#do not all this things with root and created separate username as sonaruser
+$ wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-8.9.6.50800.zip
+$ apt install unzip 
+$ unzip sonarqube-8.9.6.50800.zip
+$ ls -lrt
+$ cd sonarqube-8.9.6.50800
+$ ls	-lrt
+$ cd conf/
+$ ls -lrt
+$ vi sonar.properties
 sonar.jbc.username=sonarqube
 sonar.jbc.password=sonarqube
 #sonar.embeddedDatabase.port=we are database port mysql or postgreql
@@ -378,12 +661,12 @@ sonar.web.host=0.0.0.0
 sonar.web.port=9000
 sonar.web.context=/sonarqube
 :wq
-vi wrapper.conf
+$ vi wrapper.conf
 wrapper.java.command=/usr/lib/jvm/java-8-openjdk-amd64/bin/java
 :wq
-cd bin 
-cd linux-x86-64
-ls -lrt
+$cd bin 
+$ cd linux-x86-64
+$ ls -lrt
 ./sonar.sh console
 go website
 ->this url=3.104.45.3:9000/sonarqube
@@ -395,14 +678,108 @@ go website
  ->Now go to jenkins 
  ->manage jenkins->manage plugins->sonarqube(search available)->sonarqube scanner(select)->install(without restart)
  Again to manage jenkins->configure system->SonarQube Server->mark Environment variables->Add SonarQube->Name=Sonarjenkins->
- -->Server Url=url=3.104.45.3:9000/sonarqube(SonarQube url)---
- now go to SonarQube server to create token
+ -->Server Url=url=3.104.45.3:9000/sonarqube(SonarQube url add /sonarqube in url)---
+ #now go to SonarQube server to create token
  click Administartor->security->users->click tokens->Generate tokens=jenkins->generate->copy that token
- Now goto jenkins continue to before part
- click add(jenkins credintaials)->domain =global credentails->kind=secret text(select)->secret=paste the copied sonarqube token->Descrition=jenkins->save---
+ #Now goto jenkins continue to before part
+ click add(jenkins credintaials)->domain =global credentails->kind=secret text(select)
+ ->secret=eadb7c27fda4dd57981197bb761e97e5d3d63712 paste the copied sonarqube token->Descrition=jenkins->save---
  ->authication=Sonarjenkins->apply
- 
-#############################Jfrog Artifactory Installation###########################################################
+ ###
+ pipeline {
+        agent any
+        tools {
+            maven 'maven123'
+        }
+        stages {
+            stage('Checkout'){
+                steps {
+                    git 'https://github.com/dhanapal703278/maven.git'
+                }
+            }
+            stage('Build with maven') {
+                steps {
+                    mvn clean install
+                }
+            }
+            
+            stage("build & SonarQube analysis") {
+            steps {
+              withSonarQubeEnv('My SonarQube Server') {
+                sh 'mvn clean package sonar:sonar'
+              }
+            }
+          }
+          
+        }
+        post{
+            always {
+              deleteDir()  
+            }
+            failure{
+              mail bcc: '', body: 'test is failled', cc: '', from: '', replyTo: '', subject: 'Test  results', to: 'dhanapal703278@gmail.com' 
+            }
+            sucess {
+                mail bcc: '', body: 'test is sucess', cc: '', from: '', replyTo: '', subject: 'Test  results', to: 'dhanapal703278@gmail.com'
+                
+            }
+        }
+}
+		
+ ##In pipeline if quality gate sucess then only  it move to next stage else it fail next stage job in pipeline
+ #now go to SonarQube server to create quality gate
+->click Administartor->click configuration->click webhook create
+->Name= sonarqube-jenkins
+->URL= <http://jenkins url:8080/sonarqube-webhook/>
+->scerts= leave deafult
+->click create
+##########pipeline for sonarqube quality gate
+pipeline {
+        agent any
+        tools {
+            maven 'maven123'
+        }
+        stages {
+            stage('Checkout'){
+                steps {
+                    git 'https://github.com/dhanapal703278/maven.git'
+                }
+            }
+            stage('Build with maven') {
+                steps {
+                    mvn clean install
+                }
+            }
+            
+            stage("build & SonarQube analysis") {
+            steps {
+              withSonarQubeEnv('My SonarQube Server') {
+                sh 'mvn clean package sonar:sonar'
+              }
+            }
+          }
+          stage("Quality Gate") {
+            steps {
+              timeout(time: 1, unit: 'HOURS') {
+                waitForQualityGate abortPipeline: true
+              }
+            }
+          }
+        }
+        post{
+            always {
+              deleteDir()  
+            }
+            failure{
+              mail bcc: '', body: 'test is failled', cc: '', from: '', replyTo: '', subject: 'Test  results', to: 'dhanapal703278@gmail.com' 
+            }
+            sucess {
+                mail bcc: '', body: 'test is sucess', cc: '', from: '', replyTo: '', subject: 'Test  results', to: 'dhanapal703278@gmail.com'
+                
+            }
+        }
+}
+15. #############################Jfrog Artifactory Installation###########################################################
 ##Installation Steps
 #Pre-requisites:
 ->An AWS T2.small EC2 instance (Linux)
@@ -426,8 +803,76 @@ username: admin
 password: passwrod 
 ->Create new user 
 ->click admin->click user->click new->uersname=jenkins->email address=jenkins@gmail->mark admin previlage->mark can update profile->set-password=redhat
+16. #################copy jar from one server to another and work for remote server from jenkins###########
+#create ssh-keygen
+#copy public key to remote server into .ssh/authorized_keys 
+#create credentails in jenkins of ssh with private (copy private from  ssh-key generate server##
+#install sshagent plug-in in jenkins
 
-################################################Integrate Artifactory with Jenkins######################################
+pipeline{
+    agent {
+        docker { 
+            image 'dhanapal406/jenkins_java_git_maven-3.8.5' //docker image 
+            label 'docker-node' //agent label 
+        }
+    }
+	tools {
+        maven 'maven123'
+    }
+    options {
+        //discardbuilds 
+        buildDiscarder logRotator(artifactDaysToKeepStr: '30', artifactNumToKeepStr: '10', daysToKeepStr: '5', numToKeepStr: '5')
+        
+    }
+    environment {
+        remote_server_ip = "10.10.1.173 "
+        remote_username = "root"
+    }
+    stages{
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/dhanapal703278/tomcat_maven_app.git'
+            }
+        }
+        stage('work for remote server from jenkins') {
+            steps {
+                sshagent(['sshagent-scp']) {
+                    sh """
+                    ssh  -o StrictHostKeyChecking=no  $remote_username@$remote_server_ip  mkdir /opt/jenkins80 ; touch ~/dhanafile80 ; rm -rf /opt/jenkins88   
+                    ssh  -o StrictHostKeyChecking=no  $remote_username@$remote_server_ip cat /etc/sudoers
+                    """ 
+                    
+                }
+                
+            }
+        }
+        stage('copy jar or war from master to agent') {
+            steps {
+                //if we  build is run on server and deploy in another server for it requried jar or war
+                sshagent(['sshagent-scp']) {
+                    /*<packaging>jar</packaging>
+                    <version>1.0-SNAPSHOT</version>
+                    <name>my-app</name>
+                    above are in pom.xml
+					-o StrictHostKeyChecking=no  is do not hostkey check promot for yes or no while copying file
+					For comment we can use staring with /* and endin with */
+					*/
+                    sh " scp -o StrictHostKeyChecking=no  target/java-tomcat-maven-example.war root@10.10.1.173:/opt/pipeline-repo/"
+                }
+            }
+                
+        }
+        
+            
+            
+           
+    }
+        
+        
+}
+17.  ########################run pipeline in parallel##########
+
+1. ################################################Integrate Artifactory with Jenkins######################################
 pre-requisites
 ->An Artifactory server 
 ->A Jenkins Server 
@@ -445,13 +890,16 @@ pre-requisites
 ->Password : redhat
 ->click test connection->here found Artifactory version 
 
+
+
+
 ---------------------------------------Jenkins(CI continue intergration/Continue delivery CD)---------------------------------------------------
 ->source code commit--trigger automatically(web-hook)-->checkout(Git)-->Build(maveen)-->sonar analysis(SonarQube)-->test(junit)---------
 ->upload artifactory(nexus/jfrog)-->Deploy to pre-production(Docker Environment)---->Deploy to Production(Kubernetes).
 pipeline {
     agent any
 	tools {
-        maven "maven-3.8.5"
+        maven 'maven-3.8.5'
     }
     options {
         timeout(30)
@@ -472,14 +920,14 @@ pipeline {
 		stage('Scan') {
 			steps {
 				withSonarQubeEnv(installationName: 'sonarjenkins') { 
-				sh './mvnw clean org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.0.2155:sonar'
+				sh './mvn clean org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.0.2155:sonar'
         }
 	    stage('create Image') {
             steps {
-                sh """
+                sh '''
                     docker build -t dhanapal406/tomcat-$BUILD_NUMBER .
                     docker login -u $DOCKER_LOGIN_USR -p $DOCKER_LOGIN_PSW
-                    docker opt dhanapapush dhanapal406/tomcat-$BUILD_NUMBER
+                    docker push dhanapal406/tomcat-$BUILD_NUMBER
                     docker run -itd -p 8080:8080 -v /dhana:/l406/tomcat-$BUILD_NUMBER
                 """
             }
@@ -503,10 +951,10 @@ pipeline {
             junit '**/target/*.xml'
         }
         failure {
-            mail to: team@example.com, subject: 'The Pipeline failed :('
+            //mail to: team@example.com, subject: 'The Pipeline failed :('
         }
 		sucess {
-			mail to: dhanapal703278@gmail.com, subject: The Pipeline sucess 
+			// mail to: dhanapal703278@gmail.com, subject: The Pipeline sucess 
 		}
     }
 }
@@ -709,3 +1157,12 @@ $ kubectl top node [node Name]
 Writing playbooks using YAML, for configure the servers.
 Installing, Configured and management in Ansible Centralized Server and creating the 
 playbooks to support various middleware application servers. 
+
+
+1.jayachgandiran masilamari-1969(53 age)-507586792275
+2.A C venkatesan-1971(51 age )-417252401671
+3.A C kavlyarasan-1984(38 age)-796913445485
+4.Prabhakaran Chandirasekaran-1981(41 age)-295292668239
+5.kishorekumar Senthikumar-1994(28 age)-373240968148
+6.Santhoshkumar thirunanasambandham -1986(36 age )-520550784156
+Phone :+916380712655

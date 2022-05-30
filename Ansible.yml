@@ -3,6 +3,7 @@
 ->By using ansible we can automated the configuration management, application deployment, automatic backup, Provising orchestration(squennce of task)
 -> Ansible is agent less.
 #https://prithvirajsingh1604.medium.com/w-4c1c31cd5f81
+#https://www.softwaretestinghelp.com/ansible-roles-jenkins-integration-ec2-modules/ for ansible role
 ##To disbale the hostkeychecking
 1.method1(temporary):
 $ export 	ANSIBLE_Host_KEY_CHECKING=False
