@@ -226,29 +226,8 @@ pipeline{
           }
         }
 }
-#############################
-###error
-scp target/my-app-1.0-SNAPSHOT-jar ec2-user@10.10.1.17:/home/ec2-user
-Host key verification failed.    
-stage('check remoter serve start/restart/stop/status of service') {
-             steps {
-                sshagent(['sshagent-scp']) {
-                //environment=$remote_username, and $remote_server
-                    sh "ssh  -o StrictHostKeyChecking=no  $remote_username@$remote_server systemctl status docker"
-                } 
-             }
-         }
-         stage('work in remote server from our jenkins'){
-             steps {
-                 // we using sshagent for work in remote server
-                sh """
-                ssh  -o StrictHostKeyChecking=no  $remote_username@$remote_server mkdir /opt/jenkins ; touch jenkinsfile"
-             }
-         }
-         
- 
- 
- ###############################final pipeline##############
+
+###############################final pipeline##############
  pipeline{
     agent none
 	tools {

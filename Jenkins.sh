@@ -352,7 +352,10 @@ pipeline{
     agent {
         docker { 
             image 'dhanapal406/jenkins_java_git_maven-3.8.5' //docker image 
-            label 'docker-node' //agent label 
+            label 'docker-node' //agent label
+			args '-v /home:/tmp'
+			//args '--name maven-docker'
+			alwaysPull true
         }
     }
 	tools {
@@ -457,6 +460,7 @@ pipeline{
                 docker {
                     image 'dhanapal406/jenkins_java_git_maven-3.8.5'
                     label 'docker-node'
+					alwaysPull true
                     
                 }
                 
@@ -685,7 +689,7 @@ go website
  click add(jenkins credintaials)->domain =global credentails->kind=secret text(select)
  ->secret=eadb7c27fda4dd57981197bb761e97e5d3d63712 paste the copied sonarqube token->Descrition=jenkins->save---
  ->authication=Sonarjenkins->apply
- ###
+ ####pipeline with sonarqube#####
  pipeline {
         agent any
         tools {
@@ -813,7 +817,8 @@ pipeline{
     agent {
         docker { 
             image 'dhanapal406/jenkins_java_git_maven-3.8.5' //docker image 
-            label 'docker-node' //agent label 
+            label 'docker-node' //agent label
+			alwaysPull true
         }
     }
 	tools {
@@ -870,7 +875,7 @@ pipeline{
         
         
 }
-17.  ########################run pipeline in parallel##########
+17.  ########################run pipeline in parallel and trigger with cron jobs##########
 pipeline {
     agent any
     tools {
@@ -883,7 +888,12 @@ pipeline {
         warnError('Error messages')
         disableResume()
         disableConcurrentBuilds abortPrevious: true
-        timeout(activity: true, time: 40)
+        timeout(activity: true, time: 2)
+    }
+    triggers {
+        //minute, hour, day of month, and day of week (0 and 7 are sundays)
+        cron('0 12 * * 2,4')
+        //@yearly, @monthly, @hourly, @daily
     }
     stages {
         stage('parallel build the code') {
@@ -908,8 +918,7 @@ pipeline {
         stage('deploy the code') {
             parallel {
                 stage('deploy the code to UAT') {
-                    // here without approval it can not move next stage and we are ask approval deploy to UAT
-					input {
+                    input {
                         message 'Provide your approval to deploy in UAT'
                     }
                     steps {
@@ -927,6 +936,231 @@ pipeline {
         }
     }
 }
+18 ###########################pipeline trigger with pollscm########
+
+pipeline {
+    agent any
+    tools {
+        maven 'maven123'
+    }
+    options {
+        buildDiscarder logRotator(artifactDaysToKeepStr: '7', artifactNumToKeepStr: '10', daysToKeepStr: '7', numToKeepStr: '10')
+        retry(2)
+        timestamps()
+        warnError('Error messages')
+        disableResume()
+        disableConcurrentBuilds abortPrevious: true
+        timeout(activity: true, time: 2)
+    }
+    triggers {
+        //minute, hour, day of month, and day of week (0 and 7 are sundays)
+        pollSCM('* 4 * * * ')
+        //@yearly, @monthly, @hourly, @daily
+    }
+    stages {
+        stage('parallel build the code') {
+            parallel {
+                stage('checkout' ) {
+                    steps {
+                        echo 'checkout of git'
+                    }
+                }
+                stage('build') {
+                    steps {
+                        echo 'build with maven'
+                    }
+                }
+                stage('test') {
+                    steps {
+                        echo 'test the soruce code'
+                    }
+                }
+            }
+        }
+        stage('deploy the code') {
+            parallel {
+                stage('deploy the code to UAT') {
+                    input {
+                        message 'Provide your approval to deploy in UAT'
+                    }
+                    steps {
+                        echo 'deploy the code to UAT'
+                    }
+                
+                }
+                stage('deploy the code to DEV') {
+                    steps {
+                        echo 'deploy the code to DEV'
+                    }
+                }
+            }
+            
+        }
+    }
+}
+
+19. #############Pipeline of Post stage########
+
+Always/success/failure
+---------------------
+pipeline{
+    agent any
+    stages{
+        stage('Build'){
+            steps{
+                    echo "building"
+                    //error("Build failed")
+            }
+        }
+    }
+    post{
+		//Only runs if the current Pipeline’s or stage’s run has a "success" status
+		success{
+			echo 'post->success is called'
+		}
+		//Only runs if the current Pipeline’s or stage’s run has a "failed" status
+		failure { 
+            echo 'post->failure is called'
+        }
+		//Runs regardless of the completion status of the Pipeline’s or stage’s run.
+        always { 
+            echo 'post->always is called'
+        }
+    }
+}
+
+changed 
+-------------
+pipeline{
+    agent any
+    stages{
+        stage('Build'){
+            steps{
+                    echo "building"					
+					//script{
+					//	currentBuild.result = 'UNSTABLE'
+					//}
+            }
+        }
+    }
+    post{
+		//Only runs if the current Pipeline’s or stage’s run has a different completion status from its previous run.
+        changed { 
+            echo 'post->changed is called'
+        }
+    }
+}
+
+unstable
+---------
+using example from above
+
+
+		//Only run the steps in post if the current Pipeline’s or stage’s run has an "unstable" status, usually caused by test failures, code violations, etc. 
+		unstable { 
+            echo 'post->unstable is called'
+        }
+
+
+
+
+fixed
+------
+pipeline{
+    agent any
+    stages{
+        stage('Build'){
+            steps{
+                    echo "building"
+            }
+        }
+    }
+    post{
+		//Only runs if the current Pipeline’s or stage’s run is successful and the previous run failed or was unstable.
+		fixed { 
+            echo 'post->fixed is called'
+        }
+    }
+}
+
+
+regression
+-----------
+pipeline{
+    agent any
+    stages{
+        stage('Build'){
+            steps{
+                    echo "building"
+					error("Build failed")
+            }
+        }
+    }
+    post{
+		//Only runs if the current Pipeline’s or stage’s status is failure, unstable, or aborted and the previous run was successful.
+		regression { 
+            echo 'post->regression is called'
+        }
+    }
+}
+
+aborted
+-------
+
+pipeline{
+    agent any
+    stages{
+        stage('Build'){
+            steps{
+                    echo "building"
+					script{
+						currentBuild.result = 'ABORTED'
+					}
+            }
+        }
+    }
+    post{
+		//Only runs if the current Pipeline’s or stage’s run has an "aborted" status, usually due to the Pipeline being manually aborted. 
+		aborted { 
+            echo 'post->aborted is called'
+        }
+    }
+}
+
+
+
+cleanup
+--------
+pipeline{
+    agent any
+    stages{
+        stage('Build'){
+            steps{
+                    echo "building"
+                    //error("Build failed")
+            }
+        }
+    }
+    post{
+		//Only runs if the current Pipeline’s or stage’s run has a "success" status, typically denoted by blue or green in the web UI.
+		success{
+			echo 'post->success is called'
+		}
+		//Only runs if the current Pipeline’s or stage’s run has a "failed" status, typically denoted by red in the web UI.
+		failure { 
+            echo 'post->failure is called'
+        }
+		//Runs regardless of the completion status of the Pipeline’s or stage’s run.
+        always { 
+            echo 'post->always is called'
+        }
+		//Runs after every other post condition has been evaluated, regardless of the status of Pipeline or stage
+		cleanup{
+			echo 'post->cleanup is called'
+		}
+    }
+}
+
 1. ################################################Integrate Artifactory with Jenkins######################################
 pre-requisites
 ->An Artifactory server 

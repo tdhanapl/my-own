@@ -38,7 +38,7 @@ $ git remote -v
 ##To check current status od repository
 $ git status
 	--here dispaly file in untrack
-##To commit file to staging area or index area 
+##To commit file from working area to staging area or index area 
 $ git add * or .
 	--it commit all file to index area
 $ git add file1
@@ -46,4 +46,19 @@ $ git add file1
 ## To commit file from staging area to local repository
 $ git commit -m "this fist commit"
 ##To push to our  git hub
-$ git push --all 	
+$ git push --all
+	or 
+$ git push origin main
+##To know how many commit we did
+$ git  log	
+##To pull file from remote repository(github) to local repository
+$ git pull origin main
+	or 
+$ git pull --all 	
+	--git pull = git fetch+ git merge
+It does two thing first fetch modified commit and merged into the previous file commit-1
+##To fetch file from remote repository(github) to local repository
+$ git fetch origin main
+	or 
+$ git fetch --all
+It is only  fetch modified commit and  not merged into the previous file commit-1. We have to merged by command again the file
