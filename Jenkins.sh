@@ -1,5 +1,5 @@
 #######################Configuration ##############################
-###Home directory for jenkins
+####Home directory for jenkins
 By default, Jenkins stores all of its data in this directory on the file system
 $ ll /var/lib/jenkins
 ########jenkins document site
@@ -396,6 +396,9 @@ pipeline{
 :wq
 
 10. #############stage level assign agent in this pipeline-3 and build-docker image in pipeline#######
+###Default Environment Variables by Jenkins 
+Jenkins provides several environment variables by default like - BRANCH_NAME, BUILD_NUMBER, BUILD_TAG, WORKSPACE, etc.
+
 ####create credential in 
 ->Dashboard->click manage jenkins-> click manage Credentials
 ->Stores scoped to Jenkins(under)
@@ -876,6 +879,17 @@ pipeline{
         
 }
 17.  ########################run pipeline in parallel and trigger with cron jobs##########
+#The ways to trigger a Jenkins Job/Pipeline?
+
+There are many ways we can trigger a job in Jenkins. Some of the common ways are as below -
+
+Trigger an API (POST) request to the target job URL with the required data.
+Trigger it manually from the Jenkins web application.
+Trigger it using Jenkins CLI from the master/slave nodes.
+Time-based Scheduled Triggers like a cron job.
+Event-based Triggers like SCM Actions (Git Commit, Pull Requests), WebHooks, etc.
+Upstream/Downstream triggers by other Jenkins jobs
+
 pipeline {
     agent any
     tools {
@@ -936,6 +950,7 @@ pipeline {
         }
     }
 }
+
 18 ###########################pipeline trigger with pollscm########
 
 pipeline {
