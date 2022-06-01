@@ -1,0 +1,215 @@
+#########ansible#######
+->Ansible is open source IT automation engine or congfiguration tool provide by redhat
+->By using ansible we can automated the configuration management, application deployment, automatic backup, Provising orchestration(squennce of task)
+-> Ansible is agent less.
+#https://prithvirajsingh1604.medium.com/w-4c1c31cd5f81
+#https://www.softwaretestinghelp.com/ansible-roles-jenkins-integration-ec2-modules/ for ansible role
+##To disbale the hostkeychecking
+1.method1(temporary):
+$ export 	ANSIBLE_Host_KEY_CHECKING=False
+2.method(Permanent):
+$vim /etc/ansible/ansible.cfg
+host_key_checking=False
+:wq
+#Note:
+1.command-->we can not excute two or more commands at a time in ansible adhoc commands
+2.shell---->we can excute two or more commands at a time in ansible adhoc commands
+
+####To check the list of hosts server in inventory file
+$ ansible all --lists-hosts
+##To check all modules
+$ ansible-doc -l | grep less
+##To know adhoc command modules
+$ ansible-doc <modules>
+$ ansible-doc yum
+$ ansible-doc copy
+$ ansible-doc service
+$ ansible-doc  fetch
+##To see the system setup or information
+$ ansible 192.168.1.20 -m setup | less
+$ ansible 192.168.1.29 -m setup | grep swap
+$ ansible 192.168.1.20 -m setup | grep -e swap -e process ##-e for grep multiple
+##Ansible adhoc command syntax
+$ ansible <groupname_inventory> -m <module> -a <argument>
+$ ansible webserver -m shell -a "rpm -aq |grep httpd"
+$ ansible webserver -m yum -a "name=httpd state=latest or present" -k
+	-k-->promot for password
+$ ansible webserver -m yum -a "name=httpd state=latest or present" -b
+	-k-->without promot for password
+$ ansible webserver -m cpoy -a "src=/root/index.html dest=/var/www/html/"
+##Create a file on remote node with content
+$ ansible webserver -m cpoy -a "content='create file with content for index.html\n'       dest=/var/www/html/index.html"
+##varible ansible playbook
+
+Varible list are represent with "var" key value.
+varible always sequence or mapps.
+$vim variable.yml
+- hosts: all
+  vars:
+    my_content: "this add from playbook"
+  tasks:  
+   - name: This the copy from content of varible
+      copy:
+        src: /var/www/html/
+      	content: "{{ my_content }}"
+:wq
+##To check the ansible playbook syntax error
+$ ansible-playbook variable.yml --syntax-check
+##To create more directory with variable
+$vim multiple-directory.yml
+- hosts: all
+  tasks:
+    - name: This the copy from content of varible
+      command: mkdir "/opt/{{ item}}"
+	  with_item:
+	    - folder1
+        - folder2
+        - folder3
+:wq
+##To create a file
+$ vim file.yml
+- hosts: all
+  tasks:
+    - name: create the file
+      file:
+        path: "/home/file.txt"
+        state: touch
+        mode: 755
+        owner: dhana
+        group: dhana
+:wq
+##Register playbook 
+$ vim register.yml
+  - hosts: all
+  tasks:
+    - name: create the file
+      command: uptime
+      register: up_time
+      debug: var=up_time.stdout
+:wq
+$ vim register.yml
+  - hosts: all
+  tasks:
+    - name: create the file
+      shell: uptime
+      register: up_time
+      
+    - name: create the file
+      shell: hostname
+      register: host_name
+    - name: create the file
+      shell: free -h
+      register: ram_info 
+    - debug: var={{item}}
+      loop:
+        - up_time.stdout
+        - host_name.stdout
+        - ram_info.stdout      
+:wq
+##
+1.Configuration of yum for Docker and Installing Docker
+$ vim docker_repo.yml
+- hosts: all
+  tasks:
+  - name: Setting up yum for Docker
+    yum_repository:
+     name: docker
+     description: DOCKER YUM repo
+     file: docker_repo
+     baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
+     enabled: 1
+     gpgcheck: 1
+     gpgkey: https://download.docker.com/linux/centos/gpg
+
+  - name: Installing Docker
+    command: yum install docker-ce --nobest -y
+:wq
+2.Installing Nginx
+$ vim nginx.yml
+- name: Install Nginx web server
+  apt:
+    name: nginx
+    state: latest
+  notify: Restart Nginx
+  tags:
+    - nginx
+
+
+###
+- name: Update nginx config files
+  become: true
+  template:
+    src: templates/nginx.conf
+    dest: "/etc/nginx/sites-available/default"
+  tags:
+    - nginx
+  notify: Restart Nginx
+
+###
+- name: link nginx config
+  become: true
+  file:
+    src: "/etc/nginx/sites-available/default"
+    dest: "/etc/nginx/sites-enabled/default"
+    state: link
+  tags:
+    - nginx
+  notify: Restart Nginx
+
+:wq
+
+#Let’s go through playbook step by step
+1.This defined our hosts section
+hosts: which hosts I want to run this playbook(generally we run it on groups defined under /etc/ansible/hosts)
+remote_user: remote user we going to operate(i.e ansible user which is a privileged user)
+become: yes(means root user, as the command we want to execute on remote host need root privilege)
+become_method: sudo(it’s optional and default)
+connection: ssh(by default connection type is ssh we can use parimiko or local connection)
+gather_facts: yes(facts that are returned when it started running playbook against the hosts eg:OS)
+2.A role directory structure contains directories: defaults, vars, tasks, files, templates, meta, handlers. Each directory must contain a main.yml file which contains relevant content. 
+Let’s look little closer to each directory.  This is the major section
+defaults: contains default variables for the role. Variables in default have the lowest priority so they are easy to override.
+vars: contains variables for the role. Variables in vars have higher priority than variables in defaults directory.
+tasks: contains the main list of steps to be executed by the role.
+files: contains files which we want to be copied to the remote host. We don’t need to specify a path of resources stored in this directory.
+templates: contains file template which supports modifications from the role. We use the Jinja2 templating language for creating templates.
+meta: contains metadata of role like an author, support platforms, dependencies.
+handlers: contains handlers which can be invoked by “notify” directives and are associated with service.
+$ vim apache.ynl
+— — # This is an example playbook to install Apache on Centos
+- hosts: myserver
+  remote_user: ansible
+  become: yes
+  become_method: sudo
+  connection: ssh
+  gather_facts: yes
+  tasks:
+  --- 
+- 
+  enabled: true
+  handlers: 
+    - 
+      name: "startservice (notify and handler name should match)"
+  name: "Installing Apache"
+  notify: 
+    - "start service"
+  service: 
+    name: httpd
+  state: restarted
+  yum: 
+    name: httpd
+    state: latest
+:wq
+ 
+  root@localhost:/ansible-ws/roles/haproxy/vars
+
+[root@localhost haproxy]# cd vars 
+# cat main.yml
+# vars file for haproxy
+software: "haproxy" port: 8080 
+:wq
+[root@localhost vars]#
+
+===============================
+FYI for you information
+poa plan of action

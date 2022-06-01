@@ -49,6 +49,8 @@ $ git commit -m "this fist commit"
 $ git push --all
 	or 
 $ git push origin main
+##To push particular file to remote repository
+$ git push origin main file1
 ##To know how many commit we did
 $ git  log	
 ##To pull file from remote repository(github) to local repository
@@ -62,3 +64,11 @@ $ git fetch origin main
 	or 
 $ git fetch --all
 It is only  fetch modified commit and  not merged into the previous file commit-1. We have to merged by command again the file
+##To view current branch 
+$ git status 
+* main -->present working branch
+  task
+## To create branch 
+$ git branch feature1
+##To swtich to another branch
+$ git checkout  feature1
