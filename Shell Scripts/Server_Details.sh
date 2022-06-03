@@ -1,9 +1,15 @@
 #/bin/sh
 ######################################################################
 ### Objective : To get the Server related details. This will enable###
+<<<<<<< HEAD
 ###             								                   ###
 ### Author    :                          						   ###
 ### Date      :                                    				   ###
+=======
+###             us to plan for Disaster recovery.                  ###
+### Author    :                           ###
+### Date      :                                        ###
+>>>>>>> 27de6563bc2257b48c811dc90f6b9183bf02ce7d
 ### Changes   : 
 ### Version   :                                                 ###
 ######################################################################
