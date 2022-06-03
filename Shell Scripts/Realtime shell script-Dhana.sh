@@ -27,6 +27,7 @@ scp /opt/backup.tar.gz root@172.168.10.44:/data/backupstorage
 else 
 echo "backup failed"
 fi
+
 ####################################To known the login user details###################################
  echo "please enter day (e.g Mon)"
 read day
@@ -85,7 +86,7 @@ then
  echo -e  "this show the status\033[96m $status\033[0m"
  echo "${action} ${Service_name}"
 fi
-                0r
+                #or
 #!/bin/bash
 read -p "Enter start,stop,status,enabled,and Disabled  to perform action on  services: " action
 read -p "Enter the Service name=" Service_name
@@ -112,7 +113,7 @@ do
    echo "$ip is not working"
    fi
 done 
-###
+#######################################
 #!/bin/bash
 host=/opt/hostipaddress #( hostip address in file)
 for ip in $(cat $host)
@@ -127,7 +128,7 @@ do
    echo "$ip is unable to ssh "
    fi
 done
-################
+#######################################
 #!/bin/bash
 SCRIPT=""top -b -o +%MEM | head -n 30 > /var/cpu-loadaverage.log
 HOSTS=("192.168.1.121" "192.168.1.122" "192.168.1.123")
@@ -173,6 +174,43 @@ then
 echo "Your SSL Cert will expire in 30 days." | mail -s "SSL Cert
 Monitor" someone@example.com
 fi
+#############################Prechecks-before-Patch###########################################
+
+#!/bin/bash
+#host=/opt/hostipaddress #( hostip address in file)
+today=$(date +"%F")
+path=/var/server_precheck_patch-$today
+  echo '===========================================Precheck_outputs of file system ==================================================' >>  $path
+  echo
+  df -Th >> $path
+  echo '==============================================Precheck_outputs of logical volume===================================================== ' >> $path
+  lvs >> $path
+  echo '==============================================Precheck_outputs of volume group ==================================================== ' >> $path
+  vgs >> $path
+   echo '==============================================Precheck_outputs of volume group ==================================================== ' >> $path
+  pvs >> $path
+  echo '=============================================Precheck_outputs of fstab entry===================================================== ' >> $path
+  cat /etc/fstab >> $path
+  echo '=============================================Precheck_outputs of resolv.conf===================================================== ' >> $path
+  cat /etc/resolv.conf >> $path
+  echo '=============================================Precheck_outputs of hosts file===================================================== ' >> $path
+  cat /etc/hosts >> $path
+  echo '=============================================Precheck_outputs of routes==================================================== ' >> $path
+  route -n >> $path
+  echo '==============================================Precheck_outputs of netstat=================================================== ' >> $path
+  netstat -rn >> $path
+  echo '=============================================Precheck_outputs of ifconfig===================================================== ' >> $path
+  ifconfig -a >> $path
+  echo '==============================================Precheck_outputs of os release==================================================== ' >> $path
+  cat /etc/os-release >> $path
+  echo '==========================================================Precheck_outputs of hostnamecl ======================================== ' >> $path
+  hostnamectl >> $path
+  echo '================================================Precheck_outputs uname or kernel================================================== ' >> $path
+  uname -a >> $path
+  echo '================================================================================================================== ' >> $path
+
+
+
 
 ################################ check file size and compress or delete or move######################
 #https://www.tutorialspoint.com/unix/unix-regular-expressions.htm
@@ -237,47 +275,41 @@ cd /opt/Panorama/hedzup/mn/bin
 sed -i 's/Attribute name="ManageableByRemoteAgent" value="true"/Attribute name="ManageableByRemoteAgent" value="false"/gI' /opt/Panorama/hedzup/mn/data/dsa.ml
 ./dsactl start
 netstat -anp | grep “:2111”
- ########################
- #!/bin/bash
-host=/home/dhanapal.ikt/hostipaddress #( hostip address in file)
-path=/home/dhanapal.ikt/precheck_patch
+#######################Xphenoapp files deleting ###############################
 
-for ip in "$(cat $host)"
-do
- echo "$ip is remotely login"
-  sshpass -p root123 ssh $ip " echo '=======Precheck_outputs========' >> $path ;
-  df -Th >> $path ;
-  echo '=============================================================================================== ' >> $path ;
-  sudo lvs >> $path ;
-  echo '=============================================================================================== ' >> $path ;
-  sudo vgs >> $path ;
-  echo '=============================================================================================== ' >> $path ;
+#!/bin/bash
+#Author=
+#Purpose=
+#Creation date=
+#Modificaton date=
+cd /home/xphenoapps/public_html/
+#path=$(find /home/xphenoapps/public_html/ -name "*htaccess*" -type f | wc -l)
+find=$(find /home/xphenoapps/public_html/ -name "*htaccess*" -type f | wc -l)
+   if [ $find -gt 2 ]
+   then
+   echo ".htaccess file are cerated in /home/xphenoapps/public_html path "
+   echo "First we stoping httpd Service"
+   service httpd stop
+    echo "deleting the files of .htaccess in /home/xphenoapps/public_html path  "
 
-  pvs >> $path ;
-  echo '=============================================================================================== ' >> $path ;
-  cat /etc/fstab >> $path;
-  echo '=============================================================================================== ' >> $path ;
-  cat /etc/resolv.conf >> $path ;
-  echo '=============================================================================================== ' >> $path ;
-  cat /etc/hosts >> $path ;
-  echo '=============================================================================================== ' >> $path ;
-  route -n >> $path ;
-  echo '=============================================================================================== ' >> $path ;
-  netstat -rn >> $path ;
-  echo '=============================================================================================== ' >> $path ;
-  ifconfig -a >> $path ;
-  echo '=============================================================================================== ' >> $path ;
-  cat /etc/os-release >> $path ;
-  echo '=============================================================================================== ' >> $path ;
-  hostnamectl >> $path ;
-  echo '=============================================================================================== ' >> $path ;
-  uname -a >> $path ;
-  echo '=============================================================================================== ' >> $path ;
-  exit"
- exit
-done
+    find  /home/xphenoapps/public_html/ -name "*htaccess*" -type f -delete
+    echo "replacing the backup of  .htaccess files in (/home/xphenoapps/public_html/"
+
+    cd /home/sai.ikt/attrium/
+    cp -rvf .htaccess /home/xphenoapps/public_html/attrium/
+    cd /home/sai.ikt/askhr/
+    ls -l
+    cp -rvf .htaccess /home/xphenoapps/public_html/askhr
+    service httpd start
+    cd /home/xphenoapps/public_html/
 
 
+    echo "After deleting the .htaccess files the count should be 2"
+
+   else
+   echo "In /home/xphenoapps/public_html .htaccess file are not created more than 2"
+   fi
+##################################### 
 
 
 
