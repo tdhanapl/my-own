@@ -2,10 +2,10 @@
 ######################################################################
 ### Objective : To get the Server related details. This will enable###
 ###             us to plan for Disaster recovery.                  ###
-### Author    : mohan.vunnam@sifycorp.com                          ###
-### Date      : 24 Aug 2014                                       ###
-### Changes   : WWN No included
-### Version   : 1.5                                                ###
+### Author    :                           ###
+### Date      :                                        ###
+### Changes   : 
+### Version   :                                                 ###
 ######################################################################
 
 ## Initialize global variables                                     ###
