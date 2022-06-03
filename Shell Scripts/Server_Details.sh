@@ -1,11 +1,11 @@
 #/bin/sh
 ######################################################################
 ### Objective : To get the Server related details. This will enable###
-###             us to plan for Disaster recovery.                  ###
-### Author    : mohan.vunnam@sifycorp.com                          ###
-### Date      : 24 Aug 2014                                       ###
-### Changes   : WWN No included
-### Version   : 1.5                                                ###
+###             								                   ###
+### Author    :                          						   ###
+### Date      :                                    				   ###
+### Changes   : 
+### Version   :                                                 ###
 ######################################################################
 
 ## Initialize global variables                                     ###
@@ -68,10 +68,10 @@ if [ -d /tmp/ServerDetails ]; then
 echo "Directroy available /var/ServerDetails"
 else
 mkdir /tmp/ServerDetails
-chown sifyadmin:sifyadmin -R /tmp/ServerDetails
+chown admin:admin -R /tmp/ServerDetails
 fi
 
-chown sifyadmin:sifyadmin -R /tmp/ServerDetails
+chown dmin:admin -R /tmp/ServerDetails
 
 ######################################################################
 ### output file                                                    ###
@@ -97,7 +97,7 @@ $ECHO "################################################################" >> $OUT
 ## OS Name 
 $ECHO "OS Name:" >> $OUTFILE
 echo "####################" >> $OUTFILE
-$CAT /etc/redhat-release >> $OUTFILE
+$CAT /etc/os-release >> $OUTFILE
 $ECHO >> $OUTFILE
 
 ## Kernel Version
@@ -535,4 +535,4 @@ $ECHO "### Output has been written in file /tmp/ServerDetails/$IP-ServerDetails-
 
 ##### Remove old files
 find /tmp/ServerDetails -name "*ServerDetails-*.txt" -mtime +6 -exec rm -f {} \;
-chown sifyadmin:sifyadmin -R /tmp/ServerDetails
+chown admin:admin -R /tmp/ServerDetails

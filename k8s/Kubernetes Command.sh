@@ -6,6 +6,10 @@
 If you host grafana under subpath make sure your grafana.ini root_url setting includes subpath. If not using a reverse proxy make sure to set serve_from_sub_path to true.
 
 #############what is kubernetes###########
+##How we can say it is master
+When Rest API is present then is called master node
+##kubeadm
+kubeadm is  the command to bootstrap the cluster or kubeadm is used to build kubernetes cluster.
 #Kubernetes, also known as K8s, is an open-source system for automating deployment, scaling, and management of containerized applications.
 It groups containers that make up an application into logical units for easy management and discovery. K8s is developed by Google.
     • K8 is a Opensource, Container Orchestration Framework/tool.
@@ -910,11 +914,6 @@ $kubectl cp /tmp/foo_dir <some-pod>:/tmp/bar_dir
 $kubectl cp /tmp/foo <some-pod>:/tmp/bar -c <specific-container>
 $kubectl cp /tmp/foo <some-namespace>/<some-pod>:/tmp/bar
 
-
-
-
-
-###########################
 
 
 

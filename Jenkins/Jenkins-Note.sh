@@ -346,6 +346,7 @@ $ docker image tag docker_with_java_git_maven-3.8.5 dhanapal406/jenkins_java_git
 $ docker push dhanapal406/jenkins_java_git_maven-3.8.5
 ->In Pugins we need install Docker Pipeline
 
+###multi stage docker file  to reduce image size
 #$ vim docker-jenkinsfile 
 -------
 pipeline{
@@ -1251,9 +1252,9 @@ pipeline {
 //      def scannerHome = tool 'SonarScanner 4.0';
 //        steps{
 //       withSonarQubeEnv('sonarqube-8.9') { 
-// If you have configured more than one global server connection, you can specify its name
+//      If you have configured more than one global server connection, you can specify its name
 //            sh "${scannerHome}/bin/sonar-scanner"
-          sh "mvn sonar:sonar"
+//          sh "mvn sonar:sonar"
         }
         stage('Test') {
             steps {
@@ -1469,15 +1470,6 @@ $ kubectl set resources deployment tomcat -c = tomcat --limits = cpu = 200m, mem
 $ kubectl top node − It displays CPU/Memory/Storage usage. The top command allows you to see the resource consumption for nodes.
 
 $ kubectl top node [node Name]
-Writing playbooks using YAML, for configure the servers.
-Installing, Configured and management in Ansible Centralized Server and creating the 
-playbooks to support various middleware application servers. 
 
 
-1.jayachgandiran masilamari-1969(53 age)-507586792275
-2.A C venkatesan-1971(51 age )-417252401671
-3.A C kavlyarasan-1984(38 age)-796913445485
-4.Prabhakaran Chandirasekaran-1981(41 age)-295292668239
-5.kishorekumar Senthikumar-1994(28 age)-373240968148
-6.Santhoshkumar thirunanasambandham -1986(36 age )-520550784156
-Phone :+916380712655
+

@@ -14,8 +14,84 @@ host_key_checking=False
 #Note:
 1.command-->we can not excute two or more commands at a time in ansible adhoc commands
 2.shell---->we can excute two or more commands at a time in ansible adhoc commands
+##Mainting the owne configuration  file inventory
+$ ansible --version
+$ mkdir my_ansible_working_directory
+$ cp -rvf /etc/ansible/* ./my_ansible_working_directory
+$ cd my_ansible_working_directory
+$ ll
+$ rm -rf hosts
+Note:-
+I don't want deafult inventory and i my own inventory file that why i removed hosts file.
+$ vim  inventory
+[webserver]
+192.168.1.50
+192.168.1.2
+:wq
+##To excute ansible playbook we need specify inventory path while excuting command
+$ ansible-playbook -i inventory -m ping ---->for playbook
+$ ansible webserver -i inventory    -m service -a "name=httpd stated=restarted"
+Note:-
+-i inventory is we add own configuration inventory that why we use ("-i inventory")
+##change default location of inventory
+$ vim ansible.cfg
+[deafult]
+inventory=./inventory
+:wq
+$ ansible-playbook  -m ping ---->for playbook
+$ ansible webserver     -m service -a "name=httpd stated=restarted"
+Note:-
+Now no need to -i inventory because we add in ansible.cfg for inventory.
 
-####To check the list of hosts server in inventory file
+#############Important modules in Ansible#####################
+
+1 command: This is used to execute linux commands on the remote managed
+nodes.It is the default module of Ansible
+
+2 shell: This is used to execute shell scripts on the remote managed nodes
+  it can execute command related to redirection and piping
+
+3 user: This is used to perform user administartion on the remote servers
+like creating users,assigning home dirs deleting users etc
+
+4 file: Used for creating files/directories on the managed nodes
+
+5 copy: This used to copy files/directories to the managed node
+
+6 fetch: Used to copy files/directories from managed nodes to controller
+
+7 apt: Used to for s/w package management like isntalling,deleting,upgrading
+  etc.It works on Ubuntu,Debain flvours of linux
+
+8 yum: This is similar to apt but it works on Rehat linux,Centos,Fedora etc
+  flavours of Linux
+
+9 service: Used to start stop or restart services on the managed nodes
+
+10 uri: Used to check if a remote url is reachable or not
+
+11 git: Used for perfroming git version controlling on the managed nodes
+
+12 get_url: Used for downloading files from remote servers into the managed nodes
+
+13 stat: Used to capture detailed info about files/directories on the managed nodes
+
+14 debug: Used to display the output in JSON file format
+
+15 include: USed to call child playbooks from a parent playbook
+
+16 replace: Used to replace specific portions of the text in a file
+
+17 docker_container: Used for container management on the managed nodes
+
+18 docker_image: Used to run command related to docker images
+
+19  docker_login: Used to login into the docker registry
+
+20 docker_swarm: Used to setup of docker swarm architecture
+
+
+######To check the list of hosts server in inventory file##########
 $ ansible all --lists-hosts
 ##To check all modules
 $ ansible-doc -l | grep less
@@ -97,6 +173,7 @@ $ vim register.yml
     - name: create the file
       shell: hostname
       register: host_name
+    
     - name: create the file
       shell: free -h
       register: ram_info 
@@ -124,13 +201,14 @@ $ vim docker_repo.yml
   - name: Installing Docker
     command: yum install docker-ce --nobest -y
 :wq
-2.Installing Nginx
+2.  Installing Nginx
 $ vim nginx.yml
 - name: Install Nginx web server
   apt:
     name: nginx
     state: latest
-  notify: Restart Nginx
+  notify: 
+   - Restart Nginx
   tags:
     - nginx
 
@@ -184,21 +262,20 @@ $ vim apache.ynl
   connection: ssh
   gather_facts: yes
   tasks:
-  --- 
-- 
-  enabled: true
-  handlers: 
-    - 
-      name: "startservice (notify and handler name should match)"
-  name: "Installing Apache"
-  notify: 
-    - "start service"
-  service: 
-    name: httpd
-  state: restarted
-  yum: 
-    name: httpd
-    state: latest
+   
+    - name: "Installing Apache"
+      yum: 
+        name: httpd
+      state: latest
+
+    - name: "startservice (notify and handler name should match)"
+      service: 
+        name: httpd
+      state: restarted
+      enabled: true
+      handlers:
+      notify: 
+         - "start service"
 :wq
  
   root@localhost:/ansible-ws/roles/haproxy/vars
@@ -213,3 +290,27 @@ software: "haproxy" port: 8080
 ===============================
 FYI for you information
 poa plan of action
+
+
+- name: install {{ package_name}}  package
+  yum: name={{ package_name }} state=present
+
+- name: starting the {{ starting_service }} from ansible
+  service:
+   name: "{{ service_name }}"
+   state: "{{ starting_service }}"
+   
+- name: copy the content to {{ index_html}}
+  copy:
+   content: 'the is nginx new site create with ansible'
+   dest: "{{ index_html}}"
+   notify:
+    - Restart "{{ service_name}}""
+
+- name: restarting the {{ starting_service }} from ansible
+  service:
+   name: "{{ service_name }}"
+   state: "{{ restarting_service }}"
+
+  
+
