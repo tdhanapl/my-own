@@ -14,9 +14,6 @@ A trusted domain is a single domain that enables user access to another domain, 
 #############samba configuration#
 https://www.firewall.cx/linux-knowledgebase-tutorials/system-and-network-services/848-linux-services-samba.html
 
-AD passwords= Se4woLG*5BLO-oC*8Lz=fCp47eKCbwuw
-
-
 
 
 timedatectl set-time 14:12:00
