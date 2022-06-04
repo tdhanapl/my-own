@@ -1,0 +1,11 @@
+- name: create file with varibale
+  hosts: all
+  vars:
+   creating_directory:
+    - /home/dhanapal
+    - /home/sai
+
+    - name: creating directory with variable
+      file:
+       path: "{{ creating_directory }}"
+       state: directory

@@ -1,0 +1,26 @@
+- name: creating directory file  and loop 
+  hosts: webserver
+  become: true
+  tasks:
+
+    - name: creating a directory
+      file:
+       path: "/opt/{{ item }}"
+       state: directory
+     # with_item is now depricated and now we are using loop  in place of with_item
+      loop:                                                    
+        - folder111
+        - folder211
+        - folder311
+##To create a file
+    - name: create the file
+      file:
+       path: "/home/{{ item }}"
+       state: touch
+       mode: 755
+      loop:
+       - ansiblefile1
+       - folder21
+       - folder31
+      #owner: dhana
+      #group: dhana
