@@ -210,5 +210,5 @@ $ git  push origin -d v1.0
 #To delete the all  tags of remote repository
 $ git push origin -d $(git tag -l)
 
-###########add by dhanapal
+
  
