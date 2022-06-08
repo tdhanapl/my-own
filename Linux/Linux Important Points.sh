@@ -9,7 +9,7 @@ OR
 # systemctl --type=service --state=stop
 # systemctl --type=service --state=disabled
 OR
-# systemctl --type=service
+# systemctl --type=service 
 OR
 #systemctl list-unit-files
 
@@ -19,7 +19,7 @@ echo `hostname -i | awk '{print $NF}'`" "`hostname`" "`hostname -s`  >> /etc/hos
 ##################################Fstab configurtion Fromat########################################################
 LABEL=cloudimg-rootfs   		/        ext4   			defaults,discard       0	 		1
 device name 		    mountpoint    file system type		permission            backup  		fsck(File System Consistency Check)
-#################How to Change Runlevels (targets) in SystemD##############################
+#################How to Change Runlevels (targets) in Systemd##############################
 
 Systemd is a modern init system for Linux: a system and service manager which is compatible with the popular SysV init system and LSB init scripts. It was intended to overcome the shortcomings of SysV init as explained in the following article.
 
@@ -69,11 +69,11 @@ p   -> proces id file
 
 ##############################Find old 90 or 30 days and remove that files#####################
 find /var/log -type f -mtime +30 -exec ls -lrth {} \;  ##f--means file 
-find /var/log -type f -mtime +30 -exec rem -rvf {} \;     ## +30--means more than 90 days
+find /var/log -type f -mtime +30 -exec rem -rvf {} \;     ## +30--means more than 30 days
 find /var/log -type f -mtime +7 -exec rem -rvf  {} \;
 find /var/log -type d -mtime +90 -exec ls -lrth {} \;  ###d--means directory,  +90--means more than 90 days
 find /var/log -type d -mtime +30 -exec ls -rv {} \;
-find /var/dtpdev/tmp/ -type f -mtime +15 -exec rm -f {} +
+find /var/dtpdev/tmp/ -type f -mtime +15 -exec r3m -f {} +
 find /path/to/files/ -type f -name *.php  -mtime +30 -exec rm {} \;
 #####################find more +100m size #######################
 find /var/ -type f -size +100M -exec ls -ltr {} \;
@@ -156,8 +156,8 @@ $ renice -10 16995
   from -20 to +20 
 ################################Find Top Running Processes by Highest Memory and CPU Usage in Linux##################
 #Find Top Running Processes by Highest Memory and CPU Usage in Linux
- $ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head
- $ps -eo pid,ppid,%cpu,%mem,cmd --sort=-%mem | head
+ $ ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head
+ $ ps -eo pid,ppid,%cpu,%mem,cmd --sort=-%mem | head
 ############Find Top 15 Processes by Memory Usage with ‘top’ in Batch Mode######
 $top -b -o +%MEM | head -n 22
 $top -b -o +%MEM | head -n 22 > topreport.txt
@@ -402,7 +402,7 @@ ls /sys/class/scsi_host/host | while read host ; do echo "---" > /sys/class/scsi
 $nmap -A <remote-sever-ip>
 $nmap -A 192.168.1.5
 #############echo "---" > /sys/class/scsi_host/host{x}/scan
-# "---" {-=channel,-=scsi id,-=lun} In the above command means CTL["channel on HBA" "Target Scsi id" "LUN"] 
+#"---" {-=channel,-=scsi id,-=lun} In the above command means CTL["channel on HBA" "Target Scsi id" "LUN"] 
 # Vertify the new lun [ to check the new assaign to the system with size]
 pvs -a -o +dev_size
 systool -c fc_host | grep "port"

@@ -345,3 +345,21 @@ pipeline{
         
     }
 }
+
+##############################gathering pipeline snytax from github######
+stage('Upload to AWS-S3') {
+            steps {
+                withAWS(region:'us-east-2',credentials:'AWS Credentials') {
+                    s3Upload(pathStyleAccessEnabled:true, payloadSigningEnabled: true, file:'index.html', bucket:'static-jenkins-pipelines-on-aws')
+                }
+            }
+--------------------
+
+post{
+    always{
+        junit 'build/test-results/test/TEST-*.xml' or  junit **/target/*-reports/TEST-*.xml' 
+        jacoco execPattern: 'build/jacoco/test.exec'
+
+    }
+}
+------

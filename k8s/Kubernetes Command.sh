@@ -4,7 +4,7 @@
  https://medium.com/@ZiXianZeroX/setting-up-an-on-premise-kubernetes-cluster-from-scratch-8e3a6b415387
  https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
 If you host grafana under subpath make sure your grafana.ini root_url setting includes subpath. If not using a reverse proxy make sure to set serve_from_sub_path to true.
-
+./forticlientsslvpn_cli --server 121.242.87.100:10443 --vpnuser test 
 #############what is kubernetes###########
 ##How we can say it is master
 When Rest API is present then is called master node
@@ -200,7 +200,7 @@ $kubectl config current-context
 #kubectl config view -To check current configuration kubeconfig settings or a specified kubeconfig file.
 Examples:
   # Show merged kubeconfig settings.
-  $kubectl config view
+  $ kubectl config view
   
   # Show merged kubeconfig settings and raw certificate data.
   $kubectl config view --raw

@@ -288,8 +288,6 @@ software: "haproxy" port: 8080
 [root@localhost vars]#
 
 ===============================
-FYI for you information
-poa plan of action
 
 
 - name: install {{ package_name}}  package
