@@ -459,7 +459,7 @@ Hex code (type L to list all codes): 8e
 Changed type of partition 'Linux' to 'Linux LVM'.
 Command (m for help): wq
 #partprobe # It update kernel without restart after partition creation 
-$  lsblk
+$ lsblk
 ## making   swap disk partition
 Amount of RAM in the system	Recommended swap space	Recommended swap space if allowing for hibernation
 ⩽ 2 GB		2 times the amount of RAM	        	3 times the amount of RAM
