@@ -1,0 +1,48 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<com.cloudbees.hudson.plugins.folder.Folder plugin="cloudbees-folder@6.722.v8165b_a_cf25e9">
+  <actions/>
+  <description></description>
+  <properties>
+    <org.jenkinsci.plugins.docker.workflow.declarative.FolderConfig plugin="docker-workflow@1.28">
+      <dockerLabel></dockerLabel>
+      <registry plugin="docker-commons@1.19"/>
+    </org.jenkinsci.plugins.docker.workflow.declarative.FolderConfig>
+    <org.csanchez.jenkins.plugins.kubernetes.KubernetesFolderProperty plugin="kubernetes@3580.v78271e5631dc">
+      <permittedClouds/>
+    </org.csanchez.jenkins.plugins.kubernetes.KubernetesFolderProperty>
+    <com.cloudbees.hudson.plugins.folder.properties.FolderCredentialsProvider_-FolderCredentialsProperty>
+      <domainCredentialsMap class="hudson.util.CopyOnWriteMap$Hash">
+        <entry>
+          <com.cloudbees.plugins.credentials.domains.Domain plugin="credentials@1126.ve05618c41e62">
+            <specifications/>
+          </com.cloudbees.plugins.credentials.domains.Domain>
+          <java.util.concurrent.CopyOnWriteArrayList>
+            <com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey plugin="ssh-credentials@277.v95c2fec1c047">
+              <id>sshagent-scp</id>
+              <description>sshagent-scp</description>
+              <username>ec2-user</username>
+              <usernameSecret>true</usernameSecret>
+              <privateKeySource class="com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey$DirectEntryPrivateKeySource">
+                <privateKey>{AQAAABAAAApAebe8gIrsSizuOkK7M0QVbp9bsxE1lkLzDmTwUs7mxnwajHYbeZWbK9r5iNpTYmYwF4rvZXfaN7Cb8mIy7dsKayM+C2BKglCbETnJE+zqELwc0vMNarmCB9DwqfZQhxpWcnb4rQsE5TyigqrWgaiofs++iyPDp+22XRP3bvzpbmOPhVMjoPT1rohcok6QaPEy5hFRu+q0wRcsMuC1n+oJPVdL5U6Uhp6k5cAqLimPNPfwq9Tj6ht1uF7vk7xoBQOCKBH4v/ZrdGV9zR17TTrcw0frQRNrQOF5+QA7AV9z/RcOXMdwpo/KOZvP43xuwnKvhzAn/zGltpjLuyyiPt3syhTWa0AGQ/EP1OXuPTlsNy2aClbN8nkdD8Ff4ZNi6nqtLab2gz4h+g9pV9QNC6Sxw/J/XqOm9i74PvjOW+AYA8B2pSGwM0yAkSFfbAkgIT7/nwszfmSdf05sgeBm+4w0SjQ+ZfwWcG2JtQDN+T2Yf+fb5XpbP6lV4L+FvSIBl3GK9Q/xJCd/fYS9elVJj3BdaQrgcZ5ZmsQN4SnEKd7WxdWCWVY3gs+4U2kIRSy5ITrJpNZw+YzzeruisWu8XxbxyURz5NwSAXxkcavQuag2Leos5bJMbFnyhIDJaNXzQRgtJsZRs534yMgXSHLDuhr1SI0TGuxlxLAihxW3LJf4hzdnLUUxOPR0O1bLdO9YQHR1eHAKcQOtOvLMVrTj+JGqTzzWhyE3k4mYz9z7Oxe6tWCWYlJcCYTWhJeQbDCCxHV6U829T7u/OCWu7u5kcl3YGaE7Bu5zaNppHNA8qUAMPBaWY+MOF/EvdK5HXX5t1d5oMFQN6LsnaLoJUcp2D2y0wBi9bW2/uN9D4a52O/p5CwKZ4P9gxhIWO3g9mNusF0KvDfgjXtutFHUVtl/zk0wWisgpdgD2UbABjrBySYOG8Jtnl2LMwPcWrRGqkbO2I0zT3swzfyK2VLk775k5RuYN1MQfaRaNdG+bEPepAJWxrGQ55CaMynx4TCuuuuyMiIeW7n9mteXO24rj/OC9nh24H2lKFEuyLS1ZcGCRZwyTAiG2m5uJ6VZsH5IGJ1rfulF5MNrqBtWK8a6+nVqb2oqbbC/H3YRO1e+imIPgWR2R+h1tH+19cgsWHthAupfcndiPYA/KLXtTHHLEGbYIjhTHj7+JqZuAhlEWm/FnEIyJBGZbt9gL/raBBpE3w7srkLnWjZxFbUdeKeLb1l1J+wGB6srUD2UiWCHG5Qyhc7HGyaVS5cBbfTzyV9fzekmPYwNNe+tp7EKrpcBnBtN1W9tzWGzY4iH1CoJDDebdzVg4t4G8m/8l3WmST0x76OtZWRuNOoUpvanuswfxJmyBqbEMcjMg6qIYl/u84WeCSkj2IiM5Y7FVyawefovQI7MIff401gVIMt16Yu9rX2ASAnzHoGSAaDij4iYMpEvkOPbdz7kAgVAbjjm41XxOaQg5h8O2Nkjtbjcs4JzIRybjTYu2bX804HHQJP2vPc9PAxMYhgLqpuOM7dMYgF9C1aXEgrodIAxEQs/dwUKCrD+FPTV86V+ZSl8lsPx6SgGUOZeF8oASdrYSSnatg1oVqOQlvBrxwplnE9lojdrGd3TVaRIVsVmdlVUw3DtBxQ2V7bDRpIbwA/qJmq4rqsgD3gC3J/UHqzcdFGtwVutm7SXa7MQ3ShNSfJHl3lROmyAEs7MCGYt3iRVQjYi9Wkkg9uXKdy+Jz9Ynz3qHUJuNlolScOgybq2HdY9Pqrz1m+shmLkJjxO6PwAz3/JKWQmvgfGKSeAQOb8ro54nqUxQor950OLbrdOj7kOoEiPj4UB4dfbWEMZacskFD6h4ED8ZUk+rabNjXPlhA2BctaESWwDKPedief/MRhrjVgGF68LcBBoVuWYV/8wkTJGDZfMj2zW5vimUIK05gYXDXHzVD8M5OBDgvtITy7Eq3/DX4U2YWEgcEdhfBEa1E3dd4InoK9lT5oyHSo1TJZMqH460kbro+Rfl0ew+BmWbtPcBtiiplUUJtj+1XOrYQCf04fplZiofS5MNcDb4pwfd58/swVNiG4GBEnvzIpnHmcdXOmM3VWKHrMrEzXZrq5xDODoL6G26pwGw+SkpfmzQRnmKv81Oaq2/QaSj+H7u9kKUc1qRpwZI2K92fa9QPzJQ3vI+qSSA5omIpUAoLfSSA2iuggSCiKCVh7CEnHbqtViKCIiTPlIUZGxsgKJJI4tnyobKKyCa6IBwtRr+xmLwJVKXkl/6mzQ6FI0JjrIOYgQKGRm8tvynDHNoHctS4NlfcCyS/hymljzL9yw8hm9zfeotqEpBAMrs0Ob2MCLCH1ju8t4L8R84xfzFuA1BpNl+rnB1JNHPODZw+TXkr/MgSw5PLfdqVXF92ok7G20Fy5KHkVB1JP4vcztY3jsXA3behnfQM9+FZ7JcFdf63oJ6TTxhCJfiOZum3izWRryLkTRdi9tE8wI+Vj3Mvf3f7XAdqbIC7nOulYBQn8aHBeOIl8oqiEgNT76YjL5FxICPg2tr4eLzQp2dZhz6OdW2ZIZeDgbWxBhPDLHwBUZXsAci/VwoMIloSjsj8MouVTwfLikxrHht3wgNc15gAiCyhtksn/OVicXdtLHyp3c945V//f61BzOJa6elYYQ3mgm0WTgnM71/C4F7DUy0Om+imoHLVzZWULTxOH/mEFtVZR2NTRiDYtMe2KeTbs8wDB1+cavozTPflOR/S7BtDajlMaExD/qP0JSGNKWbEq/eS9W/0m9o8trGejpXtqqhHglyeYJ8Uq5XzTBnv/ydpvYd5w1WZqI9a5xYyVlU1fBXeYcspIzA37rgslWuS1WcdOtnY8ahAeOu3XjuQYNZqenKhU9LCJtK6vTjleYC/Q5lwzijtY0TzVVF9MZkQ/WvSzm46kuZGOHh01CjASATC8Ks1rxDARlbs2I86HYSACbUe6ClD7UT4uJ6DyUQGijEgDMB5+Nsi1S5vo3D3kFaAWZjKWuNkkKV9qekI47UVEJs8AMwWuj3KLsRb+Hnz+M+B/bX7lP87Cs1R/la2hqipDzE5bclswtoOyr9qLpSdypO+9S3wJeOQ1HRLgRR7Am+o025Q4qYvai8N/LMbWF/CqqiJ40KiMMs6xnAuNqVngZemDL+4BcXHtvwPP1dC5IbJK35kqE9URoi8tZuKOmBxS7baz0Xklz8o3aVkIX4GjE7LHgQ/YZWHc/NsdNpSduvOAhnJ0H33vynbBAHLM+1/dHWag7Su1+m7gnl+9nusZPMfCDmBwonYG2r8UCBSuHHDwUsVp6Rql8h7PTSU82afUo0lxvGzzcQojxxltg8znRMWfzj6Oh78qlcZDUWqIOlzhbC7aQkcw6HgVUAL+sn0op8s1JTZY3Xn3WeTsQgyCWfGhd5+3xURwqqU+q2OcJqcQGN/bFWLE040LhlVKV/0e/oX+saxmVVj+XmTjmhtAonYhRgDCcockoAq4JkoBNmIu7U/08d5xrIWruw8MrnziRMY2EnJlO4OAM2D4uq}</privateKey>
+              </privateKeySource>
+            </com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey>
+          </java.util.concurrent.CopyOnWriteArrayList>
+        </entry>
+      </domainCredentialsMap>
+    </com.cloudbees.hudson.plugins.folder.properties.FolderCredentialsProvider_-FolderCredentialsProperty>
+  </properties>
+  <folderViews class="com.cloudbees.hudson.plugins.folder.views.DefaultFolderViewHolder">
+    <views>
+      <hudson.model.AllView>
+        <owner class="com.cloudbees.hudson.plugins.folder.Folder" reference="../../../.."/>
+        <name>All</name>
+        <filterExecutors>false</filterExecutors>
+        <filterQueue>false</filterQueue>
+        <properties class="hudson.model.View$PropertyList"/>
+      </hudson.model.AllView>
+    </views>
+    <tabBar class="hudson.views.DefaultViewsTabBar"/>
+  </folderViews>
+  <healthMetrics/>
+  <icon class="com.cloudbees.hudson.plugins.folder.icons.StockFolderIcon"/>
+</com.cloudbees.hudson.plugins.folder.Folder>
