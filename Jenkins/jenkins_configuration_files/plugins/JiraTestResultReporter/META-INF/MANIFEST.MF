@@ -1,0 +1,30 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+Built-By: runner
+Build-Jdk: 1.8.0_322
+Extension-Name: JiraTestResultReporter
+Specification-Title: Creates issues in Jira for failed tests and/or li
+ nk them directly in Jenkins.
+Implementation-Title: JiraTestResultReporter
+Implementation-Version: 169.v6073bb438046
+Plugin-Class: org.jenkinsci.plugins.JiraTestResultReporter.JiraTestRes
+ ultReporterPlugin
+Group-Id: org.jenkins-ci.plugins
+Short-Name: JiraTestResultReporter
+Long-Name: Jenkins JiraTestResultReporter plugin
+Url: https://github.com/jenkinsci/JiraTestResultReporter-plugin
+Compatible-Since-Version: 2.0.0
+Minimum-Java-Version: 1.8
+Plugin-Version: 169.v6073bb438046
+Hudson-Version: 2.321
+Jenkins-Version: 2.321
+Plugin-Dependencies: apache-httpcomponents-client-4-api:4.5.13-1.0,jun
+ it:1.53,matrix-project:1.19
+Plugin-Developers: Andrei Tuicu:andreituicu:andrei.tuicu@gmail.com,Cat
+ alin Luta:catalinluta:luta.catalin@gmail.com,Stephan Esch:maplesteve:
+Plugin-License-Name: Apache License
+Plugin-License-Url: http://www.apache.org/licenses/LICENSE-2.0
+Plugin-ScmUrl: https://github.com/jenkinsci/JiraTestResultReporter-plu
+ gin
+
