@@ -1,10 +1,13 @@
 ####################################################Kubernetes command#############################
- export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
- https://www.padok.fr/en/blog/kubeadm-kubernetes-cluster
- https://medium.com/@ZiXianZeroX/setting-up-an-on-premise-kubernetes-cluster-from-scratch-8e3a6b415387
- https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
+##current version  of SMAX cluster=v1.18
+
+export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+https://www.padok.fr/en/blog/kubeadm-kubernetes-cluster
+https://medium.com/@ZiXianZeroX/setting-up-an-on-premise-kubernetes-cluster-from-scratch-8e3a6b415387
+https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
 If you host grafana under subpath make sure your grafana.ini root_url setting includes subpath. If not using a reverse proxy make sure to set serve_from_sub_path to true.
 ./forticlientsslvpn_cli --server 121.242.87.100:10443 --vpnuser test 
+
 #############what is kubernetes###########
 ##How we can say it is master
 When Rest API is present then is called master node
@@ -31,12 +34,12 @@ It is Frontend  of cluster. we using  for rest operation and connect to the api 
 #3.etcd:
 It is key value store or database.It will keep all current state.
 #4.kube scheduler:
-It is the one which schedules pods on spefic node the pods want to run.It will schedule thee pods based on label, taints, toleration.
+It is the one which schedules pods on spefic node the pods want to run.It will schedule the pods based on label, taints, toleration.
 #Worker node major service 
 #1.kubelet:
 It the one will passes the request  to container engine.
 #2.kube-proxy:
-It will use Ip tables to provide a interface to connceting kubernetres components.
+It will use Ip tables to provide a interface to connceting kubernetes components.
 #3.conatiner run time:
 It take care of acusally running containers.
 
