@@ -1,6 +1,10 @@
 ---
-# vars file for lvm-role.yml
-raw_disks: sdb1
+#vars file for lvm-role.yml
+hard_disk_name:
+ - sdb
+ - sbc
+raw_disks: md0
+partition_disks: md01
 vg_name: vg_root
 lv_name: lv_root
 require_lv_size: 10GB

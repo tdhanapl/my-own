@@ -1,14 +1,18 @@
-- name: Create a new primary partition for LVM
-  community.general.parted:
-    device: /dev/sdb
-    number: 1
-    flags: [ lvm ]
-    state: present
-    #part_start: 1GiB
-    #part_end: 10GiB or "100%" 
+#Partitioning Disk using Fdisk
+- name: partition new disk
+  shell: echo -e "n\np\n1\n\n\nt\n8e\nw" | sudo fdisk "/dev/{{ raw_disks }}"
+
+#“n\ = new partition, new line
+#np\ = primary, new line
+#n1\ = 1 st primary, 1 and new line
+#n\ = new line
+#n\ = new line
+#nt\ = t and new line
+#n8e\ = LVM type 8e and new line
+#nw” = write and exit, new line
+#| = forwarding all inputs to fdisk command on a disk.
 
 - name: Format the disk 
   filesystem:
     fs_type: ext4
-    dev: "/dev/{{ raw_disks }}"	
-
+    dev: "/dev/{{ partition_disks }}"

@@ -1,6 +1,6 @@
 - name: Create the "{{ vg_name }}" Volume group.
       lvg:
-        pvs: "/dev/{{ raw_disks }}"
+        pvs: "/dev/{{ partition_disks }}"
         vg: "{{ vg_name }}"
         #pesize: "8"
         #pv_options: '-Z y'
