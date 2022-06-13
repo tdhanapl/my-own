@@ -1,0 +1,24 @@
+- name: create a file with content using varibles
+  hosts: all 
+  become: true
+  vars:
+   my_content: "this file is created using varible concept\n"
+  tasks:
+    
+   - name: copy the content into file
+     copy:
+       content: "{{ my_content }}"       
+       dest: \tmp\var_file1.txt
+    
+   - name: creating file with content 
+     copy:
+      content: | #pipe is used for add more line content at time
+               this is first line
+               this is second line
+               this is third line       
+      dest: "/tmp/{{ item }}"
+     loop:
+       - content1
+       - content2
+
+              
