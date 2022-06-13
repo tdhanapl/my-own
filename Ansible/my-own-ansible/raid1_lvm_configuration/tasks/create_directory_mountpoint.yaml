@@ -1,0 +1,5 @@
+- name: creating a directory for mount of lvm filesystem
+  file:
+    path: "{{ mount_point }}"
+    state: directory
+    mode: '0755'
