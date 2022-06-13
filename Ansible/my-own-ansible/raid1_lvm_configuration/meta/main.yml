@@ -1,6 +1,6 @@
 galaxy_info:
-  author: dhanapal
-  description: lvm creation using ansible
+  author: your name
+  description: your role description
   company: your company (optional)
 
   # If the issue tracker for your role is not on github, uncomment the

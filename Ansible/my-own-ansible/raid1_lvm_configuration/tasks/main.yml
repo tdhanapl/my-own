@@ -1,0 +1,6 @@
+---
+# tasks file for raid1_lvm_configuration
+- import_tasks: raid1_configuration.yaml
+- import_tasks: create_directory_mountpoint.yaml
+- import_tasks: new_partition.yml
+- import_tasks: lvm_creation.yml

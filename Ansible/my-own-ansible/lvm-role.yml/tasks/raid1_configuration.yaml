@@ -1,5 +1,0 @@
-- name: creating Raid1 level configuration
-  shell: |
-    mdadm --create /dev/{{ raw_disks }} --level=1 --raid-devices=2 /dev/{{ hard_disk_name }} /dev/{{ hard_disk_name }}
-    mdam -D /dev/{{ raw_disks }}
-    mke2fs -t ext4 -j /dev/{{ raw_disks }}

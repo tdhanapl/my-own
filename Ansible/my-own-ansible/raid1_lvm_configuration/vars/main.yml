@@ -1,5 +1,5 @@
 ---
-#vars file for lvm-role.yml
+# vars file for raid1_lvm_configuration
 hard_disk_name:
  - sdb
  - sbc
@@ -9,4 +9,4 @@ vg_name: vg_root
 lv_name: lv_root
 require_lv_size: 10GB
 fs: ext4
-mount_point: /securonix		
+mount_point: /securonix         
