@@ -13,16 +13,15 @@ You may ask how I’m using the fdisk to create a partition. It simple by using 
 # /bin/echo -e "n\np\n1\n\n\nt\n8e\nw" | sudo fdisk "{{ disk_name }}"
 new line represent hereby Pressing an “Enter Key”.
 
-“n\ = new partition, new line
-np\ = primary, new line
-n1\ = 1 st primary, 1 and new line
-n\ = new line
-n\ = new line
-nt\ = t and new line
-n8e\ = LVM type 8e and new line
-nw” = write and exit, new line
-
-“|” = forwarding all inputs to fdisk command on a disk.
+#“n\ = new partition, new line
+#np\ = primary, new line
+#n1\ = 1 st primary, 1 and new line
+#n\ = new line
+#n\ = new line
+#nt\ = t and new line
+#n8e\ = LVM type 8e and new line
+#nw” = write and exit, new line
+#“|” = forwarding all inputs to fdisk command on a disk.
 ================================================================
 ---
 # defaults file for ansible-mdadm
@@ -107,3 +106,11 @@ mdadm_arrays:
         fstype: "{{ fs }}"
         #opts: rw,nosuid,noexec
         state: mounted
+============
+vars:
+raw_disks: sdb1
+vg_name: vg_root
+lv_name: lv_root
+require_lv_size: 10GB
+fs: ext4
+mount_point: /securonix		
