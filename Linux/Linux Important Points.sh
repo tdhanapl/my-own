@@ -61,12 +61,21 @@ b   -> blocked file
 p   -> proces id file
 .   -> selinux
 +   -> ACL
-############################Disk identification#####################################################################
+############################Disk identification#########################################################
 #fdisk -l
 /dev/sda -> SCSI hard disk
 /dev/hda -> IDE hard disk 
 /dev/vda -> Virtual hard disk
-
+##To check openport ruuning in the server##################
+$netstat -nultp 
+	--n=
+	--t=tcp
+	--u=udp
+	--l=listing 
+	--p=pid
+###################command to  delete 	empty line in a fine############
+$ sed -i '/^$/d' <filename>
+$ sed -i  '/^$/d' file.txt
 ##############################Find old 90 or 30 days and remove that files#####################
 find /var/log -type f -mtime +30 -exec ls -lrth {} \;  ##f--means file 
 find /var/log -type f -mtime +30 -exec rem -rvf {} \;     ## +30--means more than 30 days
@@ -77,6 +86,8 @@ find /var/dtpdev/tmp/ -type f -mtime +15 -exec r3m -f {} +
 find /path/to/files/ -type f -name *.php  -mtime +30 -exec rm {} \;
 #####################find more +100m size #######################
 find /var/ -type f -size +100M -exec ls -ltr {} \;
+####################find empty file####################################################
+find / -empty
 #######################################realtime issue###################################
 1#application is not working and kubernetes pod unable start because of security team blocked /bin/get_secret defaultdb_user_password then we asked va 
 team unblocked the path then pod start to run fine then application running fine.
@@ -747,7 +758,7 @@ Password- harshsffdd677
 
 8.#man yum-security to know about command
 
-JB545235680in
+
 
 ###########################How to update the subscription#########################
 ##To check to subscription-manager or not 

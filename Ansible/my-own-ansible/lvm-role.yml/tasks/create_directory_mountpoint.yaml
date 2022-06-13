@@ -1,0 +1,4 @@
+- name: create a directory for mount point
+  file:
+    path: /securonix
+    state: directory

@@ -1,14 +1,14 @@
 ####################################################Kubernetes command#############################
 ##current version  of SMAX cluster=v1.18
-
 export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+
 https://www.padok.fr/en/blog/kubeadm-kubernetes-cluster
 https://medium.com/@ZiXianZeroX/setting-up-an-on-premise-kubernetes-cluster-from-scratch-8e3a6b415387
 https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
 If you host grafana under subpath make sure your grafana.ini root_url setting includes subpath. If not using a reverse proxy make sure to set serve_from_sub_path to true.
 ./forticlientsslvpn_cli --server 121.242.87.100:10443 --vpnuser test 
 
-#############what is kubernetes###########
+######################what is kubernetes###########
 ##How we can say it is master
 When Rest API is present then is called master node
 ##kubeadm
@@ -21,7 +21,7 @@ Need of Container Orchestration tool:
     • Usage of microservices increased the possibility of container technologies. Because containerization is the best way to host the small, independent services known as micro-services.
     • Now the raise of containers usage due to the micro-service architecture resulted that each application is depends on hundreds/thousands of containers.
     • Managing these high amount of containers in different environments using script/self made tools is not easy anymore. 
-	  -This actually cause the real need for the orchestration tool that manages the containers of the application. Managing here means giving High Availability, Scalability and Disaster recovery to the applications.
+	-This actually cause the real need for the orchestration tool that manages the containers of the application. Managing here means giving High Availability, Scalability and Disaster recovery to the applications.
 Here comes Kubernetes. Now, lets learn the basic components of K8s.
 #Kubernetes Components:
 #Pods:
@@ -121,7 +121,7 @@ DESCRIPTION:
      values of container.securityContext take precedence over field values of
      PodSecurityContext.
 2.$jobs:
-     #To run the pod for specific time and stop the pod or certain time only pods will run
+#To run the pod for specific time and stop the pod or certain time only pods will run
 $kubectl explain  jobs
 KIND:     Job
 VERSION:  batch/v1
@@ -165,6 +165,7 @@ $labels:
 8.$readinessprobe:
 It will check  serverice or something is availabe or not in file before  creating a pod
 9.$livenessprobe:
+
 1.$Command: newline-separated commands which are executed inside the container. If the return value is 0, it is considered to be healthy.
 2.$Http: which will execute a HTTP GET operation against a URL. If the request returns a status code between 200 and 399 inclusive it is considered healthy.
 3.$TCP: Socket, which will attempt to establish a connection against a TCP socket. If the connection can be established, it is considered healthy.

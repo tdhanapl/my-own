@@ -1,2 +1,5 @@
 ---
 # tasks file for lvm-role.yml
+- import_tasks: create_directory_mountpoint.yaml 
+- import_tasks: new_partition.yml
+- import_tasks: lvm_creation.yml
