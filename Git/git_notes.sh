@@ -26,10 +26,6 @@ Types of VCS
 																		 |
 																		hot-fix (it is just patch  to production release)	
 
-
-
-
-
 #########git command####
 #To check git vsersion
 $ git --version
@@ -51,11 +47,11 @@ $ git config --list
 $ mkdir test-git
 $ cd test-git
 $ git init .
-	--we need enter that particular folder then initalize it.
+	-- we need enter that particular folder then initalize it.
 
 ##How to know current directory is repository or not
 #go that folder then ll -al
-	--here dispaly .git folder
+	-- here dispaly .git folder
 
 ##To check current branch 
 $ git branch
@@ -65,7 +61,12 @@ $ git remote -v
 #To check current status od repository
 $ git status
 	--here dispaly file in untrack
-
+##How clone only single branch from remote repository
+$ git clone -b <branch_name> --single-branch <git_url>
+$ git clone -b main --single-branch https://github.com/dhanapal703278/tomcat_maven_app_source_code_dhana.git
+##How clone only single branch and only the latest commit from remote repository
+$ git clone -b <branch_name> --single-branch --depth 1 <git_url>
+$ git clone -b main --single-branch --depth 1 https://github.com/dhanapal703278/tomcat_maven_app_source_code_dhana.git
 ##To commit file from working area to staging area or index area 
 $ git add * or .
 	--it commit all file to index area
@@ -191,9 +192,10 @@ Note:-After this it delete current modified in working directory of file.
 
 ##change or revert  from staging/index to  working directory  area of file.
 $ git restore --staged file1.txt
+	or 
+$ git rm --cached  file1.txt
 Note:-Perviously it is in staging/index area after using above command it comes to working directory.
 	  from here if you want Discard the change(currently it working directory) then you can do with this command "git restore 	<filename>"	
-	  
 
 ##revert the chanage of files from local repository to staging area(reset ---soft)
 If one file in local repository you want to that file from  local repository to staging area then use this command.
@@ -262,3 +264,29 @@ $ git stash save "add new file"
 #To check stash  file list
 $ git stash list
 $ git stash apply stash@{0}
+
+===============================
+1. sonarqube (source code anysis) by using rule that giving 
+2. build
+3. nexus
+4. build docker image and push nexus
+5. kubernetes
+-------------------
+1. git webhook
+2. git runner
+3. master
+    |___________
+	            |
+	           test
+4. jenkins
+   test   -  sonar
+   build  -  maven
+   elk    -   
+   docker -  jboss
+
+
+ansible push mechanism:  
+   
+    
+
+ 

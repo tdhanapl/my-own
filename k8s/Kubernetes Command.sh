@@ -8,7 +8,7 @@ https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-ku
 If you host grafana under subpath make sure your grafana.ini root_url setting includes subpath. If not using a reverse proxy make sure to set serve_from_sub_path to true.
 ./forticlientsslvpn_cli --server 121.242.87.100:10443 --vpnuser test 
 
-######################what is kubernetes###########
+######################what is kubernetes######################
 ##How we can say it is master
 When Rest API is present then is called master node
 ##kubeadm
@@ -169,6 +169,7 @@ It will check  serverice or something is availabe or not in file before  creatin
 1.$Command: newline-separated commands which are executed inside the container. If the return value is 0, it is considered to be healthy.
 2.$Http: which will execute a HTTP GET operation against a URL. If the request returns a status code between 200 and 399 inclusive it is considered healthy.
 3.$TCP: Socket, which will attempt to establish a connection against a TCP socket. If the connection can be established, it is considered healthy.
+
 10.$taints:
 Add a Taint on node to restrict  pods from being scheduled 
 $kubectl taint nodes node1 app=red: NoSchedule
@@ -215,6 +216,7 @@ Examples:
 ###########################kubectl api-versions#####################
 #kubectl api-versions −It prints the supported versions of API on the cluster.
 $ kubectl api-versions
+
 admissionregistration.k8s.io/v1beta1
 apiextensions.k8s.io/v1beta1
 apiregistration.k8s.io/v1beta1

@@ -225,7 +225,7 @@ CMD ["-D", "FOREGROUND"]
 ENTRYPOINT ["/usr/sbin/httpd"]
 :wq
 ################multi stage dockerfile##############
-$ vim Dockerfile
+$ vim Dockerfile-1
 
 # Copies in our code and runs NPM Install
 FROM node:latest as builder
@@ -263,7 +263,8 @@ COPY --from=builder /usr/src/app/dest ./
 COPY --from=builder /usr/src/app/package* ./
 RUN [“npm”, “start”]
 :wq
-
+##build the image
+ $docker build  -t  dhana:v1 -f Dockerfile-1 .
 ##################docker shared voulme################
 sharable Docker volumes
 ============================
@@ -318,3 +319,15 @@ used by c1 and c3 should use the volume used by c2
 
 14 Check if the files are still present
    cd "source_path_from"step12
+   
+   
+================
+WORKDIR /usr/local
+RUN wget http://www-us.apache.org/dist/tomcat/tomcat-9/v9.0.24/bin/apache-tomcat-9.0.24.tar.gz \
+    && tar -xvf apache-tomcat-9.0.24.tar.gz \
+    && mv apache-tomcat-9.0.24 tomcat9 \
+	&& useradd -r tomcat \
+	&& chown -R tomcat:tomcat /usr/local/tomcat9 \
+	&& ls -l /usr/local/tomcat9 
+EXPOSE 8080
+CMD ["catalina.sh" "run"]
