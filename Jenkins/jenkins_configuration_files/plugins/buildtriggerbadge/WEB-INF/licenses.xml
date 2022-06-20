@@ -1,2 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<l:dependencies xmlns:l='licenses' groupId='org.jenkins-ci.plugins' artifactId='buildtriggerbadge' version='251.vdf6ef853f3f5'><l:dependency name='Build Trigger Badge Plugin' groupId='org.jenkins-ci.plugins' artifactId='buildtriggerbadge' version='251.vdf6ef853f3f5' url='https://wiki.jenkins-ci.org/display/JENKINS/Build+Trigger+Badge+Plugin'><l:description>Displays icon(s) representing the cause(s) of a build.</l:description></l:dependency></l:dependencies>

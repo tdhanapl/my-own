@@ -1,2 +1,0 @@
-SSHLauncher{host='10.10.1.173', port=22, credentialsId='docker-node', jvmOptions='', javaPath='', prefixStartSlaveCmd='', suffixStartSlaveCmd='', launchTimeoutSeconds=60, maxNumRetries=10, retryWaitTime=15, sshHostKeyVerificationStrategy=hudson.plugins.sshslaves.verifiers.NonVerifyingKeyVerificationStrategy, tcpNoDelay=true, trackCredentials=true}
-[06/11/22 04:58:08] [SSH] Opening SSH connection to 10.10.1.173:22.
