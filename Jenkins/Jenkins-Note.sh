@@ -13,8 +13,8 @@ https://www.lambdatest.com/blog/use-jenkins-shared-libraries-in-a-jenkins-pipeli
 2.
 ########integarting with jenkins###########
 1. git-> jenkins(git-webhook, git pollscm)
-2. sonarqube->jenkins(we pom.xml in properties tag )
-3. nexus->jenkins(we mention nexus details under dependency nexus repository details)
+2. sonarqube-> jenkins(we pom.xml in properties tag )
+3. nexus-> jenkins(we mention nexus details under dependency nexus repository details)
 ##jenkins requried java version = 1.18
 ##jenkins version=2.160
 1. ###############Reverse Proxy with nginx for jenkin url access########
@@ -207,7 +207,6 @@ export PATH=$PATH:$M2_HOME
 :wq!
 $ bash
 mvn --version
-
 5. ######################configure maven in jenkins#############
 ##this use for if it required to bulid in par version only on that time we can add  that version
 #we bulid with particular version
@@ -469,8 +468,7 @@ pipeline {
 pipeline{
     agent none
     environment {
-        DOCKER_LOGIN = credentials('docker_login')
-        
+        DOCKER_LOGIN = credentials('docker_login')    
     }
 	tools {
         maven 'maven123'
@@ -829,7 +827,18 @@ cd /opt/jfrog-artifactory-oss-6.9.6/bin
 username: admin
 password: passwrod 
 ->Create new user 
-->click admin->click user->click new->uersname=jenkins->email address=jenkins@gmail->mark admin previlage->mark can update profile->set-password=redhat
+->click admin->click user->click new
+->uersname=jenkins->email address=jenkins@gmail.com->mark admin previlage->mark can update profile->set-password=redhat
+##create repository
+->click maven repository
+->click create->finish.
+After create repository here  dispaly five file
+1. lib-snapshot-local
+2. lib-release-local--it store our artifactory(jar,war) 
+3. jcenter--it store all thrid dependency
+4. libs-snapshot-local--it store the snapshot of version
+5. lib-release--it store the dependency
+
 16. #################copy jar from one server to another and work for remote server from jenkins###########
 #create ssh-keygen
 #copy public key to remote server into .ssh/authorized_keys 
