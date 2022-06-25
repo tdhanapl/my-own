@@ -11,12 +11,40 @@ https://www.lambdatest.com/blog/use-jenkins-shared-libraries-in-a-jenkins-pipeli
 ##security tools:
 1.Veracode
 2.
+##pipeline
+1.tools
+2.agent
+3.stage(git checkout)
+4.stage(source code bulit)
+5.stage(SonarQube analysis and Quality gate check)
+6.stage(deploy artifact to jfrog)
+8.stage(Bulid dcoker image with artifact and push to jfrog) 
+9.stage(identifying misconfigs using datree in helm charts)
+10.stage(pushing the helm charts to nexus)
+11.stage(manual approval for deploy in k8s development environment)
+12.stage(Deploying application on k8s cluster)
+13.post{
+        always {
+            junit '**/target/*.xml'
+        }
+        failure {
+            //mail to: team@example.com, subject: 'The Pipeline failed :('
+        }
+		sucess {
+			// mail to: dhanapal703278@gmail.com, subject: The Pipeline sucess 
+		}
+    }
+###Pugins 
+1. git, github, pipeline, docker, maven, artifact, java, timestamps, timeout, mail, input, kubernetes deploy, helm	
 ########integarting with jenkins###########
 1. git-> jenkins(git-webhook, git pollscm)
 2. sonarqube-> jenkins(we pom.xml in properties tag )
-3. nexus-> jenkins(we mention nexus details under dependency nexus repository details)
+3. jfrog-> jenkins(we mention jfrog details under dependency jfrog repository details)
 ##jenkins requried java version = 1.18
-##jenkins version=2.160
+##jenkins version=2.300
+##kubernetes version=1.19
+##ansible version=
+##git ansible=
 1. ###############Reverse Proxy with nginx for jenkin url access########
 #set hostname with FQDN
 $ hostnamectl set-hostname jenkins.cntech.local
@@ -35,7 +63,7 @@ $ yum install nginx
         root         /usr/share/nginx/html;
 
         # Load configuration files for the default server block.
-        include /etc/nginx/default.d/*.conf;
+        include /etc/nginx/deffault.d/*.conf;
 
         location / {
         }
@@ -96,7 +124,7 @@ $chown -R jenkins:jenkins /opt/backup-jenkins-data
 ->Maximum backups in location=20
 ->Store no older than (days)=15
 ->File Management Strategy= ConfigOnly/FullBackup
-->Storage Strategy=TarGzStorage
+->Storage Strategy=Tar.GzStorage
 ->Backup Location=/opt/backup-jenkins-data
 ->mark enable this location
 ->click validate
@@ -831,7 +859,11 @@ password: passwrod
 ->uersname=jenkins->email address=jenkins@gmail.com->mark admin previlage->mark can update profile->set-password=redhat
 ##create repository
 ->click maven repository
-->click create->finish.
+->Repository key: development-repository
+->repository layout: maven-2-deafult
+->checksumpolicy: verfiy against client checksums
+->maven snpahot version:unique
+->click save and finish
 After create repository here  dispaly five file
 1. lib-snapshot-local
 2. lib-release-local--it store our artifactory(jar,war) 
@@ -1154,7 +1186,6 @@ pipeline{
         }
     }
 }
-
 
 regression
 -----------
