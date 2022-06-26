@@ -3,6 +3,9 @@
 $ C++: make, cmake, premake
 $ Java: ant+, maven, gradle
 $ C#: msbuild
+##maven release type
+1. Release
+2. Snapshot
 
 # 3 build lifecycle in maven? What does mvn site does?
 1.clean
@@ -22,9 +25,20 @@ pre-site	execute processes needed prior to the actual project site generation
 site	    generate the projects site documentation
 post-site	execute processes needed to finalize the site generation, and to prepare for site deployment
 site-deploy	deploy the generated site documentation to the specified web server
+##########Difference between mvn install and mvn deploy
+mvn install
+mvn deploy
+============================================================================================================
+mvn -> pom.xml
+	    1.DOWNLOAD A PACKAGE > setting.xml (mirror)
+	    2.UPLOAD A PACK ----> pom.xml (distributionManagement)
+mvn install
+compile test -> package -> copy to Local repo(.m2)     vs  copy from Local repo to remote repo(pom.xml)
+        		    ----------------------         ---------------------------------------------
+			    install                         deploy
+============================================================================================================
 
 It generate project report which will inculde project summary, project license, dependency, source repositories, continue integration report, and html document.
-
 ###To create a maven project
 $ mvn archetype:generate
 $ mvn archetype:generate  -DarchetypeArtifactIds=maven-archetype-webapp -DgroupId=com.ikt -DartifactId=project-ikt -Dversion=1.0 -Dpackage=com.ikt.project-ikt  -Dinteractivemode=false
@@ -44,6 +58,7 @@ $ mvn archetype:generate  -DarchetypeArtifactIds=maven-archetype-webapp -DgroupI
             <scope>test</scope>
         </dependency>
   </dependencies>
+
 ####adding nexus in pom.xml
 Deployment to a repository is configured in the pom.xml for the respective project in the distributionManagement section. Using the default repositories of the repository manager:
 
@@ -67,7 +82,7 @@ Deployment to a repository is configured in the pom.xml for the respective proje
  $ vim pom.xml
  <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  c
+  
   <build>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
@@ -104,9 +119,9 @@ Deployment to a repository is configured in the pom.xml for the respective proje
         </dependency>
   </dependencies>
 </project>
-
 :wq
- ##############maven interview questions##
+
+##############maven interview questions##
 1.what is multi module project in maven and what are the setting you want to do in multi module parent and child project? what is dependency management?
 2.what is transitive dependency?
 3.when i issue mvn install what all things happen in background?
@@ -148,7 +163,7 @@ It generate project report which will inculde project summary, project license, 
 
 15.Is there way by which we can set local repository as some other custom directory, other than .m2?
 16.Settings that you make for mvn deploy?
-we need define repository that we   deploy in project pom file in <distributionManagement>  section we need define Id name and url of repository of the deploy.
+we need define repository that we   deploy in project pom.xml file in <distributionManagement>  section we need define Id name and url of repository of the deploy.
   <distributionManagement>
     <repository>
       <id>internal.repo</id>
