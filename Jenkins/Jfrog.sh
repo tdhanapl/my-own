@@ -1,6 +1,8 @@
 #############################Jfrog Artifactory Installation###########################################################
 ##site
 #https://medium.com/globant/jfrog-artifactory-integration-with-ci-cd-jenkins-5c5228471642
+##pipeline syntax 
+#https://www.jfrog.com/confluence/display/JFROG/Declarative+Pipeline+Syntax
 ##Installation Steps
 #Pre-requisites:
 ->An AWS T2.small EC2 instance (Linux)
@@ -27,7 +29,7 @@ password: passwrod
 ->uersname=jenkins->email address=jenkins@gmail.com->mark admin previlage->mark can update profile->set-password=redhat
 ##create repository
 ->click maven repository
-->Repository key: development-repository
+->Repository key: development-repositor
 ->repository layout: maven-2-deafult
 ->checksumpolicy: verfiy against client checksums
 ->maven snpahot version:unique
@@ -38,3 +40,11 @@ After create repository here  dispaly five file
 3. jcenter--it store all thrid dependency
 4. libs-snapshot-local--it store the snapshot of version
 5. lib-release--it store the dependency
+--------------
+we use aglie methodology and we work on weekly  base sprintes. now currently I am working on git, docker,  jenkins, docker, Ansible and AWS.
+while come to role and reposbility.
+1. In git--creating branches, PR merging, resolving merge conflict, creating repo, providing branch permission.
+2. In jenkins--creating  pipeline job, managing job as per requriment, taking backup of home directoy.
+3. creating dockerfile as per requriment.
+4. working ansible playbooks and ad-hoc command like user managment, patch, crating lvm, stop service and stoping service, installing packages.
+5. IN AWS I am working on  EC2, ALB,IAM,  autoscaling, route53, snapshot, EBS, natgateway, vpc peering.

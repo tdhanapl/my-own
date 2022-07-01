@@ -1,3 +1,13 @@
+########Arguments
+$0 specifies the name of the script to be invoked.
+$1-$9 stores the names of the first 9 arguments or can be used as the arguments positions.
+$# specifies the total number (count) of arguments passed to the script.
+$*(postional parameter) stores all the command line arguments by joining them together.
+$@ stores the list of arguments as an array or treated as sperate arguments.
+$? specifies the exit status of the last command or the most recent execution process.
+$$ specifies the process ID of the current script..
+$! shows ID of the last background job.
+
 ###############opertional-condition########
 Operator	Description	Example
 + (Addition)	Adds values on either side of the operator	`expr $a + $b` will give 30

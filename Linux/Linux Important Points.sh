@@ -36,7 +36,7 @@ To view the default target, type the command below.
 graphical.target
 
 To set the default target, run the command below.
-# systemctl set-default multi-user.target  
+#systemctl set-default multi-user.target  
 
 How to Change the target (runlevel) in Systemd
 While the system is running, you can switch the target (run level), meaning only services as well as units defined under that target will now run on the system.
@@ -120,7 +120,7 @@ https://www.redhat.com/sysadmin/route-ip-route
 #route add default gw 192.168.4.254
 #route add -i net 192.169.1.0/24 netmask  255.255.0.9 gateway 192.168.1.1
 # route add -net 17.16.4.0 netmask 255.255.254.0 gw 172.16.4.251
-#route add -net 172.16.4.0 netmask 255.255.254.0 gw 172.16.4.254
+#route add -net 172.16.100.0 netmask 255.255.255.0 gw 172.16.100.1
 #route add -net 192.168.85.0 netmask 255.255.255.0 gw 192.168.85.99
 #route  add -net 10.33.58.0 netmask 255.255.255.0 gw  10.32.39.254
 ####################################Create Permanent Static Routes#########################################
@@ -736,7 +736,7 @@ In rhel7, now /bin,/sbin,/lib and /lib64 are nested under /usr.
 
 #yum updateinfo list security all ------>To list all available security updates without installing them
 
-#yum updateinto list sec ----- >o list all available security updates without installing them [yum info-sec |grep 'Critical:' ---see critical patches)
+#yum updateinto list sec ----- >To list all available security updates without installing them [yum info-sec |grep 'Critical:' ---see critical patches)
 #yum updateinfo list security installed --->To get a list of the currently installed security updates
 
 #yum updateinfo info security --------->To lint all available security updates with verboat descriptions of the Lasus they apply
@@ -998,7 +998,7 @@ ANSWER:
 #hostnamectl set-hostname servero.example.com
 #bash or exec bash ##forcelly update the kernel
 #####################Configure Selinux. Set the selinux policy in Enfrocing mode####################
-$ vim /etc/syaconfig/selinux 
+$ vim /etc/sysconfig/selinux 
 SELINUX=Enforcing
 :wq
 #sestatus
@@ -1183,7 +1183,7 @@ sudo SUSEConnect -r REGISTRATION_CODE -e EMAIL _ADDRESS
 * Difference between Grub & Grub2 ?
 * What is boot loader ?
 * Do you think the boot process in RHEL 7 is faster than RHEL 6 ? If yes, How ?
-* What is .rpm & .deb ?
+* What is .rpm & .deb?
 * What is RPM ?
 * What is YUM ?
 * Different methods to install the rpm based packages ?

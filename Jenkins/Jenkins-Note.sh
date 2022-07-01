@@ -14,9 +14,9 @@ https://www.lambdatest.com/blog/use-jenkins-shared-libraries-in-a-jenkins-pipeli
 ##pipeline
 1.tools
 2.agent
-3.stage(git checkout)
-4.stage(source code bulit)
-5.stage(SonarQube analysis and Quality gate check)
+3.stage(source code bulit)
+4.stage(SonarQube analysis and Quality gate check)
+5.stage(git checkout)
 6.stage(deploy artifact to jfrog)
 8.stage(Bulid dcoker image with artifact and push to jfrog) 
 9.stage(identifying misconfigs using datree in helm charts)
@@ -35,7 +35,8 @@ https://www.lambdatest.com/blog/use-jenkins-shared-libraries-in-a-jenkins-pipeli
 		}
     }
 ###Pugins 
-1. git, github, pipeline, docker, maven, artifact, java, timestamps, timeout, mail, input, kubernetes deploy, helm	
+1. git, Build Timestamp Plugin,Build Timeout,Credentials,Pull Request Builder, Docker Pipeline, Email Extension,github,
+ pipeline, maven, artifact, bule ocean,  timestamps, timeout, input, kubernetes deploy, helm.	
 ########integarting with jenkins###########
 1. git-> jenkins(git-webhook, git pollscm)
 2. sonarqube-> jenkins(we pom.xml in properties tag )
@@ -485,7 +486,7 @@ pipeline {
             steps {
                 sh 'echo "Service user is $DOCKER_LOGIN_USR"'
                 sh 'echo "Service password is $DOCKER_LOGIN_PSW"'
-               sh 'docker login -u $DOCKER_LOGIN_USR -p $DOCKER_LOGIN_PSW'
+                sh 'docker login -u $DOCKER_LOGIN_USR -p $DOCKER_LOGIN_PSW'
             }
         }
         
@@ -1290,7 +1291,7 @@ pipeline {
 			steps{
 				mvn clean install 
 				}
-			}
+			} 
 		stage('Scan') {
 			steps {
 				withSonarQubeEnv(installationName: 'sonarjenkins') { 
@@ -1333,4 +1334,7 @@ pipeline {
     }
 }
 
-
+-------------
+QA builds (every  monday and thusday)
+pref builds (wensday)
+UAT builds(tue)
