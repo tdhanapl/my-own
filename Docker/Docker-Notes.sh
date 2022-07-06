@@ -117,9 +117,13 @@ $docker push dhanapal406/centos-7.5
 ## We can give name of  repository and tag
 $ docker commit <conatiner_id>  <repository:tag>
 $ docker commit  2b62    production:webserver
-##To save to local repository
+##To save image as tar file(docker save)
 $ docker save production:webserver > /tmp/production.tar
+         OR
 $ docker save -o /tmp/production.tar production:webserver
+##To unzip the image from tar(docker load command)
+$ docker load -i /tmp/production.tar
+$ docker images
 ##Docker file
 Dockerfile is used to create docker image
 ##In Dockerfile elements

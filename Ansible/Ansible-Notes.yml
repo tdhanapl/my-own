@@ -169,7 +169,7 @@ $ vim register.yml
       debug: var=up_time.stdout
 :wq
 $ vim register.yml
-  - hosts: all
+4- hosts: all
   tasks:
     - name: create the file
       shell: uptime

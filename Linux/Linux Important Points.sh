@@ -956,7 +956,7 @@ noted: to go iso image path do upgrade or mention that specific path of iso imag
 ##At the start prompt of linux select kernel and press e 
 ----> go to linux 16 line, press end key there it will reach at UTF-8 please type there.
 
-rd.break console=ttyl
+rd.break 
 
 --> ctlr+x
 #mount -o remount,rw /sysroot
@@ -1033,14 +1033,18 @@ $ cd /restore
 $ touch file
 $ mkdir dhana
 ##unmount the file sys
-$ umount /dev/vg1/lv1 
-##go to archive location of lvms
+$ umount /dev/vg1/lv1
+##remove the lvm  now
+$ remove  /dev/vg1/lv1
+##go to archive location of lvms to restore lvm
 $ cd /ect/lvm/archive
 $  ll
-$ vgcfgrestore --list
-##restore the remove lvm
-$ vgcfgrestore -f /etc/lvm/archive/vg1_0002-18736372631234.vg lv1
-##scan lv
+###Now list VGS(volume_group)
+$ vgcfgrestore --list <volime_group_name>
+$ vgcfgrestore --list vg1
+##restore the remove  of slect the "created *before* exucting lvremove"
+$ vgcfgrestore -f /etc/lvm/archive/vg1_0002-18736372631234.vg vg1 #(vg1=volume_group_name)
+##scan lv(logical_volume)
 $ lvscan
 here lv in incative 
 ##active lv 
@@ -1283,3 +1287,4 @@ This helps the system to run faster because disk information is already in memor
 * What is SSHFS ?
 * What is Kerberos ?
 * How to secure NFS with Kerberos ?
+------------------

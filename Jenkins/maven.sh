@@ -123,6 +123,8 @@ Deployment to a repository is configured in the pom.xml for the respective proje
 
 ##############maven interview questions##
 1.what is multi module project in maven and what are the setting you want to do in multi module parent and child project? what is dependency management?
+A:
+https://www.baeldung.com/maven-multi-module
 2.what is transitive dependency?
 3.when i issue mvn install what all things happen in background?
 4.what are the settings you need to do before running mvn deploy?

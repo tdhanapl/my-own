@@ -44,7 +44,7 @@ After create repository here  dispaly five file
 we use aglie methodology and we work on weekly  base sprintes. now currently I am working on git, docker,  jenkins, docker, Ansible and AWS.
 while come to role and reposbility.
 1. In git--creating branches, PR merging, resolving merge conflict, creating repo, providing branch permission.
-2. In jenkins--creating  pipeline job, managing job as per requriment, taking backup of home directoy.
+2. In jenkins--creating  pipeline job, managing job as per requriment, taking backup of home directoy of jenkins.
 3. creating dockerfile as per requriment.
 4. working ansible playbooks and ad-hoc command like user managment, patch, crating lvm, stop service and stoping service, installing packages.
 5. IN AWS I am working on  EC2, ALB,IAM,  autoscaling, route53, snapshot, EBS, natgateway, vpc peering.

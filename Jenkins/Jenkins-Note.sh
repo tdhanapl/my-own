@@ -20,7 +20,7 @@ https://www.lambdatest.com/blog/use-jenkins-shared-libraries-in-a-jenkins-pipeli
 6.stage(deploy artifact to jfrog)
 8.stage(Bulid dcoker image with artifact and push to jfrog) 
 9.stage(identifying misconfigs using datree in helm charts)
-10.stage(pushing the helm charts to nexus)
+10.stage(pushing the helm charts to jfrog)
 11.stage(manual approval for deploy in k8s development environment)
 12.stage(Deploying application on k8s cluster)
 13.post{
@@ -36,7 +36,7 @@ https://www.lambdatest.com/blog/use-jenkins-shared-libraries-in-a-jenkins-pipeli
     }
 ###Pugins 
 1. git, Build Timestamp Plugin,Build Timeout,Credentials,Pull Request Builder, Docker Pipeline, Email Extension,github,
- pipeline, maven, artifact, bule ocean,  timestamps, timeout, input, kubernetes deploy, helm.	
+ pipeline, maven, artifact, Role-based Authorization Strategy, bule ocean,  timestamps, timeout, input, kubernetes deploy, helm.	
 ########integarting with jenkins###########
 1. git-> jenkins(git-webhook, git pollscm)
 2. sonarqube-> jenkins(we pom.xml in properties tag )
@@ -44,8 +44,8 @@ https://www.lambdatest.com/blog/use-jenkins-shared-libraries-in-a-jenkins-pipeli
 ##jenkins requried java version = 1.18
 ##jenkins version=2.300
 ##kubernetes version=1.19
-##ansible version=
-##git ansible=
+##ansible version=2.10
+##git=2.30
 1. ###############Reverse Proxy with nginx for jenkin url access########
 #set hostname with FQDN
 $ hostnamectl set-hostname jenkins.cntech.local
@@ -273,7 +273,6 @@ Just the push event.
 In the page ‘Which events would you like to trigger this webhook?’ choose ‘Let me select Send me everything.’ Then, check ‘Pull Requests’ and ‘Pushes’. 
 At the end of this option, make sure that the ‘Active’ option is checked and click on ‘Add webhook’.
 ###Configuring from  Jenkins side
-
 Step 5: In Jenkins, click on ‘New Item’ to create a new project.
 Step 6: Give your project a name, then choose ‘Pipeline’ and finally, click on ‘OK’.click pipeline project->click build trigger-
 ------->mark github hook trigger for GITSCM polling----->click apply.
