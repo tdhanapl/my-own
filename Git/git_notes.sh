@@ -1,18 +1,17 @@
-#################################git(Global Information Tracker)##############################
+#########git #
 ##VCS
 =============
 1.Track the changes
 2.Coleberative Development
 3.Revert the changes
 4.Who and When changes are made
-##############
-git token
-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
+
 Types of VCS
 =====
 1.Local VCS
 2.Centralized VCS ----subversion
 3.Distributed VCS ----Gitlab, github, Bitbucket
+
 ##git branching strages
                   master(production code which is  stable)
 					|______________ 
@@ -42,6 +41,12 @@ Types of VCS
 $ git --version
 x.X.X
 major.minor.hostfix
+=======
+#########git command####
+#To check git vsersion
+$ git --vsersion
+
+>>>>>>> 9a364dac2523e964db193a167ef1a3661336d5da
 ##Add the our username and gamil to git 
 $ git config --global user.name "dhanapal"
 $ git config --global user.email "dhanapal703278@gmail.com"
@@ -59,26 +64,20 @@ $ git config --list
 $ mkdir test-git
 $ cd test-git
 $ git init .
-	-- we need enter that particular folder then initalize it.
+	--we need enter that particular folder then initalize it.
 
 ##How to know current directory is repository or not
 #go that folder then ll -al
-	-- here dispaly .git folder
+	--here dispaly .git folder
 
 ##To check current branch 
-$ git branch
-
 ##To verfiy new url
 $ git remote -v
+#
 #To check current status od repository
 $ git status
 	--here dispaly file in untrack
-##How clone only single branch from remote repository
-$ git clone -b <branch_name> --single-branch <git_url>
-$ git clone -b main --single-branch https://github.com/dhanapal703278/tomcat_maven_app_source_code_dhana.git
-##How clone only single branch and only the latest commit from remote repository
-$ git clone -b <branch_name> --single-branch --depth 1 <git_url>
-$ git clone -b main --single-branch --depth 1 https://github.com/dhanapal703278/tomcat_maven_app_source_code_dhana.git
+
 ##To commit file from working area to staging area or index area 
 $ git add * or .
 	--it commit all file to index area
@@ -88,10 +87,10 @@ $ git add file1
 # To commit file from staging area to local repository
 $ git commit -m "this fist commit"
 
-##To push file from local repository to our  git hub
+##To push to our  git hub
 $ git push --all
 	or 
-$ git push origin main  #main=branch name	
+$ git push origin main
 
 ##To push particular file to remote repository
 $ git push origin main file1
@@ -117,18 +116,14 @@ $ git status
   task
 
 ##what is Branch
-To provide isolate enviroment  for developer to build the source code.
+To provide isolate enviroment  for developer to build the source code
 
 ## To create branch 
 $ git branch feature1
 $ git branch feature2
 
 ##To swtich to another branch
-$ git checkout <branch_name>
-		or 
-$ git switch  <branch_name>
-
-$ git checkout  feature1 or  git switch  feature1
+$ git checkout  feature1
 
 ## To create branch and checkout at a time.
 $ git checkout -b feature2
@@ -138,6 +133,8 @@ $ git status
   main
   task
 
+##To merge from feature1 branch to main branch
+$ git merge feature1  main
 ##To delete branch
 $ git branch -d feature1
 $ touch newfile
@@ -162,27 +159,21 @@ this  branch feature3
 $ git add *
 $ git commit -m "create feature3"
 $ git push origin feature3 ##feature3=branch name
-
 ##To check remote(github) branch
 $ git branch -r
-
 ##To delete remote repository branch
 $ git push origin -d feature3
 
 ##To merge from feature3 branch to main branch
-#Difference between merge and rebase.
-Git merge is a command that allows developer to merge branches from Git and it will create commit id or history.
-Git rebase is a command that allows developers to integrate changes from one branch to another and it will not create commit id or history .
 $ git branch
 * main-->we present in main branch
  feature3
 $ git merge feature3 
--- we are merge feature3 to main 
---here history or commit id will  create.
+-- we are merge feature3 to main feature3
 Note:-1.when you merge one branch to another branch Sometime merge conflict will occur.
         we  resolve the issue in two ways 1. manually and 2.git mergetool (tool)
       2.I want merge all my changes from feature3 to main branch but in company we will not merge directly.
-        Before merge our code we need get code reviewed  or requried approval by our team lead or manager then only  we can merge our code from feature3 to main branch.
+		Before merge our code we need get code reviewed  or requried approval by our team lead or manager then only  we can merge our code from feature3 to main branch.
 ##After merge conflict reslove using git mergetool
 ##when conflict occur then mergetool	 use 
 $ git mergetool
@@ -198,6 +189,9 @@ $ git status
 ## To merge the particular	commit id from one branch to another branch
 By using cheerypick we can merge the particular commit id from one branch to another branch
 $ git cheerypick <commit id>
+=======
+       Before merge our code we need get code reviewed  or requried approval by our team lead or manager then only  we can merge our code from feature3 to main branch.
+>>>>>>> 9a364dac2523e964db193a167ef1a3661336d5da
 
 ##Discard the change or delete current modified  in working directory of file.
 $ git restore 	<filename> or $ git checkout file1.txt
@@ -206,10 +200,16 @@ Note:-After this it delete current modified in working directory of file.
 
 ##change or revert  from staging/index to  working directory  area of file.
 $ git restore --staged file1.txt
-	or 
-$ git rm --cached  file1.txt
 Note:-Perviously it is in staging/index area after using above command it comes to working directory.
 	  from here if you want Discard the change(currently it working directory) then you can do with this command "git restore 	<filename>"	
+	  ##Tagging the git
+	  git tagging developer use this functionality to mark release point (v1.0, v1.1)
+	  $ vim file1.txt
+	  creating tagging
+	  :wq!
+	  $ git add *
+	  $ git commit -m "add tagging for git"
+	  $ git tag -a v1.0 -m "release the latest changes"
 
 ##revert the chanage of files from local repository to staging area(reset ---soft)
 If one file in local repository you want to that file from  local repository to staging area then use this command.
@@ -240,14 +240,6 @@ $ git reset --hard HEAD~1
 # revert with particular   commit id from local repository to working directory(reset --hard)
 $ git reset --hard 3f45
 
-##Tagging the git
-git tagging developer use this functionality to mark release point (v1.0, v1.1)
-$ vim file1.txt
-creating tagging
-:wq!
-$ git add *
-$ git commit -m "add tagging for git"
-$ git tag -a v1.0 -m "release the latest changes"
 ##To check git tag version
 $ git tag
 	--here dispaly version
@@ -269,9 +261,9 @@ $ git  push origin -d v1.0
 #To delete the all  tags of remote repository
 $ git push origin -d $(git tag -l)
 
-## To difference the between two comment ID 
-$ git diff adc047f  63e075a
+
  
+<<<<<<< HEAD
 ##git stash
 stash meaning is store file(something) safely in a hidden place.
 We can stashing  file if its in staging/index. If file is not in staging/index area then we can notstashing  file.
@@ -312,3 +304,5 @@ Key principles of SRE include:
 
 Principles Of SRE
 ================================== 
+=======
+>>>>>>> 9a364dac2523e964db193a167ef1a3661336d5da

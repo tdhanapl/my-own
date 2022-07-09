@@ -32,7 +32,7 @@ pipeline{
     }
 }
 ##########pipeline-2 running on docker of another agent machine###########
-###build docker image  of ubuntu with java, git, maven
+###build docker image with java, git, maven
 $ Dockerfile
 FROM ubuntu
 LABEL owner="dhanapal"
@@ -50,28 +50,7 @@ RUN  apt update -y \
      && export PATH=$PATH:/opt/maven/bin \
      &&  echo $PATH
 CMD  ["mvn", "--version"]
-    
-    or
-##apline image
-$ vim Dockerfile-1
-FROM alpine as build
-LABEL owner="dhanapal"
-LABEL Description="creating image with git, maven, java for docker-jenkins-slave"
-RUN  apk update  \
-     && apk   add git  \
-     && apk add wget  \
-     && apk add openjdk11  \
-     &&  cd /opt \
-     && wget  https://dlcdn.apache.org/maven/maven-3/3.8.6/binaries/apache-maven-3.8.6-bin.tar.gz \
-     && tar -xvf apache-maven-3.8.6-bin.tar.gz \
-     && rm -rf apache-maven-3.8.6-bin.tar.gz  \
-     && mv apache-maven-3.8.6  maven \
-     && ln -s /opt/maven/bin/mvn /usr/bin/mvn \
-     && export PATH=$PATH:/opt/maven/bin \
-     &&  echo $PATH
-CMD  ["mvn", "--version"]
-    
-    
+
 $docker build --tag docker_with_java_git_maven-3.8.5 .
 $ docker image tag docker_with_java_git_maven-3.8.5 dhanapal406/jenkins_java_git_maven-3.8.5
 $ docker push dhanapal406/jenkins_java_git_maven-3.8.5
@@ -125,6 +104,8 @@ pipeline{
 ->Jenkins
 ->Global credentials (unrestricted)->New credentials
 ->Kind= Username with password
+Block or Report
+￼
 ->Scope= Global (Jenkins, nodes, items, all child items, etc)
 ->Username= dhanapal406(mark Treat username as secret)
 ->Password= •••••••••
@@ -135,7 +116,7 @@ pipeline{
 $ vim Dockerfile
 FROM tomcat
 RUN rm -rf /usr/local/tomcat/webapps/ROOT/
-COPY webapp.war /usr/local/tomcat/webapps/ROOT/ 
+COPY webapp.war /uELKsr/local/tomcat/webapps/ROOT/ 
 RUN cd /usr/local/tomcat/webapps/ROOT && unzip java-tomcat-maven-example.war && \
     rm -rf /usr/local/tomcat/webapps/ROOT/java-tomcat-maven-example.war
 EXPOSE 8080
@@ -180,14 +161,59 @@ pipeline{
     }
 }
 =================================================
+#############pipeline-3 with ############
 
+pipeline{
+    agent none
+    environment {
+        DOCKER_LOGIN = credentials('docker_login')
+        
+    }
+    tools {
+        maven 'maven123'
+    }
+    options {
+        timestamps()()
+        timeout(activity: true, time: 20)
+    }
+
+    
+    stages {
+        stage ('Checkout and Build') {
+            agent {
+                docker {
+                    image 'dhanapal406/jenkins_java_git_maven-3.8.5'
+                    label 'docker-node'
+                    
+                }
+                
+            }
+            steps{
+                git 'https://github.com/dhanapal703278/tomcat_maven_app.git'
+                sh "mvn clean package"
+            }
+        }
+        stage('Create  a images'){
+            agent {
+                label 'docker-node'
+            }
+            steps {
+                sh """
+                     docker build -t dhanapal406/tomcat_sai-$BUILD_NUMBER .
+                     docker login -u $DOCKER_LOGIN_USR -p $DOCKER_LOGIN_PSW
+                     docker push dhanapal406/tomcat_sai-$BUILD_NUMBER
+                     docker run -itd -p 8080:8080 dhanapal406/tomcat_sai-$BUILD_NUMBER
+                """
+            }
+        }
+    }
+}
 ################pipeline for sonarqube scanner#########
  pipeline {
-        agent any
-        tools 
+        agent none
         stages {
           stage("build & SonarQube analysis") {
-            
+            agent any
             steps {
               withSonarQubeEnv('My SonarQube Server') {
                 sh 'mvn clean package sonar:sonar'
@@ -286,6 +312,8 @@ pipeline{
               }
             }
         }
+Block or Report
+￼
         */
         stage('copy jar or war from master to agent') {
             agent {
@@ -329,166 +357,13 @@ stage('Upload to AWS-S3') {
                     s3Upload(pathStyleAccessEnabled:true, payloadSigningEnabled: true, file:'index.html', bucket:'static-jenkins-pipelines-on-aws')
                 }
             }
-##################shared-library pipeline#####################################
+--------------------
 
-def call(String repoUrl) {
-    pipeline {
-        agent none
-        environment {
-            DOCKER_LOGIN = credentials('docker_login')
-            
-        }
-        tools {
-        maven 'maven123'
-            
-        }
-        options {
-        timestamps()
-        timeout(activity: true, time: 20)
-            
-        }
-        stages {
-            stage ('Checkout and Build') {
-                agent {
-                    docker {
-                        image 'dhanapal406/jenkins_java_git_maven-3.8.5'
-                        label 'docker-node'
-                    }
-                }
-                steps{
-                    git branch: 'master',  // branch name source code
-                        url: "${repoUrl}" 
-                 // git url given has varible here and this git url given in jenkinsfile at the palce varibleof https://github.com/dhanapal703278/tomcat_maven_app.git
-                 //@Library('first-shared-lib') _
-                 //jenkinsforjava repoUrl(varible_name) 
-                 //jenkinsForJava 'https://github.com/dhanapal703278/tomcat_maven_app.git'
-                    sh "mvn clean package"
-                }
-                
-            }
-            /*stage('Create  a images'){
-                agent {
-                    label 'docker-node'
-                }
-                steps {
-                sh """
-                     docker build -t dhanapal406/tomcat_sai-$BUILD_NUMBER .
-                     docker login -u $DOCKER_LOGIN_USR -p $DOCKER_LOGIN_PSW
-                     docker push dhanapal406/tomcat_sai-$BUILD_NUMBER
-                     docker run -itd -p 8080:8080 dhanapal406/tomcat_sai-$BUILD_NUMBER
-                """
-                }
-            }*/
-        }
-        post {
-            always {
-                //deleteDir() /* clean up our workspace */
-                //junit '**/target/surefire-reports*.xml'
-                //jacoco execPattern: 'build/jacoco/test.exec'
-                junit '**/target/*.xml'
-            }
-            /*success {
-                slackSend channel: '#ops-room',
-                color: 'good',
-                message: "The pipeline ${currentBuild.fullDisplayName} completed successfully.
-                
-            }
-            failure {
-                mail to: 'team@example.com',
-                     subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
-                     body: "Something is wrong with ${env.BUILD_URL}"
-            }*/
-            
-        }
+post{
+    always{
+        junit 'build/test-results/test/TEST-*.xml' or  junit **/target/*-reports/TEST-*.xml' 
+        jacoco execPattern: 'build/jacoco/test.exec'
+
     }
-}
-#########################Script Block in Declarative Pipeline######################
-pipeline {
-    agent any
-    stages {
-        stage('Example') {
-            steps {
-                echo 'Hello World'
-
-                script {
-                    def browsers = ['chrome', 'firefox']
-                    for (int i = 0; i < browsers.size(); ++i) {
-                        echo "Testing the ${browsers[i]} browser"
-                    }
-                }
-            }
-        }
-    }
-}
-##################Conditional Statement if, Scripted Pipeline#################
-node {
-    stage('Example') {
-        if (env.BRANCH_NAME == 'master') {
-            echo 'I only execute on the master branch'
-        } else {
-            echo 'I execute elsewhere'
-        }
-    }
-}
-####################parameters###############
-parameters:
-The parameters directive provides a list of parameters that a user should provide when triggering the Pipeline. The values for these user-specified parameters are made available to Pipeline steps via the params object, see the Parameters, Declarative Pipeline for its specific usage.
-
-Required
-
-No
-
-Parameters
-
-None
-
-Allowed
-
-Only once, inside the pipeline block.
-
-Available Parameters
-string
-A parameter of a string type, for example: parameters { string(name: 'DEPLOY_ENV', defaultValue: 'staging', description: '') }
-
-text
-A text parameter, which can contain multiple lines, for example: parameters { text(name: 'DEPLOY_TEXT', defaultValue: 'One\nTwo\nThree\n', description: '') }
-
-booleanParam
-A boolean parameter, for example: parameters { booleanParam(name: 'DEBUG_BUILD', defaultValue: true, description: '') }
-
-choice
-A choice parameter, for example: parameters { choice(name: 'CHOICES', choices: ['one', 'two', 'three'], description: '') }
-
-password
-A password parameter, for example: parameters { password(name: 'PASSWORD', defaultValue: 'SECRET', description: 'A secret password') }
-
-Example 10. Parameters, Declarative Pipeline
-pipeline {
-    agent any
-    parameters {
-        string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
-
-        text(name: 'BIOGRAPHY', defaultValue: '', description: 'Enter some information about the person')
-
-        booleanParam(name: 'TOGGLE', defaultValue: true, description: 'Toggle this value')
-
-        choice(name: 'CHOICE', choices: ['One', 'Two', 'Three'], description: 'Pick something')
-
-        password(name: 'PASSWORD', defaultValue: 'SECRET', description: 'Enter a password')
-    }
-    stages {
-        stage('Example') {
-            steps {
-                echo "Hello ${params.PERSON}"
-
-                echo "Biography: ${params.BIOGRAPHY}"
-
-                echo "Toggle: ${params.TOGGLE}"
-
-                echo "Choice: ${params.CHOICE}"
-
-                echo "Password: ${params.PASSWORD}"
-            }
-        }
-    }
-}
+}ELK
+------
