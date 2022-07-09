@@ -1,4 +1,10 @@
 ########################################shell script###########################
+##types of shell
+$ cat /etc/shells
+1.sh
+2.bash(born again shell)
+3.tcsh
+4.csh
 #!/bin/bash
 #Author=
 #Purpose=
@@ -9,7 +15,7 @@ touch -d "Mon 5 June 2021 12:23:15" Oldfile{1..5}.txt
 
 ##################################find the 90 days old files#####################
 #find /var/log -mtime +90 -exec ls -l {} \;
-# rename the old files
+#rename the old files
 #find /opt/scripts -mtime +90 -exec mv {} {}.new \;
 
 ######Deleting the old 90 days files 
@@ -29,7 +35,7 @@ echo "backup failed"
 fi
 
 ####################################To known the login user details###################################
- echo "please enter day (e.g Mon)"
+echo "please enter day (e.g Mon)"
 read day
 echo "please enter Month (e.g jun)"
 read Month

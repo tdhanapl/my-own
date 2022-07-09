@@ -1,0 +1,82 @@
+
+ pipeline {
+    /* agent {
+         label 'node-1'
+        } 
+    agent any
+    environment{
+        
+    }
+    tools {
+    }
+    options {
+
+    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+    stages{
+        stage ('Git-checkout') {
+            steps {
+                
+            }
+        }
+        
+        stage('SonarQube analysis') {
+            steps {
+                
+            }
+        }
+        stage('Quality Gate') {
+            steps {
+                
+        }
+		stage('Build source code') {
+            steps {
+                
+            }
+        }
+        stage('deploy artifact to jfrog') {
+            steps { 
+                
+            }
+        }
+        stage('Bulid dcoker image with artifact and push to jfrog') {
+            steps {
+            }  
+            
+        }
+        stage('identifying misconfigs using datree in helm charts') {
+            steps {
+             }
+        }
+        stage('pushing the helm charts to jfrog') {
+		    steps {
+			}
+           
+        }
+        
+        stage('sending mail for  manual approval to  deploy in k8s development environment') { 
+             steps {
+               input {
+               }
+            }
+        }
+        stage('Deploying application on k8s cluster') {
+            steps{
+                
+            }
+            
+        }
+     
+    }
+    post{
+        always {
+            junit '**/target/*.xml'
+            mail bcc: '', body: "<br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "${currentBuild.result} CI: Project name -> ${env.JOB_NAME}", to: "dhanapal703278@gmail.com";  
+        }
+        failure {
+            //mail to: team@example.com, subject: 'The Pipeline failed'
+        }
+		sucess {
+			// mail to: dhanapal703278@gmail.com, subject: The Pipeline sucess 
+		}
+    }
+}

@@ -15,7 +15,7 @@ Types of VCS
 3.Distributed VCS ----Gitlab, github, Bitbucket
 ##git branching strages
                   master(production code which is  stable)
-					|______________
+					|______________ 
 					               |
 							 development(pre-poduction code)
                                    |___________ 
@@ -28,10 +28,20 @@ Types of VCS
 																		 |
 																		hot-fix (it is just patch  to production release)	
 
+
+=======================================
+			master
+			  |______________
+			                 |
+							 Hostfix
+							 
+			  |
+			  Strong ability to troubleshoot any issues generated while building, deploying and in production support. 
 #########git command####
 #To check git vsersion
 $ git --version
-
+x.X.X
+major.minor.hostfix
 ##Add the our username and gamil to git 
 $ git config --global user.name "dhanapal"
 $ git config --global user.email "dhanapal703278@gmail.com"
@@ -170,10 +180,12 @@ $ git merge feature3
 -- we are merge feature3 to main 
 --here history or commit id will  create.
 Note:-1.when you merge one branch to another branch Sometime merge conflict will occur.
-       we  resolve the issue in two ways 1. manually and 2.git mergetool (tool)
+        we  resolve the issue in two ways 1. manually and 2.git mergetool (tool)
       2.I want merge all my changes from feature3 to main branch but in company we will not merge directly.
-       Before merge our code we need get code reviewed  or requried approval by our team lead or manager then only  we can merge our code from feature3 to main branch.
-
+        Before merge our code we need get code reviewed  or requried approval by our team lead or manager then only  we can merge our code from feature3 to main branch.
+##After merge conflict reslove using git mergetool
+##when conflict occur then mergetool	 use 
+$ git mergetool
 ##To rebase from feature3 branch to main branch
 $ git branch
 * main-->we present in main branch
@@ -242,6 +254,7 @@ $ git tag
 #To know the tag full details
 $ git show v1.0
 #To push the tag to remote repository
+$ git push origin v1.0
 #To assgin tag for after commit or particular commit id 
 $ git tag v1.5 <commit id>
 $ git tag v1.5 3f45
@@ -288,7 +301,14 @@ $ git stash apply stash@{0}
 
 
 ansible push mechanism:  
-   
-    
+ ----------------------------
+Site reliability engineering mainly focuses on enhancing system availability and reliability.
+SRE uses three Service Level Commitments to measure how well a system performs:
 
- 
+Service level agreements (SLAs) define the required reliability, performance, and latency of the system as desired by end users.
+Service level objectives (SLOs) target values and goals set by SRE teams that should be met to satisfy SLAs.
+Service level indicators (SLIs) measure specific metrics and aspects that show how much a system conforms to the SLOs. Typical SLIs include request latency, system throughput, lead time, development frequency, mean time to restore (MTTR), and availability error rate.
+Key principles of SRE include:
+
+Principles Of SRE
+================================== 

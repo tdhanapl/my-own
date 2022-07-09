@@ -1,13 +1,14 @@
 ########Arguments
-$*(postional parameter) stores all the command line arguments by joining them together.
-$# specifies the total number (count) of arguments passed to the script.
-$1-$9 stores the names of the first 9 arguments or can be used as the arguments positions.
-$@ stores the list of arguments as an array or treated as sperate arguments.
-$? specifies the exit status of the last command or the most recent execution process.
-$$ specifies the process ID of the current script..
-$! shows ID of the last background job.
-$0 specifies the name of the script to be invoked or capture.
-
+$*--It store the compelte set of postional parameter as a single string.
+$#--specifies the total number (count) of arguments passed to the script.
+$1-$9--stores the names of the first 9 arguments or can be used as the arguments positions.
+$1--first argument
+$2--second argument
+$0--name of executed command
+$@--each quoted treated as seperate argument
+$?--exit status of last command
+$$--PID  of current shell
+$!--PID of the last background job.
 ###############opertional-condition########
 Operator	Description	Example
 + (Addition)	Adds values on either side of the operator	`expr $a + $b` will give 30
