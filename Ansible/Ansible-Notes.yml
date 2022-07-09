@@ -5,8 +5,6 @@
 ->ansible is push mechanism
 #https://prithvirajsingh1604.medium.com/w-4c1c31cd5f81
 #https://www.softwaretestinghelp.com/ansible-roles-jenkins-integration-ec2-modules/ for ansible role
-###configuration of kubernetes in AWS using ansible 
-https://thespecguy.medium.com/kubernetes-multi-node-cluster-configuration-using-ansible-1d88d9a02f9a
 #####Ansible use case
 1.patching
 2.install packages
@@ -122,223 +120,8 @@ $ ansible webserver -m yum -a "name=httpd state=latest or present" -b
 $ ansible webserver -m cpoy -a "src=/root/index.html dest=/var/www/html/"
 ##Create a file on remote node with content
 $ ansible webserver -m cpoy -a "content='create file with content for index.html\n'       dest=/var/www/html/index.html"
-####Changing the selinux state in the selinux configuration file.
-- name: selinux
-  hosts: localhost
-  tasks:
-    - name: Ensure SELinux is set to enforcing mode
-      lineinfile:
-        path: /etc/selinux/config
-        regexp: '^SELINUX='
-        line: SELINUX=enforcing
---------------------------------
-##Adding the fullqualifydomain line in /etc/hosts using ansible
-- name: adding the line in the /etc/hosts
-  hosts: localhost
-  tasks:
-    - name: Add a line to a file if the file does not exist, without passing regexp
-      lineinfile:
-        path: /etc/hosts
-        insertafter: '^::1         localhost localhost.localdomain localhost6 localhost6.localdomain6'
-        line: 10.10.1.147 ansible.cntech_controller.local ansible_controller  
-        create: yes
---------------------------------        
-##Creating   the username, password    and sudo access using ansible
-
-#generating the password in encrypted mode using python
-Generate encrypted password with Python3
-To generate the hash, you must have the python3 package on your system. The following commands can be used to install the package depending on your operating system.
-## CentOS ###
-sudo yum -y install epel-release
-sudo yum -y install python3 python3-bcrypt
-## Ubuntu / Debian ###
-sudo apt update
-sudo apt install python3 python3-bcrypt
-To generate the hash, use a command such as this:
-
-$ python3 -c 'import crypt,getpass;pw=getpass.getpass();print(crypt.crypt(pw) if (pw==getpass.getpass("Confirm: ")) else exit())'
-It will ask you to enter and confirm password:
-Password: ik.@..6
-Confirm: ik.@..6
-
-$6$/1OFlW9yH1KHHiOm$pn2SfNgbF/rbblahjseab/p1Xb6Z29UZik.BUilZ.TLnp9yvl2HViB3fs8XdVteboeioss7o2A4g1IYxw.TFJ/
-
-You will then use encrypted password printed as value to password parameter when using the user python module.
-- name: adding the line in the /etc/sudoers
-  hosts: localhost
-  tasks:
-    - name:
-      user:
-        name: giri
-        #password: It is given in encrypted copy from above steps using python
-        password: $6$5qTmGOHccyk5xWay$aEjoXm1KxLut3xa7x/SHE.lMJGYFsRuQNRFfqsv0j7difYQYy1hcz45MNVHtG45KKeBIqvpPSWNmmR/1xjPKD1
-        state: present
-        
-    - name: Add a line to a file if the file does not exist, without passing regexp
-      lineinfile:
-        path: /etc/sudoers
-        insertafter: '^root    ALL=(ALL)       ALL'
-        line: giri    ALL=(ALL)       ALL  
-        create: yes
---------------------------------       
-##########Ansible Error handling in playbooks#############
-##Ignoring failed commands
-By default Ansible stops executing tasks on a host when a task fails on that host. You can use ignore_errors to continue on in spite of the failure.
-- name: Do not count this as a failure
-  ansible.builtin.command: /bin/false
-  ignore_errors: yes
-The ignore_errors directive only works when the task is able to run and returns a value of ‘failed’. It does not make Ansible ignore undefined variable errors, connection failures, execution issues (for example, missing packages), or syntax errors.
---------------------------------
-##Ignoring unreachable host errors
-New in version 2.7.
-You can ignore a task failure due to the host instance being ‘UNREACHABLE’ with the ignore_unreachable keyword. Ansible ignores the task errors, but continues to execute future tasks against the unreachable host. For example, at the task level:
-
-- name: This executes, fails, and the failure is ignored
-  ansible.builtin.command: /bin/true
-  ignore_unreachable: yes
-
-- name: This executes, fails, and ends the play for this host
-  ansible.builtin.command: /bin/true
-And at the playbook level:
-
-- hosts: all
-  ignore_unreachable: yes
-  tasks:
-  - name: This executes, fails, and the failure is ignored
-    ansible.builtin.command: /bin/true
-
-  - name: This executes, fails, and ends the play for this host
-    ansible.builtin.command: /bin/true
-    ignore_unreachable: no
---------------------------------
-##Resetting unreachable hosts
-If Ansible cannot connect to a host, it marks that host as ‘UNREACHABLE’ and removes it from the list of active hosts for the run. You can use meta: clear_host_errors to reactivate all hosts, so subsequent tasks can try to reach them again.
---------------------------------
-##Handlers and failure
-Ansible runs handlers at the end of each play. If a task notifies a handler but another task fails later in the play, by default the handler does not run on that host, which may leave the host in an unexpected state. For example, a task could update a configuration file and notify a handler to restart some service. If a task later in the same play fails, the configuration file might be changed but the service will not be restarted.
-
-You can change this behavior with the --force-handlers command-line option, by including force_handlers: True in a play, or by adding force_handlers = True to ansible.cfg. When handlers are forced, Ansible will run all notified handlers on all hosts, even hosts with failed tasks. (Note that certain errors could still prevent the handler from running, such as a host becoming unreachable.)
---------------------------------
-##Defining failure
-Ansible lets you define what “failure” means in each task using the failed_when conditional. As with all conditionals in Ansible, lists of multiple failed_when conditions are joined with an implicit and, meaning the task only fails when all conditions are met. If you want to trigger a failure when any of the conditions is met, you must define the conditions in a string with an explicit or operator.
-
-You may check for failure by searching for a word or phrase in the output of a command
-
-- name: Fail task when the command error output prints FAILED
-  ansible.builtin.command: /usr/bin/example-command -x -y -z
-  register: command_result
-  failed_when: "'FAILED' in command_result.stderr"
-or based on the return code
-
-- name: Fail task when both files are identical
-  ansible.builtin.raw: diff foo/file1 bar/file2
-  register: diff_cmd
-  failed_when: diff_cmd.rc == 0 or diff_cmd.rc >= 2
-You can also combine multiple conditions for failure. This task will fail if both conditions are true:
-
-- name: Check if a file exists in temp and fail task if it does
-  ansible.builtin.command: ls /tmp/this_should_not_be_here
-  register: result
-  failed_when:
-    - result.rc == 0
-    - '"No such" not in result.stdout'
-If you want the task to fail when only one condition is satisfied, change the failed_when definition to
-
-failed_when: result.rc == 0 or "No such" not in result.stdout
-If you have too many conditions to fit neatly into one line, you can split it into a multi-line YAML value with >.
-
-- name: example of many failed_when conditions with OR
-  ansible.builtin.shell: "./myBinary"
-  register: ret
-  failed_when: >
-    ("No such file or directory" in ret.stdout) or
-    (ret.stderr != '') or
-    (ret.rc == 10)
-Defining “changed”
-Ansible lets you define when a particular task has “changed” a remote node using the changed_when conditional. This lets you determine, based on return codes or output, whether a change should be reported in Ansible statistics and whether a handler should be triggered or not. As with all conditionals in Ansible, lists of multiple changed_when conditions are joined with an implicit and, meaning the task only reports a change when all conditions are met. If you want to report a change when any of the conditions is met, you must define the conditions in a string with an explicit or operator. For example:
-
-tasks:
-
-  - name: Report 'changed' when the return code is not equal to 2
-    ansible.builtin.shell: /usr/bin/billybass --mode="take me to the river"
-    register: bass_result
-    changed_when: "bass_result.rc != 2"
-
-  - name: This will never report 'changed' status
-    ansible.builtin.shell: wall 'beep'
-    changed_when: False
-You can also combine multiple conditions to override “changed” result.
-
-- name: Combine multiple conditions to override 'changed' result
-  ansible.builtin.command: /bin/fake_command
-  register: result
-  ignore_errors: True
-  changed_when:
-    - '"ERROR" in result.stderr'
-    - result.rc == 2
-Note:-
-
-Just like when these two conditionals do not require templating delimiters ({{ }}) as they are implied.
-
-See Defining failure for more conditional syntax examples.
---------------------------------
-##Ensuring success for command and shell
-The command and shell modules care about return codes, so if you have a command whose successful exit code is not zero, you can do this:
-tasks:
-  - name: Run this command and ignore the result
-    ansible.builtin.shell: /usr/bin/somecommand || /bin/true
-Aborting a play on all hosts
-Sometimes you want a failure on a single host, or failures on a certain percentage of hosts, to abort the entire play on all hosts. You can stop play execution after the first failure happens with any_errors_fatal. For finer-grained control, you can use max_fail_percentage to abort the run after a given percentage of hosts has failed.
---------------------------------
-##Aborting on the first error: any_errors_fatal
-If you set any_errors_fatal and a task returns an error, Ansible finishes the fatal task on all hosts in the current batch, then stops executing the play on all hosts. Subsequent tasks and plays are not executed. You can recover from fatal errors by adding a rescue section to the block. You can set any_errors_fatal at the play or block level.
-
-- hosts: somehosts
-  any_errors_fatal: true
-  roles:
-    - myrole
-
-- hosts: somehosts
-  tasks:
-    - block:
-        - include_tasks: mytasks.yml
-      any_errors_fatal: true
-You can use this feature when all tasks must be 100% successful to continue playbook execution. 
-For example, if you run a service on machines in multiple data centers with load balancers to pass traffic from users to the service, you want all load balancers to be disabled before you stop the service for maintenance. 
-To ensure that any failure in the task that disables the load balancers will stop all other tasks:
-
----
-- hosts: load_balancers_dc_a
-  any_errors_fatal: true
-
-  tasks:
-    - name: Shut down datacenter 'A'
-      ansible.builtin.command: /usr/bin/disable-dc
-
-- hosts: frontends_dc_a
-  tasks:
-    - name: Stop service
-      ansible.builtin.command: /usr/bin/stop-software
-
-    - name: Update software
-      ansible.builtin.command: /usr/bin/upgrade-software
-
-- hosts: load_balancers_dc_a
-
-  tasks:
-    - name: Start datacenter 'A'
-      ansible.builtin.command: /usr/bin/enable-dc
-In this example Ansible starts the software upgrade on the front ends only if all of the load balancers are successfully disabled.
---------------------------------
-##Setting a maximum failure percentage
-By default, Ansible continues to execute tasks as long as there are hosts that have not yet failed. In some situations, such as when executing a rolling update, you may want to abort the play when a certain threshold of failures has been reached. To achieve this, you can set a maximum failure percentage on a play:
-
-- hosts: webservers
-  max_fail_percentage: 30
-  serial: 10
-The max_fail_percentage setting applies to each batch when you use it with serial. In the example above, if more than 3 of the 10 servers in the first (or any) batch of servers failed, the rest of the play would be aborted.
-
 ##varible ansible playbook
+
 Varible list are represent with "var" key value.
 varible always sequence or mapps.
 $vim variable.yml
@@ -353,44 +136,6 @@ $vim variable.yml
 :wq
 ##To check the ansible playbook syntax error
 $ ansible-playbook variable.yml --syntax-check
---------------------------------
-##get_url - Downloads files from HTTP, HTTPS, or FTP to node.
-Download FTP Files
-Downloading FTP files is very similar to the process described in the previous section. All you need to do is specify ftp:// as the protocol to the server.
-To download a secure file, you must also add the login information, as shown previously.
-Consider the following playbook:
-- hosts: all  
-
-  tasks:
-  - name: Download file from FTP server    
-  become: yes    
-  
-    ##url yes	HTTP, HTTPS, or FTP URL in the form (http|https|ftp)://[user[:pass]]@host.domain[:port]/path
-    get_url:
-      url: ftp://192.168.11.101/
-      username: user
-      password: '{{pass}}'
-      dest: /backups
-      mode: 0777
---------------------------------
-##Download Files with Authentication
-To download a file to a server that requires authentication, you will need to specify the login values.
-Consider the following playbook:
-- hosts: all    
-- name: Download File with authentication      
-  become: yes      
-    
-    get_url:
-      ##url: ftp)://[user[:pass]]@host.domain[:port]/path
-      url: http://102.15.192.120/backups/database.tar.gz
-      dest: /backups
-      ##url_password (added in 1.6) required=no	The password for use in HTTP basic authentication. If the url_username parameter is not specified, the url_password parameter will not be used.
-      ##url_username(added in 1.6)required=no The username for use in HTTP basic authentication. This parameter can be used without url_password for sites that allow empty passwords.
-      url_username: user
-      url_password: '{{pass}}'
-      mode: 0777
-      timeout: 5      
---------------------------------
 ##To create more directory with variable
 $vim multiple-directory.yml
 - hosts: all
@@ -402,7 +147,6 @@ $vim multiple-directory.yml
         - folder2
         - folder3
 :wq
---------------------------------
 ##To create a file
 $ vim file.yml
 - hosts: all
@@ -415,7 +159,6 @@ $ vim file.yml
         owner: dhana
         group: dhana
 :wq
---------------------------------
 ##Register playbook 
 $ vim register.yml
   - hosts: all
@@ -445,28 +188,8 @@ $ vim register.yml
         - host_name.stdout
         - ram_info.stdout      
 :wq
---------------------------------
-##creating the logical volume  using  playbook
-- name: Create a logical volume of 512m with disks /dev/sda and /dev/sdb
-  lvol:
-    vg: firefly
-    lv: test
-    size: 512
-    pvs: /dev/sda,/dev/sdb
---------------------------------
-## Find the file using playbook 
-- name: Recursively find /tmp files older than 2 days
-  find:
-    paths: /tmp
-    age: 2d
-    size: 1m
-    file_type: directory
-    #patterns:
-     # - '^_[0-9]{2,4}_.*.log$'
-      #- '^[a-z]{1,5}_.*log$'
-    recurse: yes
---------------------------------
-##1.Configuration of yum for Docker and Installing Docker
+##
+1.Configuration of yum for Docker and Installing Docker
 $ vim docker_repo.yml
 - hosts: all
   tasks:
@@ -483,7 +206,6 @@ $ vim docker_repo.yml
   - name: Installing Docker
     command: yum install docker-ce --nobest -y
 :wq
---------------------------------
 2.  Installing Nginx
 $ vim nginx.yml
 - name: Install Nginx web server
@@ -518,7 +240,7 @@ $ vim nginx.yml
   notify: Restart Nginx
 
 :wq
---------------------------------
+
 #Let’s go through playbook step by step
 1.This defined our hosts section
 hosts: which hosts I want to run this playbook(generally we run it on groups defined under /etc/ansible/hosts)
@@ -571,6 +293,8 @@ software: "haproxy" port: 8080
 [root@localhost vars]#
 
 ===============================
+
+
 - name: install {{ package_name}}  package
   yum: name={{ package_name }} state=present
 

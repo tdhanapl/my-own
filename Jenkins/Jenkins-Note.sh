@@ -16,15 +16,6 @@ https://www.lambdatest.com/blog/use-jenkins-shared-libraries-in-a-jenkins-pipeli
 2.agent
 3.stage(source code bulit)
 4.stage(SonarQube analysis and Quality gate check)
-   quality gate rules:
-   1.blocker issues
-   2. critical issues
-   3. coverage on new code
-   4. open issues
-   5. reopened issues
-   6. skkipped unit test
-   7. unit test error
-   8. unit test failure
 5.stage(git checkout)
 6.stage(deploy artifact to jfrog)
 8.stage(Bulid dcoker image with artifact and push to jfrog) 
@@ -44,7 +35,7 @@ https://www.lambdatest.com/blog/use-jenkins-shared-libraries-in-a-jenkins-pipeli
 		}
     }
 ###Pugins 
-1. git, Build Timestamp Plugin,Build Timeout,Credentials,git Pull Request Builder, Docker Pipeline, Email Extension,github,
+1. git, Build Timestamp Plugin,Build Timeout,Credentials,Pull Request Builder, Docker Pipeline, Email Extension,github,
  pipeline, maven, artifact, Role-based Authorization Strategy, bule ocean,  timestamps, timeout, input, kubernetes deploy, helm.	
 ########integarting with jenkins###########
 1. git-> jenkins(git-webhook, git pollscm)

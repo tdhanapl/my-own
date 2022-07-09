@@ -1004,6 +1004,7 @@ SELINUX=Enforcing
 #sestatus
 #setenforce 1
 
+
 #######################################LVM_Restore####################################
 ##scan the new hard disk
  $ ls /sys/class/scsi_host/ | while read host ; do echo "- - -"  > /sys/class/scsi_host/$host/scan ; done

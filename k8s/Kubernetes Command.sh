@@ -30,7 +30,7 @@ Here comes Kubernetes. Now, lets learn the basic components of K8s.
 #1.kube controller manager:
 It will manages current state of cluster.
 #2.API server: 
-It is Frontend  of cluster that services  rest operation and connect to ectd database. It will direct talk to etcd .
+It is Frontend  of clusterthat services  rest operation and connect to ectd database. It will direct talk to etcd .
 #3.etcd:
 It is key value store or database.It will keep or store  all current state.
 #4.kube scheduler:
