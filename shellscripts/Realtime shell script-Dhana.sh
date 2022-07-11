@@ -209,9 +209,6 @@ path=/var/server_precheck_patch-$today
   uname -a >> $path
   echo '================================================================================================================== ' >> $path
 
-
-
-
 ################################ check file size and compress or delete or move######################
 #https://www.tutorialspoint.com/unix/unix-regular-expressions.htm
 size=$(du -ch /var/datastore/dhana.log  | grep total  | awk '{print $1}')

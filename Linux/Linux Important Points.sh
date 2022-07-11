@@ -14,20 +14,15 @@ OR
 #systemctl list-unit-files
 
 #######Entry hostname with FQDN and ip address  in /etc/hosts############
-
 echo `hostname -i | awk '{print $NF}'`" "`hostname`" "`hostname -s`  >> /etc/hosts
 ##################################Fstab configurtion Fromat########################################################
 LABEL=cloudimg-rootfs   		/        ext4   			defaults,discard       0	 		1
 device name 		    mountpoint    file system type		permission            backup  		fsck(File System Consistency Check)
 #################How to Change Runlevels (targets) in Systemd##############################
-
 Systemd is a modern init system for Linux: a system and service manager which is compatible with the popular SysV init system and LSB init scripts. It was intended to overcome the shortcomings of SysV init as explained in the following article.
-
 The Story Behind ‘init’ and ‘systemd’: Why ‘init’ Needed to be Replaced with ‘systemd’ in Linux
 On Unix-like systems such as Linux, the current operating state of the operating system is known as a runlevel; it defines what system services are running. Under popular init systems like SysV init, runlevels are identified by numbers. However, in systemd runlevels are referred to as targets.
-
 In this article, we will explain how to change runlevels (targets) with systemd. Before we move any further, let’s briefly under the relationship between runlevels numbers and targets.
-
 Run level 0 is matched by poweroff.target (and runlevel0.target is a symbolic link to poweroff.target).
 Run level 1 is matched by rescue.target (and runlevel1.target is a symbolic link to rescue.target).
 Run level 3 is emulated by multi-user.target (and runlevel3.target is a symbolic link to multi-user.target).
@@ -36,22 +31,19 @@ Run level 6 is emulated by reboot.target (and runlevel6.target is a symbolic lin
 Emergency is matched by emergency.target.
 How to View Current target (run level) in Systemd
 When the system boots, by default systemd activates the default.target unit. It’s main work is to activate services and other units by pulling them in via dependencies.
-
 To view the default target, type the command below.
 #systemctl get-default 
 graphical.target
 
 To set the default target, run the command below.
-# systemctl set-default multi-user.target  
+#systemctl set-default multi-user.target  
 
 How to Change the target (runlevel) in Systemd
 While the system is running, you can switch the target (run level), meaning only services as well as units defined under that target will now run on the system.
-
 To switch to runlevel 3, run the following command.
 # systemctl isolate multi-user.target 
 To change the system to runlevel 5, type the command below.
 # systemctl isolate graphical.target
-
 ################################### how many Type of File in Linux##########################
 --- ->Text file
 d   -> Directory
@@ -128,7 +120,7 @@ https://www.redhat.com/sysadmin/route-ip-route
 #route add default gw 192.168.4.254
 #route add -i net 192.169.1.0/24 netmask  255.255.0.9 gateway 192.168.1.1
 # route add -net 17.16.4.0 netmask 255.255.254.0 gw 172.16.4.251
-#route add -net 172.16.4.0 netmask 255.255.254.0 gw 172.16.4.254
+#route add -net 172.16.100.0 netmask 255.255.255.0 gw 172.16.100.1
 #route add -net 192.168.85.0 netmask 255.255.255.0 gw 192.168.85.99
 #route  add -net 10.33.58.0 netmask 255.255.255.0 gw  10.32.39.254
 ####################################Create Permanent Static Routes#########################################
@@ -150,6 +142,20 @@ GATEWAY0=172.16.4.254
 400 Bad Request response status code indicates that the server cannot or will not process the request due
     to something that is perceived to be a client error 
     (for example, malformed request syntax, invalid request message framing, or deceptive request routing).
+##################replace a word in file in vi mode####################
+vim Dockerfile
+FROM alpine as build
+LABEL owner="dhanapal"
+LABEL Description="creating image with git, maven, java for docker-jenkins-slave"
+RUN  apk update  \
+     && apk   add git  \
+     && apk add wget  \
+     && apk add openjdk11  
+##we ned to repalce apk, install  into apt and install 
+#go escape mode 
+:%s /<old world>/<new world>/gI #g=global and I= insert
+:%s /apk/apt/gI 
+:%s /add/install/gI
 ##################login profile##################################
 cat /etc/skel/.
 1- .bashrc
@@ -169,6 +175,7 @@ $ renice -10 16995
 #Find Top Running Processes by Highest Memory and CPU Usage in Linux
  $ ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head
  $ ps -eo pid,ppid,%cpu,%mem,cmd --sort=-%mem | head
+
 ############Find Top 15 Processes by Memory Usage with ‘top’ in Batch Mode######
 $top -b -o +%MEM | head -n 22
 $top -b -o +%MEM | head -n 22 > topreport.txt
@@ -406,7 +413,7 @@ $yum remove httpd
 	--here it does not removes the dependencies
 $ yum autoremove httpd
 	--here it removes all dependencies with packages 
-######################################Extended Swap Space########################################
+######################################creation Swap Space########################################
 # Scan new lun on server with below command
 ls /sys/class/scsi_host/host | while read host ; do echo "---" > /sys/class/scsi_host/$host/scan ; done
 ##############how to check open port in remote server##################
@@ -466,7 +473,7 @@ Hex code (type L to list all codes): L
 1b  Hidden W95 FAT3 70  DiskSecure Mult bb  Boot Wizard hid fd  Linux raid auto
 1c  Hidden W95 FAT3 75  PC/IX           bc  Acronis FAT32 L fe  LANstep
 1e  Hidden W95 FAT1 80  Old Minix       be  Solaris boot    ff  BBT
-Hex code (type L to list all codes): 8e
+Hex code (type L to list all codes): 82
 Changed type of partition 'Linux' to 'Linux LVM'.
 Command (m for help): wq
 #partprobe # It update kernel without restart after partition creation 
@@ -588,7 +595,7 @@ Options:
                                 PASSWORD
   -R, --root CHROOT_DIR         directory to chroot into
 
-############################################ACL administartion##########################
+##########################ACL administartion##########################
 #setfacl -h
 setfacl 2.2.52 -- set file access control lists
 Usage: setfacl [-bkndRLP] { -m|-M|-x|-X ... } file ...
@@ -729,7 +736,7 @@ In rhel7, now /bin,/sbin,/lib and /lib64 are nested under /usr.
 
 #yum updateinfo list security all ------>To list all available security updates without installing them
 
-#yum updateinto list sec ----- >o list all available security updates without installing them [yum info-sec |grep 'Critical:' ---see critical patches)
+#yum updateinto list sec ----- >To list all available security updates without installing them [yum info-sec |grep 'Critical:' ---see critical patches)
 #yum updateinfo list security installed --->To get a list of the currently installed security updates
 
 #yum updateinfo info security --------->To lint all available security updates with verboat descriptions of the Lasus they apply
@@ -785,7 +792,7 @@ $subscription-manager list
  or 
 $subscription-manager version
 ##############Kernel-os-upgrade from 7.4 to 7.9##################################
-1.  Login to RHEL as root user.
+1. Login to RHEL as root user.
 2. Ensure that yum’s cache is cleared out with the command.
 [root@uaans ~]# yum clean all
 Loaded plugins: langpacks, product-id, subscription-manager
@@ -949,7 +956,7 @@ noted: to go iso image path do upgrade or mention that specific path of iso imag
 ##At the start prompt of linux select kernel and press e 
 ----> go to linux 16 line, press end key there it will reach at UTF-8 please type there.
 
-rd.break console=ttyl
+rd.break 
 
 --> ctlr+x
 #mount -o remount,rw /sysroot
@@ -991,7 +998,7 @@ ANSWER:
 #hostnamectl set-hostname servero.example.com
 #bash or exec bash ##forcelly update the kernel
 #####################Configure Selinux. Set the selinux policy in Enfrocing mode####################
-$ vim /etc/syaconfig/selinux 
+$ vim /etc/sysconfig/selinux 
 SELINUX=Enforcing
 :wq
 #sestatus
@@ -1026,14 +1033,18 @@ $ cd /restore
 $ touch file
 $ mkdir dhana
 ##unmount the file sys
-$ umount /dev/vg1/lv1 
-##go to archive location of lvms
+$ umount /dev/vg1/lv1
+##remove the lvm  now
+$ remove  /dev/vg1/lv1
+##go to archive location of lvms to restore lvm
 $ cd /ect/lvm/archive
 $  ll
-$ vgcfgrestore --list
-##restore the remove lvm
-$ vgcfgrestore -f /etc/lvm/archive/vg1_0002-18736372631234.vg lv1
-##scan lv
+###Now list VGS(volume_group)
+$ vgcfgrestore --list <volime_group_name>
+$ vgcfgrestore --list vg1
+##restore the remove  of slect the "created *before* exucting lvremove"
+$ vgcfgrestore -f /etc/lvm/archive/vg1_0002-18736372631234.vg vg1 #(vg1=volume_group_name)
+##scan lv(logical_volume)
 $ lvscan
 here lv in incative 
 ##active lv 
@@ -1176,7 +1187,7 @@ sudo SUSEConnect -r REGISTRATION_CODE -e EMAIL _ADDRESS
 * Difference between Grub & Grub2 ?
 * What is boot loader ?
 * Do you think the boot process in RHEL 7 is faster than RHEL 6 ? If yes, How ?
-* What is .rpm & .deb ?
+* What is .rpm & .deb?
 * What is RPM ?
 * What is YUM ?
 * Different methods to install the rpm based packages ?
@@ -1276,3 +1287,4 @@ This helps the system to run faster because disk information is already in memor
 * What is SSHFS ?
 * What is Kerberos ?
 * How to secure NFS with Kerberos ?
+------------------

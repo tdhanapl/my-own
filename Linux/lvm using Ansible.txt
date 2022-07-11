@@ -1,17 +1,16 @@
-7
-9
-14
-12
-89
--------------------
-8, 10, 11, 13, 
 
-======================================
-Partitioning Disk using Fdisk
-You may ask how I’m using the fdisk to create a partition. It simple by using an echo.
-
-# /bin/echo -e "n\np\n1\n\n\nt\n8e\nw" | sudo fdisk "{{ disk_name }}"
-new line represent hereby Pressing an “Enter Key”.
+#############Raid1##########
+- name: creating Raid1 level configuration
+  shell: |
+    mdadm --create /dev/{{ raw_disks }} --level=1 --raid-devices=2 /dev/{{ hard_disk_name }} /dev/{{ hard_disk_name }}
+	mdam -D /dev/{{ raw_disks }}
+	mke2fs -t ext4 -j /dev/{{ raw_disks }}
+	
+	
+#======================================
+#Partitioning Disk using Fdisk
+- name: partition new disk
+  shell: echo -e "n\np\n1\n\n\nt\n8e\nw" | sudo fdisk "/dev/{{ raw_disks }}"
 
 #“n\ = new partition, new line
 #np\ = primary, new line
@@ -21,94 +20,68 @@ new line represent hereby Pressing an “Enter Key”.
 #nt\ = t and new line
 #n8e\ = LVM type 8e and new line
 #nw” = write and exit, new line
-#“|” = forwarding all inputs to fdisk command on a disk.
-================================================================
----
-# defaults file for ansible-mdadm
-#
-# Define Raid Arrays to manage
-mdadm_arrays:
-    # Define array name
-  - name: 'md0'
-    # Define disk devices to assign to array
-    devices:
-      - '/dev/sdb'
-      - '/dev/sdc'
-    # Define filesystem to partition array with
-    filesystem: 'ext4'
-    # Define the array raid level
-    # 0|1|4|5|6|10
-    level: '1'
-    # Define mountpoint for array device
-    mountpoint: '/mnt/md0'
-    # Define if array should be present or absent
-    state: 'present'
-  ##Raid level 5 
-  # - name: 'md0'
-  #   devices:
-  #     - '/dev/sdb'
-  #     - '/dev/sdc'
-  #     - '/dev/sdd'
-  #   filesystem: 'ext4'
-  #   level: '5'
-  #   mountpoint: '/mnt/md0'
-  #   state: 'present'
-===========================================================
-- name: Create a new primary partition for LVM
-  community.general.parted:
-    device: /dev/sdb
-    number: 1
-    flags: [ lvm ]
-    state: present
-	#part_start: 1GiB
-	#part_end: 10GiB or "100%" 
-
+#| = forwarding all inputs to fdisk command on a disk.
+         or
+- name: create partition
+    community.general.parted:
+      device: /dev/sdb
+      number: 1
+      flags: [ lvm ]
+      state: present
+	  fs_type: ext4
+	  
 - name: Format the disk 
   filesystem:
     fs_type: ext4
-    dev: "/dev/{{ raw_disks }}"	
+    dev: "/dev/{{ partition_disks }}"
 
+#=========================================
 
 - name: Create the "{{ vg_name }}" Volume group.
-      lvg:
-        pvs: "/dev/{{ raw_disks }}"
-        vg: "{{ vg_name }}"
-        #pesize: "8"
-        #pv_options: '-Z y'
-        force: no
-        state: present
+  lvg:
+    pvs: "/dev/{{ raw_disks }}"
+    vg: "{{ vg_name }}"
+    #pesize: "8"
+    #pv_options: '-Z y'
+    force: no
+    state: present
  
-    - name: Create the "{{ lv_name }}" Logical Volume.
-      lvol:
-        vg: "{{ vg_name }}"
-        lv: "{{ lv_name }}"
-        size: "{{ require_lv_size }}"
-        active: yes
-        force: no
-        state: present
+- name: Create the "{{ lv_name }}" Logical Volume.
+  lvol:
+    vg: "{{ vg_name }}"
+    lv: "{{ lv_name }}"
+    size: "{{ require_lv_size }}"
+    active: yes
+    force: no
+    state: present    
     
-    - name: Create a "{{ fs }}" filesystem on lvm "/dev/mapper/{{ vg_name}}-{{ lv_name}}".
-      filesystem:
-        fstype: "{{ fs }}"
-        dev: "/dev/mapper/{{ vg_name }}-{{ lv_name }}"
-        force: no
+- name: Create a "{{ fs }}" filesystem on lvm "/dev/mapper/{{ vg_name}}-{{ lv_name}}".
+  filesystem:
+    fstype: "{{ fs }}"
+    dev: "/dev/mapper/{{ vg_name }}-{{ lv_name }}"
+    force: no
 
-    - name: Create a directory to mount the filesystem.
-      file:
-        path: "{{ mount_point }}"
-        state: directory
-        mode: '0755'
+- name: Create a directory to mount the filesystem.
+  file:
+    path: "{{ mount_point }}"
+    state: directory
+    mode: '0755'
 
-    - name: Mount the created "{{ fs }}" filesystem.
-      mount:
-        path: "{{ mount_point }}"
-        src: "/dev/mapper/{{ vg_name}}-{{ lv_name}}"
-        fstype: "{{ fs }}"
-        #opts: rw,nosuid,noexec
-        state: mounted
-============
+- name: Mount the created "{{ fs }}" filesystem.
+  mount:
+    path: "{{ mount_point }}"
+    src: "/dev/mapper/{{ vg_name}}-{{ lv_name}}"
+    fstype: "{{ fs }}"
+    #opts: rw,nosuid,noexec
+    state: mounted
+
+#===========
 vars:
-raw_disks: sdb1
+hard_disk_name:
+ - sdb
+ - sbc
+raw_disks: md0
+partition_disks: md01
 vg_name: vg_root
 lv_name: lv_root
 require_lv_size: 10GB

@@ -104,6 +104,8 @@ pipeline{
 ->Jenkins
 ->Global credentials (unrestricted)->New credentials
 ->Kind= Username with password
+Block or Report
+￼
 ->Scope= Global (Jenkins, nodes, items, all child items, etc)
 ->Username= dhanapal406(mark Treat username as secret)
 ->Password= •••••••••
@@ -114,7 +116,7 @@ pipeline{
 $ vim Dockerfile
 FROM tomcat
 RUN rm -rf /usr/local/tomcat/webapps/ROOT/
-COPY webapp.war /usr/local/tomcat/webapps/ROOT/ 
+COPY webapp.war /uELKsr/local/tomcat/webapps/ROOT/ 
 RUN cd /usr/local/tomcat/webapps/ROOT && unzip java-tomcat-maven-example.war && \
     rm -rf /usr/local/tomcat/webapps/ROOT/java-tomcat-maven-example.war
 EXPOSE 8080
@@ -310,6 +312,8 @@ pipeline{
               }
             }
         }
+Block or Report
+￼
         */
         stage('copy jar or war from master to agent') {
             agent {
@@ -361,5 +365,5 @@ post{
         jacoco execPattern: 'build/jacoco/test.exec'
 
     }
-}
+}ELK
 ------

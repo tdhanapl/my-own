@@ -8,7 +8,7 @@ https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-ku
 If you host grafana under subpath make sure your grafana.ini root_url setting includes subpath. If not using a reverse proxy make sure to set serve_from_sub_path to true.
 ./forticlientsslvpn_cli --server 121.242.87.100:10443 --vpnuser test 
 
-######################what is kubernetes###########
+######################what is kubernetes######################
 ##How we can say it is master
 When Rest API is present then is called master node
 ##kubeadm
@@ -30,9 +30,9 @@ Here comes Kubernetes. Now, lets learn the basic components of K8s.
 #1.kube controller manager:
 It will manages current state of cluster.
 #2.API server: 
-It is Frontend  of cluster. we using  for rest operation and connect to the api server. It will direct talk to etcd .
+It is Frontend  of clusterthat services  rest operation and connect to ectd database. It will direct talk to etcd .
 #3.etcd:
-It is key value store or database.It will keep all current state.
+It is key value store or database.It will keep or store  all current state.
 #4.kube scheduler:
 It is the one which schedules pods on spefic node the pods want to run.It will schedule the pods based on label, taints, toleration.
 #Worker node major service 
@@ -42,6 +42,43 @@ It the one will passes the request  to container engine.
 It will use Ip tables to provide a interface to connceting kubernetes components.
 #3.conatiner run time:
 It take care of acusally running containers.
+----------------------
+#Pods:
+Smallest unit of k8s, which is an abstraction of the container application
+#Services & Ingress: 
+To manage external communication between nodes and internal pod level communication
+#ConfigMaps:
+ To manage the end-point URLs required by the pods/ DB’s
+#Secrets: 
+To keep app-level passwords and secret keys securely using based64 encoding
+#Volume: 
+For Persistent data storage
+#Deployments: 
+To deploy create replicas & manage stateless apps
+#Statefulsets: 
+For stateful apps and databases
+#######by deafult  what are namespace
+Namepace--it used to  separate resource environment. it use to differentiate customer environment like client1, client2 within cluster
+1.deafult--whenever we pods without mention namespace it deploy in deafult namespace
+2.kube-node-lease
+3.kube-public
+4.kube-system---All  infrasturture pods create in kube-system
+###on 3 masters cpu and ram
+Ram=16GB
+CPU=8cpu
+##om 4 worker node cpu and ram
+Ram=46GB
+Cpu=16cpu
+##on database cpu and ram
+Ram=46GB
+Cpu=16cpu
+####nfs 
+Ram=30GB
+cpu=16cpu
+##Node networking
+1.network addon->install-> what type plugins we use-- flannel(currently we use) and mostly use calio
+2.CNI(containner network interface)-- how  networking worker pod--pod, pod-source, external-source 
+###configure k8s cluster
 
 ##################################Components of Kubernetes###############
 1.$Nodes:
@@ -89,22 +126,6 @@ Means that, the application pod will be replicated to the another Node based on 
 All these replicated Pods connected to the same service(remember IP is permanent). 
 So replicated Pods also can be accessed with the same IP. 
 Service component also does the Load balancing with these replicas.
------------------------------------------------------------------------
-
-#Pods: 
-Smallest unit of k8s, which is an abstraction of the container application
-#Services & Ingress: 
-To manage external communication between nodes and internal pod level communication
-#ConfigMaps:
- To manage the end-point URLs required by the pods/ DB’s
-#Secrets: 
-To keep app-level passwords and secret keys securely using based64 encoding
-#Volume: 
-For Persistent data storage
-#Deployments: 
-To deploy create replicas & manage stateless apps
-#Statefulsets: 
-For stateful apps and databases
 
 ###################important parts in pod of  kubernetes################
 1.$securityContext:
@@ -169,6 +190,7 @@ It will check  serverice or something is availabe or not in file before  creatin
 1.$Command: newline-separated commands which are executed inside the container. If the return value is 0, it is considered to be healthy.
 2.$Http: which will execute a HTTP GET operation against a URL. If the request returns a status code between 200 and 399 inclusive it is considered healthy.
 3.$TCP: Socket, which will attempt to establish a connection against a TCP socket. If the connection can be established, it is considered healthy.
+
 10.$taints:
 Add a Taint on node to restrict  pods from being scheduled 
 $kubectl taint nodes node1 app=red: NoSchedule
@@ -215,6 +237,7 @@ Examples:
 ###########################kubectl api-versions#####################
 #kubectl api-versions −It prints the supported versions of API on the cluster.
 $ kubectl api-versions
+
 admissionregistration.k8s.io/v1beta1
 apiextensions.k8s.io/v1beta1
 apiregistration.k8s.io/v1beta1
