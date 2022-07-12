@@ -178,7 +178,7 @@ ENTRYPOINT ["/usr/sbin/httpd"]
 :wq
 	Note:--The major difference between both Dockerfile we not repeting the run command in 2nd Dockerfile with the 2nd Dockerfile size will be reduce and less layer of docker image will created.
 ###To Build the Dockerfile has docker image
-$ docker build -t <tag_name:version>
+$ docker build --tag <tag_name:version>
    -t--tag_name
 ## Change tag name of docker image
 $ docker image tag  <old_image_name> <new_image_name>

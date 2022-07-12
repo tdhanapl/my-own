@@ -25,7 +25,7 @@ Types of VCS
 														  release(it support to release preparation  new  production release)
 														     |___________
 																		 |
-																		hot-fix (it is just patch  to production release)	
+																		hot-fix (it is just patch  to production release, we create branch from master branch)	
 
 
 =======================================
@@ -260,9 +260,6 @@ $ git tag -d $(git tag -l)
 $ git  push origin -d v1.0
 #To delete the all  tags of remote repository
 $ git push origin -d $(git tag -l)
-
-
- 
 ##git stash
 stash meaning is store file(something) safely in a hidden place.
 We can stashing  file if its in staging/index. If file is not in staging/index area then we can notstashing  file.
@@ -292,8 +289,10 @@ $ git stash apply stash@{0}
 
 
 ansible push mechanism:  
- ----------------------------
-Site reliability engineering mainly focuses on enhancing system availability and reliability.
+
+----------------------------
+Site reliability engineering mainly focuses on enhancing to  manage systems  availability and reliability , solve problems, and automate operations tasks.
+SRE teams are responsible for how code is deployed, configured, and monitored, as well as the availability, latency, change management, emergency response, and capacity management of services in production.
 SRE uses three Service Level Commitments to measure how well a system performs:
 
 Service level agreements (SLAs) define the required reliability, performance, and latency of the system as desired by end users.
@@ -303,5 +302,4 @@ Key principles of SRE include:
 
 Principles Of SRE
 ================================== 
-=======
->>>>>>> 9a364dac2523e964db193a167ef1a3661336d5da
+load balancer flannel  

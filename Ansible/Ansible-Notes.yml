@@ -8,7 +8,9 @@
 #####Ansible use case
 1.patching
 2.install packages
-3. manging services
+3.manging services
+##what is tasks
+
 ##To disbale the hostkeychecking
 1.method1(temporary):
 $ export 	ANSIBLE_Host_KEY_CHECKING=False
@@ -134,8 +136,10 @@ $vim variable.yml
         src: /var/www/html/
       	content: "{{ my_content }}"
 :wq
+
 ##To check the ansible playbook syntax error
 $ ansible-playbook variable.yml --syntax-check
+
 ##To create more directory with variable
 $vim multiple-directory.yml
 - hosts: all
@@ -206,7 +210,7 @@ $ vim docker_repo.yml
   - name: Installing Docker
     command: yum install docker-ce --nobest -y
 :wq
-2.  Installing Nginx
+2.Installing Nginx
 $ vim nginx.yml
 - name: Install Nginx web server
   apt:
@@ -241,7 +245,7 @@ $ vim nginx.yml
 
 :wq
 
-#Let’s go through playbook step by step
+##Let’s go through playbook step by step
 1.This defined our hosts section
 hosts: which hosts I want to run this playbook(generally we run it on groups defined under /etc/ansible/hosts)
 remote_user: remote user we going to operate(i.e ansible user which is a privileged user)
@@ -267,17 +271,16 @@ $ vim apache.ynl
   connection: ssh
   gather_facts: yes
   tasks:
-   
     - name: "Installing Apache"
       yum: 
         name: httpd
-      state: latest
+        state: latest
 
     - name: "startservice (notify and handler name should match)"
       service: 
         name: httpd
-      state: restarted
-      enabled: true
+        state: restarted
+        enabled: true
       handlers:
       notify: 
          - "start service"

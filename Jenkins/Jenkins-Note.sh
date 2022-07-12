@@ -7,18 +7,26 @@ https://www.jenkins.io/doc/
 https://www.jenkins.io/doc/book/pipeline/syntax/#options
 ####refernces these site for shared libary in jenkins
 https://www.lambdatest.com/blog/use-jenkins-shared-libraries-in-a-jenkins-pipeline/?s=08
+##what is Continuous Integration,Continuous delivery,and Continuous Deployment.
+#Continuous Integration (CI)
+It  is a software engineering practice in which developers integrate code into a shared repository several times a day in order to obtain rapid feedback of the feasibility of that code. CI enables automated build and testing so that teams can rapidly work on a single project together.
 
+#Continuous delivery (CD) 
+It is a software engineering practice in which teams develop, build, test, and release software in short cycles. It depends on automation at every stage so that cycles can be both quick and reliable.
+
+#Continuous Deployment
+It  is the process by which qualified changes in software code or architecture are deployed to production as soon as they are ready and without human intervention.
 ##security tools:
 1.Veracode
 2.
 ##pipeline
 1.tools
 2.agent
-3.stage(source code bulit)
+3.stage(git checkout)
 4.stage(SonarQube analysis and Quality gate check)
-5.stage(git checkout)
+5.stage(source code bulit)
 6.stage(deploy artifact to jfrog)
-8.stage(Bulid dcoker image with artifact and push to jfrog) 
+8.stage(Bulid docker image with artifact and push to jfrog) 
 9.stage(identifying misconfigs using datree in helm charts)
 10.stage(pushing the helm charts to jfrog)
 11.stage(manual approval for deploy in k8s development environment)
@@ -35,8 +43,8 @@ https://www.lambdatest.com/blog/use-jenkins-shared-libraries-in-a-jenkins-pipeli
 		}
     }
 ###Pugins 
-1. git, Build Timestamp Plugin,Build Timeout,Credentials,Pull Request Builder, Docker Pipeline, Email Extension,github,
- pipeline, maven, artifact, Role-based Authorization Strategy, bule ocean,  timestamps, timeout, input, kubernetes deploy, helm.	
+1. git, Build Timestamp Plugin, Build Timeout, Credentials, Pull Request Builder, Docker Pipeline, Email Extension,github,
+   pipeline, maven, artifact, Role-based Authorization Strategy, bule ocean, input, kubernetes deploy, helm.	
 ########integarting with jenkins###########
 1. git-> jenkins(git-webhook, git pollscm)
 2. sonarqube-> jenkins(we pom.xml in properties tag )
@@ -46,7 +54,7 @@ https://www.lambdatest.com/blog/use-jenkins-shared-libraries-in-a-jenkins-pipeli
 ##kubernetes version=1.19
 ##ansible version=2.10
 ##git=2.30
-1. ###############Reverse Proxy with nginx for jenkin url access########
+1.###############Reverse Proxy with nginx for jenkin url access########
 #set hostname with FQDN
 $ hostnamectl set-hostname jenkins.cntech.local
 $ echo `hostname -i | awk '{print $NF}'`" "`hostname`" "`hostname -s ` >> /etc/hosts
@@ -139,7 +147,7 @@ $chown -R jenkins:jenkins /opt/backup-jenkins-data
 ->Now go to jenkins 
 ->manage jenkins->manage plugins->Role-based Authorization Strategy(search available)->Role-based Authorization Strategy(select)->install(without restart)
 
-3. ############LDAP configuration in jenkins##############
+3.############LDAP configuration in jenkins##############
 ##server LDAP configuration details (deatils for configure LDAP in jenkins###
 objectClass: top
 objectClass: dcObject 
@@ -728,7 +736,8 @@ go website
  confirm password=ikt@406
  ->Now go to jenkins 
  ->manage jenkins->manage plugins->sonarqube(search available)->sonarqube scanner(select)->install(without restart)
- Again to manage jenkins->configure system->SonarQube Server->mark Environment variables->Add SonarQube->Name=Sonarjenkins->
+ 
+ ->Again to manage jenkins->configure system->SonarQube Server->mark Environment variables->Add SonarQube->Name=Sonarjenkins->
  -->Server Url=url=3.104.45.3:9000/sonarqube(SonarQube url add /sonarqube in url)---
  #now go to SonarQube server to create token
  click Administartor->security->users->click tokens->Generate tokens=jenkins->generate->copy that token
@@ -865,11 +874,10 @@ password: passwrod
 ->maven snpahot version:unique
 ->click save and finish
 After create repository here  dispaly five file
-1. lib-snapshot-local
+1. lib-snapshot-local--it store the snapshot of version
 2. lib-release-local--it store our artifactory(jar,war) 
 3. jcenter--it store all thrid dependency
-4. libs-snapshot-local--it store the snapshot of version
-5. lib-release--it store the dependency
+4. lib-release--it store the dependency
 
 16. #################copy jar from one server to another and work for remote server from jenkins###########
 #create ssh-keygen
@@ -1091,7 +1099,6 @@ http://<jfrog server ip:8081/artifactory>
 
 #Integration Steps
 ->Login to Jenkins to integrate Artifactory with Jenkins
-
 ->Install "Artifactory" plug-in
 ->Manage Jenkins -> Jenkins Plugins -> available -> artifactory-> select without restart.
 ->Configure Artifactory server credentials
@@ -1334,6 +1341,6 @@ pipeline {
 }
 
 -------------
-QA builds (every  monday and thusday)
-pref builds (wensday)
-UAT builds(tue)
+dev builds (every  monday and thusday)
+prod builds (wensday)
+UAT builds(tue)   

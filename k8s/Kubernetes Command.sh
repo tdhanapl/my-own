@@ -57,7 +57,7 @@ For Persistent data storage
 To deploy create replicas & manage stateless apps
 #Statefulsets: 
 For stateful apps and databases
-#######by deafult  what are namespace
+######by deafult  what are namespace
 Namepace--it used to  separate resource environment. it use to differentiate customer environment like client1, client2 within cluster
 1.deafult--whenever we pods without mention namespace it deploy in deafult namespace
 2.kube-node-lease
@@ -155,7 +155,7 @@ KIND:     CronJob
 VERSION:  batch/v1
 FIELD:    schedule <string>
 DESCRIPTION:
-     The schedule in Cron format ("*/2 * * * *")
+    The schedule in Cron format ("*/2 * * * *")
 $kubectl get cronjobs
 4.$strategy(deployment specification):
 #It will explain how pods should  be update.
@@ -689,7 +689,7 @@ Examples:
   # Also note, do not surround your command and its flags/arguments with quotes
   # unless that is how you would execute it normally (i.e., do ls -t /usr, not "ls -t /usr").
   $kubectl exec 123456-7890 -i -t -- ls -t /usr
-  
+
 ###########################kubectl expose##########
 #kubectl expose − This is used to expose the Kubernetes objects such as pod, replication controller, and service as a new Kubernetes service. 
 -This has the capability to expose it via a running container or from a yaml file.
