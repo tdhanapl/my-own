@@ -28,14 +28,8 @@ Types of VCS
 																		hot-fix (it is just patch  to production release, we create branch from master branch)	
 
 
-=======================================
-			master
-			  |______________
-			                 |
-							 Hostfix
-							 
-			  |
-			  Strong ability to troubleshoot any issues generated while building, deploying and in production support. 
+
+#Strong ability to troubleshoot any issues generated while building, deploying and in production support. 
 #########git command####
 #To check git vsersion
 $ git --version
@@ -46,7 +40,6 @@ major.minor.hostfix
 #To check git vsersion
 $ git --vsersion
 
->>>>>>> 9a364dac2523e964db193a167ef1a3661336d5da
 ##Add the our username and gamil to git 
 $ git config --global user.name "dhanapal"
 $ git config --global user.email "dhanapal703278@gmail.com"

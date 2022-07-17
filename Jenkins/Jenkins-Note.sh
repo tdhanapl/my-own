@@ -1,12 +1,20 @@
 #######################Configuration ##############################jenkins-pass=root123
+
 ###Home directory for jenkins
 By default, Jenkins stores all of its data in this directory on the file system
 $ ll /var/lib/jenkins
+
 ########jenkins document site
 https://www.jenkins.io/doc/
 https://www.jenkins.io/doc/book/pipeline/syntax/#options
 ####refernces these site for shared libary in jenkins
 https://www.lambdatest.com/blog/use-jenkins-shared-libraries-in-a-jenkins-pipeline/?s=08
+
+##good content devopsec
+https://medium.com/@nanditasahu031/devsecops-implementing-secure-ci-cd-pipelines-9653726b4916
+https://medium.com/@nanditasahu031/jenkins-pipeline-jfrog-artifactory-and-jenkins-integration-4fed3fc8d556
+https://github.com/Savegirlchild/DevSecOps_Pipeline
+
 ##what is Continuous Integration,Continuous delivery,and Continuous Deployment.
 #Continuous Integration (CI)
 It  is a software engineering practice in which developers integrate code into a shared repository several times a day in order to obtain rapid feedback of the feasibility of that code. CI enables automated build and testing so that teams can rapidly work on a single project together.
@@ -16,9 +24,11 @@ It is a software engineering practice in which teams develop, build, test, and r
 
 #Continuous Deployment
 It  is the process by which qualified changes in software code or architecture are deployed to production as soon as they are ready and without human intervention.
+
 ##security tools:
-1.Veracode
-2.
+1.Veracode--source code scan
+2.trivy-image-scan--docker image scan
+
 ##pipeline
 1.tools
 2.agent
@@ -49,11 +59,14 @@ It  is the process by which qualified changes in software code or architecture a
 1. git-> jenkins(git-webhook, git pollscm)
 2. sonarqube-> jenkins(we pom.xml in properties tag )
 3. jfrog-> jenkins(we mention jfrog details under dependency jfrog repository details)
-##jenkins requried java version = 1.18
-##jenkins version=2.300
-##kubernetes version=1.19
-##ansible version=2.10
-##git=2.30
+
+##vsersion
+#jenkins requried java version = 1.18
+#jenkins version=2.300
+#kubernetes version=1.19
+#ansible version=2.10
+#git=2.30
+
 1.###############Reverse Proxy with nginx for jenkin url access########
 #set hostname with FQDN
 $ hostnamectl set-hostname jenkins.cntech.local
