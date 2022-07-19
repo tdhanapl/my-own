@@ -65,9 +65,12 @@ $netstat -nultp
 	--u=udp
 	--l=listing 
 	--p=pid
-###################command to  delete 	empty line in a fine############
+###################command to  delete 	empty line in a file############
 $ sed -i '/^$/d' <filename>
 $ sed -i  '/^$/d' file.txt
+#########To delete all line in vi mode of the file############
+#In escape mode
+:1,$d 
 ##############################Find old 90 or 30 days and remove that files#####################
 find /var/log -type f -mtime +30 -exec ls -lrth {} \;  ##f--means file 
 find /var/log -type f -mtime +30 -exec rem -rvf {} \;     ## +30--means more than 30 days

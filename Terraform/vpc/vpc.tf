@@ -1,50 +1,27 @@
-#creating vpc, internet_gateway,nat_gateway, route table, subnet, associate the subnet to route table and security_group
+#creating vpc, internet_gateway, route table, subnet, associate the subnet to route table and security_group
 #provider
 provider "aws" {
   region     = "ap-south-1"
-  access_key = "access_key"
-  secret_key = "secret_key"
+  #access_key = "AKIA4PNPSPCJFINHAHVO"
+  #secret_key = "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"
 }
-##1.create vpc
-#2. create internet_gateway and attach to the vpc (for public_subnet)
-#3. create nat_gateway ( for private_subnet)
-#4. create public and private  subnet
-#5. create routing public table and assign IGW and associate with public_subnet
-#6. create routing private table and assign nat_gateway and associate with private_subnet
-#7. create the security
-
 #1.creating the vpc with main name
 resource "aws_vpc" "VPC-A" {
   cidr_block       = "10.50.0.0/16"
   instance_tenancy = "default"
   enable_dns_hostnames    = true
   tags = {
-    Name = var.vpc_name
+    Name =  "prod-${var.vpc_name}"
   }
 }
-#2.create internet gateway, elastic ip and nat_gateway_id
+#2.create internet gateway
 resource "aws_internet_gateway" "VPC-A-IGW" {
   vpc_id = aws_vpc.VPC-A.id
 
   tags = {
-    Name = "VPC-A-IGW"
+    Name = "${var.vpc_name}-IGW"
   }
 }
-##create elastic_ip
-#resource "aws_eip" "elastic_ip" {
-#vpc = true 
-#tags = {
-#  Name = "elastic_ip"
- #}
-#}
-##create the nat_gateway_id
-#resource "aws_nat_gateway" "VPC-A-NAT-GW" {
-#  allocation_id = aws_eip.elastic_ip.id
-# subnet_id     = aws_subnet.Private-Subnet-A.id
-
-#  tags = {
-#    Name = "gw NAT"
-#  }
 #3.create the route table
 #creating the public_route_table
 
@@ -57,21 +34,20 @@ resource "aws_route_table" "Public-RT" {
   }
 
   tags = {
-    Name = "Public-RT"
+    Name = "Public-RT-${var.name[0]}"
   }
 }
-
-##creating the private_route_table
+#creating the private_route_table
 resource "aws_route_table" "Private-RT" {
   vpc_id = aws_vpc.VPC-A.id
 #here we are leave default route add
   #route {
    # cidr_block = "0.0.0.0/0"
-    #nat_gateway_id = aws_nat_gateway.VPC-A-NGW
+    #gateway_id = aws_internet_gateway.VPC-A-IGW.id
   #}
 
   tags = {
-    Name = "Private-RT"
+    Name = "Private-RT-${var.name[0]}"
   }
 }
 #4.create a subnets
@@ -84,7 +60,7 @@ resource "aws_subnet" "Public-Subnet-A" {
   availability_zone       = var.public_subnet_availability_zone
   #map_public_ip_on_launch = true
   tags = {
-    Name = "Public-Subnet-A"
+    Name = "Public-Subnet-${var.name[0]}"
   }
 }
 #creating the private_subnet
@@ -96,7 +72,7 @@ resource "aws_subnet" "Private-Subnet-A" {
   availability_zone       = var.private_subnet_availability_zone
   #map_public_ip_on_launch = true
   tags = {
-    Name = "Private-Subnet-A"
+    Name = "Private-Subnet-${var.name[0]}"
   }
 }
 
@@ -114,9 +90,9 @@ resource "aws_route_table_association" "private" {
   route_table_id = aws_route_table.Private-RT.id
 }
 #6.create the security group
-resource "aws_security_group" "allow_web" {
-  name        = "allow_web"
-  description = "Allow web inbound traffic"
+resource "aws_security_group" "allow_ports" {
+  name        = "allow_pots"
+  description = "Allow ports inbound traffic"
   vpc_id      = aws_vpc.VPC-A.id
 
   ingress {
@@ -124,7 +100,7 @@ resource "aws_security_group" "allow_web" {
     from_port        = 443
     to_port          = 443
     protocol         = "tcp"
-    cidr_blocks      = [0.0.0.0/0]
+    cidr_blocks      = ["0.0.0.0/0"]
     #ipv6_cidr_blocks = [aws_vpc.main.ipv6_cidr_block]
   }
   ingress {
@@ -132,7 +108,7 @@ resource "aws_security_group" "allow_web" {
     from_port        = 22
     to_port          = 22
     protocol         = "tcp"
-    cidr_blocks      = [0.0.0.0/0]
+    cidr_blocks      = ["0.0.0.0/0"]
     #ipv6_cidr_blocks = [aws_vpc.main.ipv6_cidr_block]
   }
   
@@ -145,6 +121,6 @@ resource "aws_security_group" "allow_web" {
   }
 
   tags = {
-    Name = "vpc-a-security-group"
+    Name = "${var.vpc_name}-security-group"
   }
 }

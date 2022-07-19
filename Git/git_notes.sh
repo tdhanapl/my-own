@@ -182,11 +182,7 @@ $ git status
 ## To merge the particular	commit id from one branch to another branch
 By using cheerypick we can merge the particular commit id from one branch to another branch
 $ git cheerypick <commit id>
-=======
-       Before merge our code we need get code reviewed  or requried approval by our team lead or manager then only  we can merge our code from feature3 to main branch.
->>>>>>> 9a364dac2523e964db193a167ef1a3661336d5da
 
-##Discard the change or delete current modified  in working directory of file.
 $ git restore 	<filename> or $ git checkout file1.txt
 $ git restore file1.txt
 Note:-After this it delete current modified in working directory of file.
@@ -195,14 +191,14 @@ Note:-After this it delete current modified in working directory of file.
 $ git restore --staged file1.txt
 Note:-Perviously it is in staging/index area after using above command it comes to working directory.
 	  from here if you want Discard the change(currently it working directory) then you can do with this command "git restore 	<filename>"	
-	  ##Tagging the git
-	  git tagging developer use this functionality to mark release point (v1.0, v1.1)
-	  $ vim file1.txt
-	  creating tagging
-	  :wq!
-	  $ git add *
-	  $ git commit -m "add tagging for git"
-	  $ git tag -a v1.0 -m "release the latest changes"
+##Tagging the git
+git tagging developer use this functionality to mark release point (v1.0, v1.1)
+$ vim file1.txt
+creating tagging
+:wq!
+$ git add *
+$ git commit -m "add tagging for git"
+$ git tag -a v1.0 -m "release the latest changes"
 
 ##revert the chanage of files from local repository to staging area(reset ---soft)
 If one file in local repository you want to that file from  local repository to staging area then use this command.

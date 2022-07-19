@@ -59,13 +59,22 @@ AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 Default region name [None]: ap-south-1
 Default output format [None]:
     or
-## set credentials in Environment Variables
-Credentials can be provided by using the AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and optionally AWS_SESSION_TOKEN environment variables. The region can be set using the AWS_REGION or AWS_DEFAULT_REGION environment variables.
-For example:
-provider "aws" {}
-$ export AWS_ACCESS_KEY_ID="my-access-key"
-$ export AWS_SECRET_ACCESS_KEY="my-secret-key"
-$ export AWS_REGION="ap-south-1"
+## set credentials in the .aws configuration files
+  
+[root@ansible .aws]# vim credentials
+[default]
+aws_access_key_id =  AKIAIOSFODNN7EXAMPLE 
+aws_secret_access_key = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+
+:wq!
+[root@ansible .aws]# vim  config
+[default]
+region = ap-south-1
+
+:wq!
+##Strings and Templates
+##url for references of string and templates
+https://www.terraform.io/language/expressions/strings
 
 ### variable types
 1.string 
@@ -84,6 +93,18 @@ variable "map" {
 	ubuntu-ami = "ami-068257025f72f470d"
   }
 }
+##Terraform visualing exexution plan
+#Install graphviz.x86_64 package
+This guide let you learn how to install graphviz.x86_64 package:
+$ sudo dnf makecache
+$ sudo dnf install graphviz.x86_64
+
+#Uninstall / Remove graphviz.x86_64 package
+Please follow the step by step instructions below to uninstall graphviz.x86_64 package:
+$ sudo dnf remove graphviz.x86_64
+sudo dnf autoremove
+##To create the terraform plan graphviz
+$ terraform graph -Tsvg > graph.svg
 
 ##Initialize the project.
 $ terraform init

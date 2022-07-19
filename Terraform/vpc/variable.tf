@@ -3,7 +3,11 @@ variable "vpc_name" {
   type        = string
   default     = "VPC-A"
 }
-
+variable "name" {
+  description = "vpc_name"
+  type        = list
+  default     = ["A","B","C"]
+}
 variable "vpc_cidr_block" {
   description = "vpc_cidr_block_ip"
   type        = string
