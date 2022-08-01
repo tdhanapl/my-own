@@ -8,7 +8,7 @@
 #####Ansible use case
 1.patching
 2.install packages
-3.manging services
+3.managing services
 ##what is tasks
 
 ##To disbale the hostkeychecking
@@ -21,6 +21,7 @@ host_key_checking=False
 #Note:
 1.command-->we can not excute two or more commands at a time in ansible adhoc commands
 2.shell---->we can excute two or more commands at a time in ansible adhoc commands
+
 ##Mainting the owne configuration  file inventory
 $ ansible --version
 $ mkdir my_ansible_working_directory
@@ -35,11 +36,13 @@ $ vim  inventory
 192.168.1.50
 192.168.1.2
 :wq
+
 ##To excute ansible playbook we need specify inventory path while excuting command
 $ ansible-playbook -i inventory -m ping ---->for playbook
 $ ansible webserver -i inventory    -m service -a "name=httpd stated=restarted"
 Note:-
 -i inventory is we add own configuration inventory that why we use ("-i inventory")
+
 ##change default location of inventory
 $ vim ansible.cfg
 [deafult]
@@ -51,7 +54,6 @@ Note:-
 Now no need to -i inventory because we add in ansible.cfg for inventory.
 
 #############Important modules in Ansible#####################
-
 1 command: This is used to execute linux commands on the remote managed
 nodes.It is the default module of Ansible
 
@@ -97,21 +99,24 @@ like creating users,assigning home dirs deleting users etc
 
 20 docker_swarm: Used to setup of docker swarm architecture
 
-
 ######To check the list of hosts server in inventory file##########
 $ ansible all --lists-hosts
+
 ##To check all modules
 $ ansible-doc -l | grep less
+
 ##To know adhoc command modules
 $ ansible-doc <modules>
 $ ansible-doc yum
 $ ansible-doc copy
 $ ansible-doc service
 $ ansible-doc  fetch
+
 ##To see the system setup or information
 $ ansible 192.168.1.20 -m setup | less
 $ ansible 192.168.1.29 -m setup | grep swap
 $ ansible 192.168.1.20 -m setup | grep -e swap -e process ##-e for grep multiple
+
 ##Ansible adhoc command syntax
 $ ansible <groupname_inventory> -m <module> -a <argument>
 $ ansible webserver -m shell -a "rpm -aq |grep httpd"
@@ -120,10 +125,11 @@ $ ansible webserver -m yum -a "name=httpd state=latest or present" -k
 $ ansible webserver -m yum -a "name=httpd state=latest or present" -b
 	-k-->without promot for password
 $ ansible webserver -m cpoy -a "src=/root/index.html dest=/var/www/html/"
+
 ##Create a file on remote node with content
 $ ansible webserver -m cpoy -a "content='create file with content for index.html\n'       dest=/var/www/html/index.html"
-##varible ansible playbook
 
+##varible ansible playbook
 Varible list are represent with "var" key value.
 varible always sequence or mapps.
 $vim variable.yml
@@ -151,6 +157,7 @@ $vim multiple-directory.yml
         - folder2
         - folder3
 :wq
+
 ##To create a file
 $ vim file.yml
 - hosts: all
@@ -163,6 +170,7 @@ $ vim file.yml
         owner: dhana
         group: dhana
 :wq
+
 ##Register playbook 
 $ vim register.yml
   - hosts: all
@@ -192,7 +200,7 @@ $ vim register.yml
         - host_name.stdout
         - ram_info.stdout      
 :wq
-##
+#####
 1.Configuration of yum for Docker and Installing Docker
 $ vim docker_repo.yml
 - hosts: all
@@ -210,6 +218,7 @@ $ vim docker_repo.yml
   - name: Installing Docker
     command: yum install docker-ce --nobest -y
 :wq
+
 2.Installing Nginx
 $ vim nginx.yml
 - name: Install Nginx web server
@@ -220,7 +229,6 @@ $ vim nginx.yml
    - Restart Nginx
   tags:
     - nginx
-
 
 ###
 - name: Update nginx config files
@@ -253,6 +261,7 @@ become: yes(means root user, as the command we want to execute on remote host ne
 become_method: sudo(it’s optional and default)
 connection: ssh(by default connection type is ssh we can use parimiko or local connection)
 gather_facts: yes(facts that are returned when it started running playbook against the hosts eg:OS)
+
 2.A role directory structure contains directories: defaults, vars, tasks, files, templates, meta, handlers. Each directory must contain a main.yml file which contains relevant content. 
 Let’s look little closer to each directory.  This is the major section
 defaults: contains default variables for the role. Variables in default have the lowest priority so they are easy to override.
@@ -262,8 +271,9 @@ files: contains files which we want to be copied to the remote host. We don’t 
 templates: contains file template which supports modifications from the role. We use the Jinja2 templating language for creating templates.
 meta: contains metadata of role like an author, support platforms, dependencies.
 handlers: contains handlers which can be invoked by “notify” directives and are associated with service.
+
 $ vim apache.ynl
-— — # This is an example playbook to install Apache on Centos
+# This is an example playbook to install Apache on Centos
 - hosts: myserver
   remote_user: ansible
   become: yes
@@ -286,17 +296,13 @@ $ vim apache.ynl
          - "start service"
 :wq
  
-  root@localhost:/ansible-ws/roles/haproxy/vars
-
+root@localhost:/ansible-ws/roles/haproxy/vars
 [root@localhost haproxy]# cd vars 
 # cat main.yml
 # vars file for haproxy
 software: "haproxy" port: 8080 
 :wq
 [root@localhost vars]#
-
-===============================
-
 
 - name: install {{ package_name}}  package
   yum: name={{ package_name }} state=present
@@ -318,7 +324,6 @@ software: "haproxy" port: 8080
    name: "{{ service_name }}"
    state: "{{ restarting_service }}"
 
- -------------
   
 
 

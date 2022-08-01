@@ -63,6 +63,7 @@ variable "security_groups_id" {
   #Security group ID = sg-04e6c7ee02cef736
   default     = "sg-04e6c7ee02cef7364" 
 }
+
 ##ec2 instance tags
 variable "tags" {
   description = "ec2 instance tags"

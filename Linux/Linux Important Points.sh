@@ -15,9 +15,11 @@ OR
 
 #######Entry hostname with FQDN and ip address  in /etc/hosts############
 echo `hostname -i | awk '{print $NF}'`" "`hostname`" "`hostname -s`  >> /etc/hosts
+
 ##################################Fstab configurtion Fromat########################################################
 LABEL=cloudimg-rootfs   		/        ext4   			defaults,discard       0	 		1
 device name 		    mountpoint    file system type		permission            backup  		fsck(File System Consistency Check)
+
 #################How to Change Runlevels (targets) in Systemd##############################
 Systemd is a modern init system for Linux: a system and service manager which is compatible with the popular SysV init system and LSB init scripts. It was intended to overcome the shortcomings of SysV init as explained in the following article.
 The Story Behind ‘init’ and ‘systemd’: Why ‘init’ Needed to be Replaced with ‘systemd’ in Linux
@@ -31,19 +33,18 @@ Run level 6 is emulated by reboot.target (and runlevel6.target is a symbolic lin
 Emergency is matched by emergency.target.
 How to View Current target (run level) in Systemd
 When the system boots, by default systemd activates the default.target unit. It’s main work is to activate services and other units by pulling them in via dependencies.
-To view the default target, type the command below.
-#systemctl get-default 
+#To view the default target, type the command below.
+$ systemctl get-default 
 graphical.target
-
-To set the default target, run the command below.
-#systemctl set-default multi-user.target  
-
-How to Change the target (runlevel) in Systemd
+#To set the default target, run the command below.
+$ systemctl set-default multi-user.target  
+#How to Change the target (runlevel) in Systemd
 While the system is running, you can switch the target (run level), meaning only services as well as units defined under that target will now run on the system.
-To switch to runlevel 3, run the following command.
-# systemctl isolate multi-user.target 
-To change the system to runlevel 5, type the command below.
-# systemctl isolate graphical.target
+#To switch to runlevel 3, run the following command.
+$ systemctl isolate multi-user.target 
+#To change the system to runlevel 5, type the command below.
+$ systemctl isolate graphical.target
+
 ################################### how many Type of File in Linux##########################
 --- ->Text file
 d   -> Directory
@@ -53,36 +54,47 @@ b   -> blocked file
 p   -> proces id file
 .   -> selinux
 +   -> ACL
+
 ############################Disk identification#########################################################
 #fdisk -l
 /dev/sda -> SCSI hard disk
 /dev/hda -> IDE hard disk 
 /dev/vda -> Virtual hard disk
+
 ##To check openport ruuning in the server##################
-$netstat -nultp 
-	--n=
+$netstat -nutlp 
+	--n=numeric 
 	--t=tcp
 	--u=udp
 	--l=listing 
 	--p=pid
+
 ###################command to  delete 	empty line in a file############
 $ sed -i '/^$/d' <filename>
 $ sed -i  '/^$/d' file.txt
+
 #########To delete all line in vi mode of the file############
 #In escape mode
 :1,$d 
+
+###############To check if a certain user has sudo access, use########
+$ sudo -l -U  <username>
+
 ##############################Find old 90 or 30 days and remove that files#####################
 find /var/log -type f -mtime +30 -exec ls -lrth {} \;  ##f--means file 
-find /var/log -type f -mtime +30 -exec rem -rvf {} \;     ## +30--means more than 30 days
+find /var/log -type f -mtime +30 -exec rem -rvf {} \;     ## +30--means more than 30 days rem=rm
 find /var/log -type f -mtime +7 -exec rem -rvf  {} \;
 find /var/log -type d -mtime +90 -exec ls -lrth {} \;  ###d--means directory,  +90--means more than 90 days
 find /var/log -type d -mtime +30 -exec ls -rv {} \;
 find /var/dtpdev/tmp/ -type f -mtime +15 -exec r3m -f {} +
 find /path/to/files/ -type f -name *.php  -mtime +30 -exec rm {} \;
+
 #####################find more +100m size #######################
 find /var/ -type f -size +100M -exec ls -ltr {} \;
+
 ####################find empty file####################################################
 find / -empty
+
 #######################################realtime issue###################################
 1#application is not working and kubernetes pod unable start because of security team blocked /bin/get_secret defaultdb_user_password then we asked va 
 team unblocked the path then pod start to run fine then application running fine.
@@ -93,6 +105,7 @@ Command line: /bin/get_secret defaultdb_user_password
 suggested to restart again .
 we taken approval and we restart the application then admin is able login
 3.#application is unable to access due to cpu utilization high the application  is able access  after cpu utillization  under stable.
+
 ############################Assgine static IP Address############################
 vi /etc/sysconfig/network-scripts/ifcfg-ens33
 TYPE=Ethernet
@@ -117,6 +130,7 @@ DNS1=10.33.0.19
 DNS2=10.33.0.22
 IPV6_PRIVACY=no
 :wq
+
 #######################################add route table######################################
 https://www.redhat.com/sysadmin/route-ip-route
 ############create temporary route table#################################################
@@ -126,6 +140,7 @@ https://www.redhat.com/sysadmin/route-ip-route
 #route add -net 172.16.100.0 netmask 255.255.255.0 gw 172.16.100.1
 #route add -net 192.168.85.0 netmask 255.255.255.0 gw 192.168.85.99
 #route  add -net 10.33.58.0 netmask 255.255.255.0 gw  10.32.39.254
+
 ####################################Create Permanent Static Routes#########################################
 The static routes configured in the previous section are all transient, in that they are lost on reboot.
  To configure a permanent static route for an interface, create a file with the following format "/etc/sysconfig/network-scripts/route-<INTERFACE>". 
@@ -137,6 +152,7 @@ The static routes configured in the previous section are all transient, in that 
 ADDRESS0=172.16.4.0  # 0=address key prompt
 NETMASK0=255.255.254.0
 GATEWAY0=172.16.4.254 
+
 ###########################application error#################################
 503-Server overload
 504 Gateway Timeout
@@ -145,6 +161,7 @@ GATEWAY0=172.16.4.254
 400 Bad Request response status code indicates that the server cannot or will not process the request due
     to something that is perceived to be a client error 
     (for example, malformed request syntax, invalid request message framing, or deceptive request routing).
+
 ##################replace a word in file in vi mode####################
 vim Dockerfile
 FROM alpine as build
@@ -154,27 +171,33 @@ RUN  apk update  \
      && apk   add git  \
      && apk add wget  \
      && apk add openjdk11  
-##we ned to repalce apk, install  into apt and install 
+#we need to repalce apk into   apt and add into install 
 #go escape mode 
 :%s /<old world>/<new world>/gI #g=global and I= insert
 :%s /apk/apt/gI 
 :%s /add/install/gI
+
 ##################login profile##################################
 cat /etc/skel/.
 1- .bashrc
 2- .bash_logout
 3- .bash_profile
+
 ##################stderror save in file#########################
 $llsss 2> error-file.txt
+
 ################How to change priority of running process#################################
 ##To check all running process
 $ ps -ef 
+
 #################change priority values or renice value###########
 $ renice -10 <PID>
 $ renice -10 16995
+
 ########what is range of nice value####################
   from -20 to +20 
-################################Find Top Running Processes by Highest Memory and CPU Usage in Linux##################
+
+#########################Find Top Running Processes by Highest Memory and CPU Usage in Linux##################
 #Find Top Running Processes by Highest Memory and CPU Usage in Linux
  $ ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head
  $ ps -eo pid,ppid,%cpu,%mem,cmd --sort=-%mem | head
@@ -241,6 +264,7 @@ df -h
 lvrename vgikt logical lvdisk
 # To view block UID
 blkid
+
 #############################Crontab jobs#######################################################
 Linux Crontab Format
 MIN HOUR DOM MON DOW CMD
@@ -275,6 +299,7 @@ log rotation
 /etc/cron.hourly
 /etc/cron.monthly
 /etc/cron.weekly
+
 ####################################Port number#######################
 tcp-6
 udp-17
@@ -319,8 +344,8 @@ To change the mode from enforcing to permissive type:
 sudo setenforce 0
 To turn the enforcing mode back on, enter:
 sudo setenforce 1
-########################Zombie process #################################
 
+########################Zombie process #################################
 Zombie process which is running without child process .it is identified  with 'z' 
 ###########################Linux booting process #################################
 1-BIOS(Basic input/ouput system)-performs some system intergrity checks
@@ -340,6 +365,7 @@ iostat-----------To check i/p, o/p static disk
 sar--------------To check load average
 top--------------To check cpu utilization
 systemctl get-default---To known system default run levels or target 
+
 ####### List Mounted Drives on Linux###############
 1) Listing from /proc/mounts using cat command
    #cat /proc/mounts
@@ -349,6 +375,7 @@ systemctl get-default---To known system default run levels or target
    #df -Th
 4 ) Using findmnt
    #findmnt
+
 #######################To run customized command#####################
  run custom command
 Configure a custom command in system1 and in system2 with the name
@@ -392,6 +419,7 @@ yum clean all
 yum repolist all
 AppStream
 dr-xr-xr-x. 4 root root 38 Feb  4 07:08 BaseOS
+
 #############################epel repository download####################################
 https://docs.fedoraproject.org/en-US/epel/#_el7
 RHEL 8
@@ -406,22 +434,34 @@ subscription-manager repos --enable rhel-*-optional-rpms \
                            --enable rhel-*-extras-rpms \
                            --enable rhel-ha-for-rhel-*-server-rpms
 yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-########To check dependencies for particular package with rpm########
+
+########To installing software by rpm########
+#To check dependencies for particular package with rpm
 $ rpm -qPR httpd-2.4.6*
 	--here it will list package
-##############To check configuartion file##########################
+#To check configuartion all file
 $rpm -ql httpd*
+#upgrade the package using rpm
+$ rpm -Uhv <package_name>
+##To reinstall rpm pacakage
+$ rpm -i --force <package>
+#List the files  in the  package 
+$ rpm -i <pacakage>
+
 ###################Remove package with yum################################
 $yum remove httpd
 	--here it does not removes the dependencies
 $ yum autoremove httpd
 	--here it removes all dependencies with packages 
+
 ######################################creation Swap Space########################################
 # Scan new lun on server with below command
 ls /sys/class/scsi_host/host | while read host ; do echo "---" > /sys/class/scsi_host/$host/scan ; done
+
 ##############how to check open port in remote server##################
 $nmap -A <remote-sever-ip>
 $nmap -A 192.168.1.5
+
 #############echo "---" > /sys/class/scsi_host/host{x}/scan
 #"---" {-=channel,-=scsi id,-=lun} In the above command means CTL["channel on HBA" "Target Scsi id" "LUN"] 
 # Vertify the new lun [ to check the new assaign to the system with size]
@@ -493,6 +533,7 @@ If ram size is  greaterthan 2GB then RAM size + 2 GB
 swapoff   /dev/sdc
 mkswap    /dev/sda2
 swapon -a /dev/sda2
+
 #######################################user administartion##########################
 #usermod --help
  -c, --comment COMMENT         new value of the GECOS field
@@ -734,7 +775,6 @@ In rhel6 /bin,/sbin,/lib and /lib64 are usually under /
 In rhel7, now /bin,/sbin,/lib and /lib64 are nested under /usr.
 
 ##############patching on red hat linux 7####################
-
 #yum updateinfo list available   ------>To list all available erratas without installing them
 
 #yum updateinfo list security all ------>To list all available security updates without installing them
@@ -768,8 +808,6 @@ Password- harshsffdd677
 
 8.#man yum-security to know about command
 
-
-
 ###########################How to update the subscription#########################
 ##To check to subscription-manager or not 
 [root@ebexinsp03 -1# subscription-manager list
@@ -794,6 +832,7 @@ Status: Subscribed
 $subscription-manager list
  or 
 $subscription-manager version
+
 ##############Kernel-os-upgrade from 7.4 to 7.9##################################
 1. Login to RHEL as root user.
 2. Ensure that yum’s cache is cleared out with the command.
@@ -1062,7 +1101,7 @@ $ mount /dev/vg1/lv1 /restore
 $ cd /restore
 $ ll
 here display previous data
----------------------------------------------------------------
+
 #####################################recover grub file or corrupt grub file#########################
 ##first remove grub file
 $ rm -rf /boot/grub2/grub.cfg
@@ -1089,6 +1128,7 @@ here display generating grub configuration file
 bash-4.2#exit
 sh-4.2#exit
 After above step it sucessful load
+
 ######################################### vmlinuz error or kernel boot error########################
 $ press continue #
 $ select troubleshooting
@@ -1108,6 +1148,7 @@ here display generating grub configuration file
 bash-4.2#exit
 sh-4.2#exit
 After above step it sucessful load
+
 -----------------------------------------------------------------------------------------------------------------------------
 ######################Kernel Panic Error Resolution of  initramfs image is missing or corrupted in RHEL 7/8##################
 -----------------------------------------------------------------------------------------------------------------------------
@@ -1143,10 +1184,10 @@ after that umount iso image
 sh-4.2#exit
 
 After reboot sucessful server up
+
 ####################‘chattr’ Commands to Make Important Files IMMUTABLE (Unchangeable) in Linux##########
 Attributes and Flags
 Following are the list of common attributes and associated flags can be set/unset using the chattr command.
-
 If a file is accessed with ‘A‘ attribute set, its atime record is not updated.
 If a file is modified with ‘S‘ attribute set, the changes are updates synchronously on the disk.
 A file is set with ‘a‘ attribute, can only be open in append mode for writing.
@@ -1157,7 +1198,6 @@ A file with the attribute ‘d‘, will no more candidate for backup when the du
 When a file has ‘u‘ attribute is deleted, its data are saved. This enables the user to ask for its undeletion.
 
 ##############################SUSE Enterprise Linux  patching##################################
-
 #zypper lu ---list out all patched 
 #zypper 1p ---category security -----list out all patched
 #ZYpper lu -- list out all updates
@@ -1165,7 +1205,6 @@ When a file has ‘u‘ attribute is deleted, its data are saved. This enables t
 #zypper patch ---it will patch all
 #zypper patch --category security
 #zypper 1p-a-cve-CVE2020-14621 ---see security cve
-
 Open a root shell.
 >Run "zypper ref -a" to refresh all services and repositories. 
 > Run "zypper update" to install package management updates.
@@ -1175,6 +1214,29 @@ http://192.168.166.240/sles15/packi
 CRN no 328538997
 accno. 2913388890
 sudo SUSEConnect -r REGISTRATION_CODE -e EMAIL _ADDRESS
+
+#####Join the Linux machine into active directory of windows server##################
+#Prerequisites
+This article presupposes that you have at least some introductory-level experience with Active Directory, especially around user and computer account management. Aside from that, the following obvious requirements need to be met:
+An account in AD that has the privileges necessary to join a system to the domain.
+A Linux server (a CentOS 7 server was used for this demonstration).
+A Domain Controller.
+Ensure your Linux server knows how to find the domain controller via DNS.
+This is how the lab I used for this write up is set up, so you should modify accordingly.
+AD Domain Name: cntech.local
+User account for joining the domain: administrator 
+Linux server hostname: testserver
+##Packages to install
+For this configuration, the essential package to install is realmd. Aside from realmd, there are a host of packages that need to be installed to make this work.
+$ yum install sssd realmd oddjob oddjob-mkhomedir adcli samba-common samba-common-tools krb5-workstation openldap-clients policycoreutils-python
+
+Realmd provides a simplified way to discover and interact with Active Directory domains.
+##Now join the linux machine in windows domain
+$ realm join --user=[domain user account] [domain name]
+$ realm join --user=administrator cntech.local 
+now here prompt password for administartor: mcse@16
+$ realm list 
+here dispaly active directory information
 
 #############interveiw question############
 *Linux* ✓ *(RHEL)*
@@ -1193,7 +1255,7 @@ sudo SUSEConnect -r REGISTRATION_CODE -e EMAIL _ADDRESS
 * What is .rpm & .deb?
 * What is RPM ?
 * What is YUM ?
-* Different methods to install the rpm based packages ?
+* Different methods to install the rpm based packages?
 * What is Bash ?
 * What is SHell ?
 * How many types of SHells are there ? * Explain the daily used basic commands like cp, mv, rm ?
@@ -1291,3 +1353,4 @@ This helps the system to run faster because disk information is already in memor
 * What is Kerberos ?
 * How to secure NFS with Kerberos ?
 ------------------
+https://hc.apache.org/httpcomponents-client-4.5.x/current/httpclient/apidocs/org/apache/http/conn/DnsResolver.html

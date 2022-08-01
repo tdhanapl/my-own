@@ -1,4 +1,4 @@
-########Arguments
+########Arguments##############
 $*(postional parameter) stores all the command line arguments by joining them together.
 $# specifies the total number (count) of arguments passed to the script.
 $1-$9 stores the names of the first 9 arguments or can be used as the arguments positions.
@@ -7,6 +7,58 @@ $? specifies the exit status of the last command or the most recent execution pr
 $$ specifies the process ID of the current script..
 $! shows ID of the last background job.
 $0 specifies the name of the script to be invoked or capture.
+
+#############echo command in script of Shell Substitution############
+The following escape sequences which can be used in echo command −
+
+Sr.No.	Escape 		& Description
+1		\\ 			backslash
+2		\a alert 	(BEL)
+3		\b			backspace
+4		\c			suppress trailing newline
+5		\f			form feed
+6		\n			new line
+7		\r			carriage return
+8		\t			horizontal tab
+9		\v			vertical tab
+You can use the -E option to disable the interpretation of the backslash escapes (default).
+You can use the -n option to disable the insertion of a new line.
+
+#############Shell Functions###########
+#creating FunctionsTo declare a function, simply use the following syntax −
+function_name () {
+list of commands
+}
+#Example
+Following example shows the use of function −
+$ vim test.sh
+
+#!/bin/sh
+# Define your function here
+Hello () {
+   echo "Hello World"
+}
+# Invoke your function
+Hello
+Upon execution, you will receive the following output −
+:wq!
+
+$./test.sh
+Hello World
+##########Qutoes#############
+var1=dhana
+var2=pal
+1."" double qutoes
+echo "excute double qutoes $var1 $var2"
+A:excute double qutoes dhana pal
+
+2.'' single qutoes
+echo 'excute double qutoes $var1 $var2'
+A:excute double qutoes $var1 $var2
+
+3.`` reverse qutoes-it is used for command called in reverse order
+echo "server ip is: `hostname -i`"
+A:   server ip is 10.121.34.2
 
 ###############opertional-condition########
 Operator	Description	Example
@@ -26,7 +78,7 @@ Bourne Shell supports the following relational operators that are specific to nu
 For example, following operators will work to check a relation between 10 and 20 as well as in between "10" and "20" but not in between "ten" and "twenty".
 Assume variable a holds 10 and variable b holds 20 then −
 Show Examples
-Operator	Description	Example
+#Operator	Description	Example
 -eq	Checks if the value of two operands are equal or not; if yes, then the condition becomes true.	[ $a -eq $b ] is not true.
 -ne	Checks if the value of two operands are equal or not; if values are not equal, then the condition becomes true.	[ $a -ne $b ] is true.
 -gt	Checks if the value of left operand is greater than the value of right operand; if yes, then the condition becomes true.	[ $a -gt $b ] is not true.
@@ -77,26 +129,54 @@ Operator	Description	Example
 ###The if...else statements
 If else statements are useful decision-making statements which can be used to select an option from a given set of options.
 Unix Shell supports following forms of if…else statement −
-if...fi statement
+1.
+if [ condition ] ; then
+....
+else
+.....
+fi 
+--------------------------
+2.
+if [ condition ] ; then
+....
+elif [ condition1 ] ; then 
+....
+elif [ condition2 ] ; then 
+.....
+else
+fi  #statement
 
-if...else...fi statement
-if...elif...else...fi statement
 ##Loops
-A loop is a powerful programming tool that enables you to execute a set of commands repeatedly. In this chapter, we will examine the following types of loops available to shell programmers −
-The while loop
-The for loop
-The until loop
-The select loop
-You will use different loops based on the situation. For example, the while loop executes the given commands until the given condition remains true;
-the until loop executes until a given condition becomes true.
-Once you have good programming practice you will gain the expertise and thereby, start using appropriate loop based on the situation. 
-Here, while and for loops are available in most of the other programming languages like C, C++ and PERL, etc.
-#Nesting Loops
+A loop is a powerful programming tool that enables you to execute a set of commands repeatedly. 
+In this  we will examine the following types of loops available to shell programmers −
+while loop
+for loop
+until loop
+select loop
+
+You will use different loops based on the situation. 
+#For example
+1.The while loop executes the given commands until the given condition remains true;
+2.The until loop executes until a given condition becomes true.
+
+##Nesting Loops
 All the loops support nesting concept which means you can put one loop inside another similar one or different loops. 
 This nesting can go up to unlimited number of times based on your requirement.
-Here is an example of nesting while loop. The other loops can be nested based on the programming requirement in a similar way −Nesting while Loops.
-It is possible to use a while loop as part of the body of another while loop.
+
+1. nested  IF
+if [ condition ] ; then
+	if [ condition ] ; then
+	....
+	else
+	.....
+	fi 
+....
+else
+.....
+fi 
+2.It is possible to use a while loop as part of the body of another while loop.
 Syntax
+
 while command1 ; # this is loop1, the outer loop
 do
    Statement(s) to be executed if command1 is true
@@ -108,10 +188,11 @@ do
 
    Statement(s) to be executed if command1 is true
 done
-Example
-#####Here is a simple example of loop nesting. Let's add another countdown loop inside the loop that you used to count to nine −
+
+#####Here is a simple example of loop nesting. 
+#Let's add another countdown loop inside the loop that you used to count to nine −
 ##!/bin/sh
-#a=0
+a=0
 while [ "$a" -lt 10 ]    # this is loop1
 do
    b="$a"
@@ -124,11 +205,10 @@ do
    a=`expr $a + 1`
 done
 
-#In this chapter, we will discuss shell loop control in Unix. So far you have looked at creating loops and working with loops to accomplish
-different tasks. Sometimes you need to stop a loop or skip iterations of the loop.
-In this chapter, we will learn following two statements that are used to control shell loops− The break statement
-The continue statement
-The infinite Loop
+#Sometimes you need to stop a loop or skip iterations of the loop.
+we will learn following two statements that are used to control shell loops− The break statement
+1.The continue statement
+2.The infinite Loop
 All the loops have a limited life and they come out once the condition is false or true depending on the loop.
 A loop may continue forever if the required condition is not met.
  A loop that executes forever without terminating executes for an infinite number of times. For this reason, such loops are called infinite loops.
@@ -141,8 +221,9 @@ do
    echo $a
    a=`expr $a + 1`
 done
+
 #This loop continues forever because a is always greater than or equal to 10 and it is never less than 10.
-The break Statement
+1.The break Statement
 The break statement is used to terminate the execution of the entire loop, after completing the execution of all of the lines of code up to the break statement. 
 It then steps down to the code following the end of the loop.
 Syntax
@@ -150,7 +231,7 @@ The following break statement is used to come out of a loop −
 break
 The break command can also be used to exit from a nested loop using this format −
 break n
-Here n specifies the nth enclosing loop to the exit from.
+#Here n specifies the nth enclosing loop to the exit from.
 Example
 Here is a simple example which shows that loop terminates as soon as a becomes 5 −
 #!/bin/sh
@@ -172,7 +253,6 @@ Upon execution, you will receive the following result −
 4
 5
 Here is a simple example of nested for loop. This script breaks out of both loops if var1 equals 2 and var2 equals 0 −
-Live Demo
 #!/bin/sh
 for var1 in 1 2 3
 do
@@ -186,11 +266,13 @@ do
       fi
    done
 done
+
 Upon execution, you will receive the following result. In the inner loop, you have a break command with the argument 
-2. This indicates that if a condition is met you should break out of outer loop and ultimately from the inner loop as well.
+This indicates that if a condition is met you should break out of outer loop and ultimately from the inner loop as well.
 1 0
 1 5
-The continue statement
+
+2.The continue statement
 The continue statement is similar to the break command, except that it causes the current iteration of the loop to exit, rather than the entire loop.
 This statement is useful when an error has occurred but you want to try to execute the next iteration of the loop.
 Syntax
@@ -213,4 +295,51 @@ do
    fi
    echo "Found odd number"
 done
-Upon execution, you will receive the following result 
+
+####case statement###
+case word in
+pattern1)
+Statement(s) to be executed if pattern1 matches
+;;
+pattern2)
+Statement(s) to be executed if pattern2 matches
+;;
+pattern3)
+Statement(s) to be executed if pattern3 matches
+;;
+*)
+Default condition to be executed
+;;
+esac
+
+$ vim case_statement.sh
+#example:-
+#!/bin/sh
+
+FRUIT="kiwi"
+
+case "$FRUIT" in
+   "apple") echo "Apple pie is quite tasty." 
+   ;;
+   "banana") echo "I like banana nut bread." 
+   ;;
+   "kiwi") echo "New Zealand is famous for kiwi." 
+   ;;
+esac
+:wq!
+############Unix / Linux - Shell Quoting Mechanisms###########
+#https://www.tutorialspoint.com/unix/unix-quoting-mechanisms.htm
+
+##Double quotes take away the special meaning of all characters except the following −
+$ for parameter substitution
+#Backquotes for command substitution
+
+\$ to enable literal dollar signs
+\` to enable literal backquotes
+\" to enable embedded double quotes
+\\ to enable embedded backslashes
+All other \ characters are literal (not special)
+Characters within single quotes are quoted just as if a backslash is in front of each character. This helps the echo command display properly.
+If a single quote appears within a string to be output, you should not put the whole string within single quotes instead you should precede that using a backslash (\) as follows −
+#example
+echo 'It\'s Shell Programming'

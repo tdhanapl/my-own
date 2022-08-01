@@ -41,7 +41,8 @@ last
 
 # To check the current date
 echo "Current time is $(date)"
-#find the file with .txt and move to .htm
+
+###################find the file with .txt and move to .html#############
 filename=`find /tmp/scripts/ -name "*.txt" | cut -d "." -f1`
 for i in $filename
 do
@@ -93,20 +94,20 @@ read -p "Enter the Service name=" Service_name
 Systemtcl=$(systemctl ${action} ${Service_name})
 #Assume variable a holds 10 and variable b holds 20 then −
 # -o	This is logical OR. If one of the operands is true, then the condition becomes true.	[ $a -lt 20 -o $b -gt 100 ] is true.
-if [ "${action}" == "start" -o  "${action}" == "stop" -o  "${action}" == "status" ]
+if [ "${action}" == "start" -o  "${action}" == "stop" -o  "${action}" == "status" -o  "${action}" == "enabled" -o  "${action}" == "disabled" ]
 then
 echo "${action} ${Service_name}...."
 echo"$Systemtcl" # systemctl ${action} $(Service_name)
 echo -e  "this show the status\033[96m $status\033[0m"
-echo "${action} ${Service_name} "
+echo "${action} of  ${Service_name} .... "
 fi
 
 ######################################Remote Server connectiviy checking#########################################
-host=/opt/hostipaddress #( hostip address in file)
+host=/opt/host_ipaddress #( hostip address in file)
 for ip in $(cat $host)
 do  
    ping -c1 $ip &> /dev/null
-   if [ $? -eq 0]
+   if [ $? -eq 0 ]
    then 
    echo "$ip is pinging"
    else
@@ -256,6 +257,7 @@ else
 echo " process  is not running or port is not open "
 
 fi
+
 ########################################change-configuration###################################################
 #!/bin/bash
 #Author=
@@ -272,8 +274,8 @@ cd /opt/Panorama/hedzup/mn/bin
 sed -i 's/Attribute name="ManageableByRemoteAgent" value="true"/Attribute name="ManageableByRemoteAgent" value="false"/gI' /opt/Panorama/hedzup/mn/data/dsa.ml
 ./dsactl start
 netstat -anp | grep “:2111”
-#######################Xphenoapp files deleting ###############################
 
+#######################Xphenoapp files deleting ###############################
 #!/bin/bash
 #Author=
 #Purpose=

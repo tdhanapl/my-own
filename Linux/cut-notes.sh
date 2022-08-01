@@ -1,0 +1,118 @@
+###########cut command#######
+#cut:-
+It can be used to cut parts of a line by byte position, character and field.
+$ cat state.txt
+Andhra Pradesh
+Arunachal Pradesh
+Assam
+Bihar
+Chhattisgarh
+#Options and their Description with examples:
+1. -b(byte):
+#List without ranges
+$ cut -b 1,2,3 state.txt
+And
+Aru
+Ass
+Bih
+Chh
+
+#List with ranges
+$ cut -b 1-3,5-7 state.txt
+Andra
+Aruach
+Assm
+Bihr
+Chhtti
+2. -c (column): To cut by character use the -c option.
+Syntax:
+$cut -c [(k)-(n)/(k),(n)/(n)] filename
+Here,k denotes the starting position of the character and n denotes the ending position of the character in each line, 
+if k and n are separated by “-” otherwise they are only the position of character in each line from the file taken as an input.
+
+$ cut -c 2,5,7 state.txt
+nr
+rah
+sm
+ir
+hti
+
+#Above cut command prints second, fifth and seventh character from each line of the file.
+$ cut -c 1-7 state.txt
+Andhra
+Arunach
+Assam
+Bihar
+Chhatti
+$ cut -c 1- state.txt
+Andhra Pradesh
+Arunachal Pradesh
+Assam
+Bihar
+Chhattisgarh
+#Above command prints starting from first character to end. Here in command only starting
+position is specified and the ending position is omitted.
+
+$ cut -c -5 state.txt
+Andhr
+Aruna
+Assam
+Bihar
+Chhat
+#Above command prints starting position to the fifth character. Here the starting position
+is omitted and the ending position is specified.
+3. -f (field): -c option is useful for fixed-length lines. 
+Syntax:
+
+$cut -d "delimiter" -f (field number) file.txt
+Like in the file state.txt fields are separated by space if -d option is not used then it prints whole line:
+
+$ cut -f 1 state.txt
+Andhra Pradesh
+Arunachal Pradesh
+Assam
+Bihar
+Chhattisgarh
+If -d option is used then it considered space as a field separator or delimiter:
+
+$ cut -d " " -f 1 state.txt
+Andhra
+Arunachal
+Assam
+Bihar
+Chhattisgarh
+Command prints field from first to fourth of each line from the file.
+Command:
+
+$ cut -d " " -f 1-4 state.txt
+Output:
+Andhra Pradesh
+Arunachal Pradesh
+Assam
+Bihar
+Chhattisgarh
+4. –complement: As the name suggests it complement the output.
+This option can be used in the combination with other options either with -f or with -c.
+
+$ cut --complement -d " " -f 1 state.txt
+Pradesh
+Pradesh
+Assam
+Bihar
+Chhattisgarh
+
+$ cut --complement -c 5 state.txt
+Andha Pradesh
+Arunchal Pradesh
+Assa
+Biha
+Chhatisgarh
+5. –output-delimiter: By default the output delimiter is same as input delimiter that we specify in the cut with -d option.
+To change the output delimiter use the option –output-delimiter=”delimiter”.
+
+$ cut -d " " -f1,2 state.txt --output-delimiter='%'
+Andhra%Pradesh
+Arunachal%Pradesh
+Assam
+Bihar
+Chhattisgarh

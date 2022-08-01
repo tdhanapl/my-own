@@ -9,6 +9,7 @@ provider "aws" {
 resource "aws_vpc" "VPC-A" {
   cidr_block       = "10.50.0.0/16"
   instance_tenancy = "default"
+  enable_dns_support   = true
   enable_dns_hostnames    = true
   tags = {
     Name =  "prod-${var.vpc_name}"
@@ -90,7 +91,7 @@ resource "aws_route_table_association" "private" {
   route_table_id = aws_route_table.Private-RT.id
 }
 #6.create the security group
-resource "aws_security_group" "allow_ports" {
+resource "aws_security_group" "security-group" {
   name        = "allow_pots"
   description = "Allow ports inbound traffic"
   vpc_id      = aws_vpc.VPC-A.id

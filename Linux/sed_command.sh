@@ -8,6 +8,24 @@
 3. deletion line
 4. Insertion anything before the line number. 
 5. Appending anything after the line number.
+
+###deatils of using sed with option
+Sr.No.	Range & 				Description
+1		p   					Prints the line
+2		d   					Deletes the line
+3		s/pattern1/pattern2/  	Substitutes the first occurrence of pattern1 with pattern2
+4		'4,10d'					Lines starting from the 4th till the 10th are deleted
+5		'10,4d'					Only 10th line is deleted, because the sed does not work in reverse direction
+6		'4,+5d'					This matches line 4 in the file, deletes that line, continues to delete the next five lines, and then ceases its deletion and prints the rest
+7		'2,5!d'					This deletes everything except starting from 2nd till 5th line
+8		'1~3d'					This deletes the first line, steps over the next three lines, and then deletes the fourth line. Sed continues to apply this pattern until the end of the file.
+9		'2~2d'					This tells sed to delete the second line, step over the next line, delete the next line, and repeat until the end of the file is reached
+10		'4,10p'					Lines starting from 4th till 10th are printed
+11		'4,d'					This generates the syntax error
+12		',10d'					This would also generate syntax error
+Note:-
+While using the p action, you should use the -n option to avoid repetition of line printing
+
 ##sed command works on the line numbers
 $ syntax sed 'action' filename
 ##To see file content use this commands
@@ -61,4 +79,4 @@ $ sed '/^$/d;G' filename.txt
 $ sed '/^$/d' filename.txt
 ##Delete empty lines or those begins with “#”   
 $ sed -i '/^#/d;/^$/d' a.txt
-##
+
