@@ -29,7 +29,7 @@ echo "backup failed"
 fi
 
 ####################################To known the login user details###################################
- echo "please enter day (e.g Mon)"
+echo "please enter day (e.g Mon)"
 read day
 echo "please enter Month (e.g jun)"
 read Month
@@ -67,7 +67,6 @@ if [ "${action}" == "start" ]
 then
 echo "${action} ${Service_name}...."
 echo"$Systemtcl" # systemctl ${action} $(Service_name)
-echo -e  "this show the status\033[96m $status\033[0m"
 echo "${action} ${Service_name} is start"
 fi
 
@@ -84,7 +83,6 @@ if [ "${action}" == "status" ]
 then
  echo "stopping ${Service_name}..."
  echo"$Systemtcl" # systemctl ${action} $(Service_name)
- echo -e  "this show the status\033[96m $status\033[0m"
  echo "${action} ${Service_name}"
 fi
                 #or
@@ -308,10 +306,17 @@ find=$(find /home/xphenoapps/public_html/ -name "*htaccess*" -type f | wc -l)
    else
    echo "In /home/xphenoapps/public_html .htaccess file are not created more than 2"
    fi
-##################################### 
-
-
-
-
-
+####################Redirection from a file to a command#############
+We can read data from a file as stdin with the less-than symbol (<):
+$ cmd < file
+Redirecting from a text block enclosed within a script
+Text can be redirected from a script into a file. To add a warning to the top of an automatically generated file, use the following code:
+#!/bin/bash
+cat<<EOF>log.txt
+This is a generated file. Do not edit. Changes will be overwritten.
+EOF
+The lines that appear betweencat<<EOF>log.txt and the next EOF line will appear as the stdin data. 
+#The contents of log.txt are shown here:
+$ cat log.txt
+ This is a generated file. Do not edit. Changes will be overwritten.
 

@@ -1,4 +1,5 @@
 #!/bin/bash
+tput setf 2
 ##Double quotes take away the special meaning of all characters except the following −
 # $ for parameter substitution
 #Backquotes for command substitution

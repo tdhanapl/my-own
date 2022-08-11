@@ -1,5 +1,5 @@
 #!/bin/sh
-
+tput setf 2
 option="${1}" 
 case ${option} in 
 	   -f) FILE="${2}" 

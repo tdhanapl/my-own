@@ -1,5 +1,6 @@
 #######Xphenoapp files deleting corrupted files#####
 #!/bin/bash
+tput setf 2
 #Author=
 #Purpose=
 #Creation date=

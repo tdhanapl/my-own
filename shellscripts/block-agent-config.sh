@@ -1,4 +1,5 @@
 #!/bin/bash
+tput setf 2
 #Author=
 #Purpose=
 #Creation date=

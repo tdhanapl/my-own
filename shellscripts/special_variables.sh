@@ -10,6 +10,7 @@
 # $0 spec
 
 #!/bin/bash
+tput setf 2
 echo "File Name: $0"
 echo "First Parameter : $1"
 echo "Second Parameter : $2"

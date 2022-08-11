@@ -1,5 +1,6 @@
 ######################################To check the service status###################################
 #!/bin/bash
+tput setf 2
 #read -p "Enter start,stop,status,enabled,and Disabled  to perform action on  services: " action
 #read -p "Enter the Service name=" Service_name
 #Systemtcl=$(systemctl ${action} ${Service_name})

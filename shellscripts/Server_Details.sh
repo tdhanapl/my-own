@@ -1,4 +1,5 @@
 #/bin/sh
+tput setf 2
 ######################################################################
 ### Objective : To get the Server related details. This will enable###
 ###             								                   ###

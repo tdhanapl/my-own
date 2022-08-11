@@ -1,5 +1,7 @@
 ################################ check file size and compress or delete or move######################
 #https://www.tutorialspoint.com/unix/unix-regular-expressions.htm
+#!/bin/bash
+tput setf 2
 size=$(du -ch /var/datastore/dhana.log  | grep total  | awk '{print $1}')
 mail=dhanapal703278@gmail.com
 path=/var/datastore/dhana.log

@@ -38,13 +38,17 @@ ir
 hti
 
 #Above cut command prints second, fifth and seventh character from each line of the file.
+
 $ cut -c 1-7 state.txt
+
 Andhra
 Arunach
 Assam
 Bihar
 Chhatti
+
 $ cut -c 1- state.txt
+
 Andhra Pradesh
 Arunachal Pradesh
 Assam

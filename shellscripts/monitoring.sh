@@ -1,3 +1,5 @@
+#!/bin/bash
+tput setf 2
 [ ! -d /var/log/proc_mon ] && mkdir -p /var/log/proc_mon
 
 echo "`date`" >> /var/log/proc_mon/proc_mon_`date +%d-%b-%Y`

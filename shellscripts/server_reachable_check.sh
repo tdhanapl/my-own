@@ -1,5 +1,6 @@
 ####server reacheable check with ip is ping or not##
 #!/bin/bash
+tput setf 2
 host=/opt/hostipaddress #( hostip address in file)
 for ip in $(cat $host)
 do
