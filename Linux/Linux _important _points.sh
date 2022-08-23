@@ -191,7 +191,7 @@ GATEWAY0=172.16.4.254
     to something that is perceived to be a client error 
     (for example, malformed request syntax, invalid request message framing, or deceptive request routing).
 
-##################replace a word in file in vi mode####################
+##################################replace a word in file in vi mode####################################
 vim Dockerfile
 FROM alpine as build
 LABEL owner="dhanapal"
@@ -218,30 +218,53 @@ $llsss 2> error-file.txt
 ################How to change priority of running process#################################
 ##To check all running process
 $ ps -ef 
+#options
+The -f (full) option displays more columns of information
+The -e (every) and -ax (all) options provide a report on every process that is running on the system.
+The -e  option generates a long report. This example filters the output with IFBE to display the first five entries.
+The-o PARAMETER1, PARAMETER2 option specifies the data to be displayed
 
 #################change priority values or renice value###########
 $ renice -10 <PID>
 $ renice -10 16995
 
 ########what is range of nice value####################
-  from -20 to +20 
+ from -20 to +20 
 
 #########################Find Top Running Processes by Highest Memory and CPU Usage in Linux##################
 #Find Top Running Processes by Highest Memory and CPU Usage in Linux
  $ ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head
  $ ps -eo pid,ppid,%cpu,%mem,cmd --sort=-%mem | head
+#options
+Parameter Description
+pcpu 	  Percentage of CPU
+pid 	  Process ID
+ppid 	  Parent process ID
+pmem 	  Percentage of memory
+comm 	  Executable filename
+cmd	  	  A simple command
+user 	  The user who started the process
+nice 	  The priority (niceness)
+time 	  Cumulative CPU time
+etime 	  Elapsed time since the process started
+tty 	  The associated TTY device
+euid 	  The effective user
+stat	  Process state
 
 ############Find Top 15 Processes by Memory Usage with ‘top’ in Batch Mode######
 $top -b -o +%MEM | head -n 22
 $top -b -o +%MEM | head -n 22 > topreport.txt
+
 ################To know traffic to server or capture traffic##########
 $ tcpdump  -A . port
+
 ############################2 Ways to Re-run Last Executed Commands in Linux#################
 $ history 
 Then get the number(s) of the command(s) you want to re-execute (if, for example you want to restart 
 PHP-FPM and view its status, you need to re-execute the commands 997 and 998) as shown.
 $ !997
 $ !998
+
 #######################Disable Root Account in Linux#############################
 1. Change root User’s Shell
  #$ sudo vim /etc/passwd
@@ -261,41 +284,42 @@ auth    required       pam_listfile.so \
         onerr=succeed  item=user  sense=deny  file=/etc/ssh/deniedusers
 		
 ##########################################Logical voulme Creation############################
-disk /dev/sda
-pvcreate /dev/sda
-pvs
-vgcreate vgikt /dev/sda
-vgs
-lvcreate -L 4GB -n logical vgikt
-lvgs
-lsblk
-lvsdisplay vgikt
+$ fdisk /dev/sda
+$ pvcreate /dev/sda
+$ pvs
+$ vgcreate vgikt /dev/sda
+$ vgs
+$ lvcreate -L 4GB -n logical vgikt
+$ lvgs
+$ lsblk
+$ lvsdisplay vgikt
 # Format the partion
-mkfs.ext4 /dev/vgikt/logical
+$ mkfs.ext4 /dev/vgikt/logical
 #Mounting 
-mkdir ikt
-mount /dev/vgikt/logical ikt
-df -h
+$ mkdir ikt
+$ mount /dev/vgikt/logical ikt
+$ df -h
 # Perment mount 
-vim /etc/fstab
+$ vim /etc/fstab
 /dev/mapper/vgikt/logical /ikt ext4 defaults 0 0
 :wq
-mount -q
+$ mount -a
 ###Extended the volume group
-pvcreate /dev/sda3
-vgextend vgikt /dev/sda3
-lvextend -L +5G /dev/vgikt/logical
-Noted=+ we have mention if not mention it will reduce to 5GB only not adding 5GB and data will also lose.
+$ pvcreate /dev/sda3
+$ gextend vgikt /dev/sda3
+$lvextend -L +5G /dev/vgikt/logical
+Note:-
+we have mention if not mention it will reduce to 5GB only not adding 5GB and data will also lose.
 # To update the resize LV
-resize /dev/vgikt/logical
-df -h
+$ resize /dev/vgikt/logical
+$ df -h
 # To change name of logical volume
-lvrename vgikt logical lvdisk
+$ lvrename vgikt logical lvdisk
 # To view block UID
-blkid
+$ blkid
 
 #############################Crontab jobs#######################################################
-Linux Crontab Format
+##Linux Crontab Format
 MIN HOUR DOM MON DOW CMD
 Crontab Fields and Allowed Ranges (Linux Crontab Syntax)
 Field    Description    Allowed Value
@@ -354,6 +378,7 @@ rdp-3389
 jenkins-8080
 samba-138
 iscsi(internet small computer system information)-3260
+
 ############################Selinux ################################################
 It is set of policies and modules which are going to be applied on the machine to improve overall security of the machine.
 We can implement  Selinux policies in there modes
@@ -376,6 +401,7 @@ sudo setenforce 1
 
 ########################Zombie process #################################
 Zombie process which is running without child process .it is identified  with 'z' 
+
 ###########################Linux booting process #################################
 1-BIOS(Basic input/ouput system)-performs some system intergrity checks
 2-MBR(master boot )-MBR is less than 512 bytes in size. It contains information about grub . In simple terms MBR loads and excute boot loader.
@@ -393,7 +419,46 @@ vmstat-----------To check virtual memory statics
 iostat-----------To check i/p, o/p static disk
 sar--------------To check load average
 top--------------To check cpu utilization
-systemctl get-default---To known system default run levels or target 
+$ systemctl get-default---To known system default run levels or target 
+$ uptime (to see from how long the system is running and also gives the load average report)
+* The load average is having 3 fields. 1 - present status, 2 - 5 minutes back and 3 - 15 minutes back.
+$ iostat 5 2 (to monitor the input and output statistics for every 5 seconds upto 10 times)
+$ nproc (to check how many processors (CPUs) are there in the system)
+$ top 1 (to see the no. processors (CPUs) are there in the system)
+$ iptraf (to monitor the TCP or network traffic statistics in graphical mode)
+ * Before using this command install the iptraf package by # yum install iptraf* -y command.
+$ iftraf -ng -f eth0 (to see the IP traffic statistics in graphical mode)
+$ lscpu (to see the no. of CPUs present in the system)
+$ lsusb (to see the no. of USB devices present in the system)
+$ lsblk (to see all the partitions or block devices information)
+$ cat /etc/redhat-release (to see the RHEL version of system)
+$ dmidecode (to see the complete hardware information of the system)
+$ dmidecode -t memory (to see the memory information of the system)
+$ dmidecode -t bios (to see the systems bios information)
+$ dmidecode -t system (to see the systems information)
+$ dmidecode -t processor to see the processor's (CPU's) information of thesystem)
+$ dmidecode -t 1 (to check the Systems Serial No. information)
+$ dmidecode -t 4 (to see the processor's (CPU's) information)
+$ dmidecode -t 16 (to check the Max. RAM capacity of the system)
+$ dmidecode -t 17 (to check how much RAM the system is using)
+$ pidstat (to monitoring the individual tasks currently being managed by the Linux kernel)
+$ nfsiostat (to monitor the NFS input and output statistics)
+$ cifsiostat (to monitor the Samba input and output statistics)
+$ stat <file name or directory name> (to see the statistics of the file or directory)
+$ strings <command name> (to read the binary language of the command)
+$ find / -nouser -o -nogroup (to see the files which are no belongs to any user and any group)
+$ systemctl -t help (to see the list of systemd objects that are available)
+$ systemctl -l help (to see the list of unit names)
+$ systemctl list-dependencies <service name> (to see the dependent services in a tree manner)
+$ sleep <seconds>& (to run the sleep processes at background)
+$ jobs (to see the background jobs which were sent by the user)
+$ fg % < Job ID > (to get back the background job toforeground job)
+$ Ctrl + z (to stop the process)
+$ bg % < Job ID > (to restart the process again at background)
+Note:-
+When there are stopped jobs and want to exit from the terminal then, a warning message will be
+displayed. If we try again to exit from the terminal,then the stopped or suspended jobs will be
+killed automatically.
 
 ####### List Mounted Drives on Linux###############
 1) Listing from /proc/mounts using cat command
@@ -476,6 +541,20 @@ $ rpm -Uhv <package_name>
 $ rpm -i --force <package>
 #List the files  in the  package 
 $ rpm -i <pacakage>
+#options
+-i -----> install
+-v -----> verbose
+-h -----> progress in hash codes ( in % )
+-qi -----> query information about the package
+-ql -----> list all package related files.
+-qd ----> query about the document of the package
+-qc -----> displays the configuration files for that package
+-qa -----> query on all installed packages
+-V -----> (capital V) to verify the package for repair that package
+-R -----> list all dependent packages
+--force -----> install the package forcefully
+--nodeps -----> install the package without dependency (do not check the dependencies)
+--last -----> all installed packages with date and time
 
 ###################Remove package with yum################################
 $yum remove httpd
@@ -1266,6 +1345,10 @@ $ realm join --user=administrator cntech.local
 now here prompt password for administartor: mcse@16
 $ realm list 
 here dispaly active directory information
+#######
+
+
+
 
 #############interveiw question############
 *Linux* ✓ *(RHEL)*

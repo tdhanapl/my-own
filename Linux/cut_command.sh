@@ -54,6 +54,7 @@ Arunachal Pradesh
 Assam
 Bihar
 Chhattisgarh
+
 #Above command prints starting from first character to end. Here in command only starting
 position is specified and the ending position is omitted.
 

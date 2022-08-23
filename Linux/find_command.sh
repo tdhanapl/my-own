@@ -56,7 +56,7 @@ hese are as follows:
 -cmin (change time)
 #To print all the files that have an access time older than seven minutes, use the following
 command:
-$ find . -type f -amin +7 -prin
+$ find . -type f -amin +7 -print
 ###############Searching based on file size#############
 Based on the file sizes of the files, a search can be performed:
 # Files having size greater than 2 kilobytes
@@ -72,3 +72,23 @@ w: Two-byte words
 k: Kilobytes (1,024 bytes)
 M: Megabytes (1,024 kilobytes)
 G: Gigabytes (1,024 megabytes)
+##Deleting based on file matches
+The find commands -delete flag removes files that are matched instead of displaying them. 
+Remove the .swap files from the current directory:
+$ find . -type f -name "*.swp" -del
+##excute command with find
+# find . -type f -user root -exec chown  -Rv ec2-user:ec2-user {} \;
+$ Note:-
+1.The command is terminated with \;.
+The semicolon must be escaped or it will be grabbed by your command shell as the end of the find command instead of the end of the chown command.
+2. The find  command uses an open/close curly brace pair {} to represent the filename. 
+Each time find identifies a file it will replace the {} with the filename and change the ownership of the file.
+For example, if thefindcommand finds two files with the root owner it will change both so theyre owned by ec2-user:
+3. We cannot use multiple commands along with the -exec parameter.
+It accepts only a single command, but we can use a trick.
+Write multiple commands in a shell script (for example, commands.sh) and use it with -exec as follows:
+-exec ./commands.sh {} \;
+The -exec parameter can be coupled with printf to produce joutput. Consider this example:
+$ find . -type f -name "*.txt" -exec printf "Text file: %s\n" {} \;
+Config file: /etc/openvpn/easy-rsa/openssl-1.0.0.cnf
+Config file: /etc/my.cnf

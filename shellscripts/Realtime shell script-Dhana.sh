@@ -1,4 +1,9 @@
 ########################################shell script###########################
+##Unix-like systems have the best command-line tools.
+1.Each command performs a simple function to make our work easier. 
+2.These simple functions can be combined with other commands to solve complex problems. 
+3.Combining simple commands is an art; you will get better at it as you practice and gain experience. 
+################creating the of file with previous date and time############# 
 #!/bin/bash
 #Author=
 #Purpose=
@@ -7,7 +12,7 @@
 # creating the of file with previous date and time 
 touch -d "Mon 5 June 2021 12:23:15" Oldfile{1..5}.txt
 
-##################################find the 90 days old files#####################
+################################find the 90 days old files#####################
 #find /var/log -mtime +90 -exec ls -l {} \;
 # rename the old files
 #find /opt/scripts -mtime +90 -exec mv {} {}.new \;
