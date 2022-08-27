@@ -92,3 +92,56 @@ The -exec parameter can be coupled with printf to produce joutput. Consider this
 $ find . -type f -name "*.txt" -exec printf "Text file: %s\n" {} \;
 Config file: /etc/openvpn/easy-rsa/openssl-1.0.0.cnf
 Config file: /etc/my.cnf
+#### find command required the specific location.
+$ find <location><options><file or directory> (to find the specific file or directory)
+ The options are, -name -----> search files and directories
+-prem -----> search for permissions
+-size -----> search for sizes
+-user -----> search for the owner
+-uid -----> search for files/directories of uid)
+-gid -----> search for files/directories of gid)
+-group -----> search for group owner
+-empty -----> search for empty files
+-amin -----> search for access time
+-mmin -----> " " 
+-cmin -----> " "
+-atime -----> search for access day (access day, minutes, hrs, ...etc)
+-mtime -----> search for modify day (change the content)
+-ctime -----> search for change day (permissions, .....etc)
+Examples :
+# find / -name <file name> (to search for file names in / directory)
+# find / -name <file name> -type f (to find file names only)
+# find / -name <directory name> -type d (to find directories with small letters only)
+# find / -iname <file/directory name> -t d (to search for small or capital letter files/directories)
+#find / -empty (to search empty files or directories)
+# find / -empty -type f (to search for empty files only)
+# find / -empty -type d (to search for empty directories only)
+# find / -name " *.mp3" (to search for .mp3 files only)
+# find / -size 10M (to search for exact 10M size file/directories)
+# find / -size -10M (to search for less than 10M size files/directories)
+# find / -size +10M (to search for greater than 10M size files/directories)
+# find / -user student (to search for student user files/directories)
+# find / -group student (to search for student group files/directories)
+# find / -user student -not -group student (to search for student user files and not student 
+group files)
+# find / -user student -o -group student (to search for student user and student group 
+files/directories)
+# find / -uid <uid no.> (to search for files/directories which belongs to the user 
+having the specified user id)
+# find / -gid <gid no.> (to search for files/directories which belongs to the group 
+ having the specified group id)
+# find / -prem 755 (to search file/directories which are having the 
+permissions 755)
+# find / -prem -755 (to search file/directories which are having the 
+permissions below 755 and also at least one match also)
+# find / -mmin 20 (to search for files/directories which are modified within 20 minutes, 
+ +20 ----> above 20 minutes and -20 -----> below 20 minutes)
+# find / -mtime 2 (to search files/directories which are modified within 2 days)
+# find / -name "*.mp3" -exec rm -rf { } \; (to search all .mp3 files and delete them)
+# find / -name "*.mp3" -exec cp -a { } /ram \ ;(to search all mp3 files and copy them into /ram 
+directory)
+# find / -user student -exec cp -a { } /ram \; (to search student user's files and directories and 
+ copy them into /ram directory)
+# find / -nouser -exec mv -a { } /home/ram \; (to search files/directories which are not 
+belongs to any user and move them into /home/ram directory)
+# du -h / |sort -r |head -n 10 (to search 10 big size files in reverse order

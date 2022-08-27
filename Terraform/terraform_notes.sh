@@ -42,7 +42,7 @@ $ mkdir learn-terraform-aws-instance
 $ cd learn-terraform-aws-instance
 $ touch main.tf
 
-Open main.tf in your text editor, paste in the configuration below, and save the file.
+#Open main.tf in your text editor, paste in the configuration below, and save the file.
 $ vim main.tf
 provider "aws" {
   region     = "ap-south-1"
@@ -72,6 +72,7 @@ aws_secret_access_key = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 region = ap-south-1
 
 :wq!
+
 ##Strings and Templates
 ##url for references of string and templates
 https://www.terraform.io/language/expressions/strings
@@ -125,13 +126,62 @@ Apply the configuration now with the terraform apply command. Terraform will pri
 $ terraform apply
 ##Create or update infrastructure with auto-approve 
 #If we use "--auto-approve" it will not ask for yes or no prompt
- 
+$ terraform apply --auto-approve 
+##Show output values from your root module
+syntax:-
+$ terraform [global options] output [options] [NAME]
+options:-
+
+  -state=path      Path to the state file to read. Defaults to
+                   "terraform.tfstate".
+
+  -no-color        If specified, output wont contain any color.
+
+  -json            If specified, machine readable output will be
+                   printed in JSON format.
+
+  -raw             For value types that can be automatically
+                   converted to a string, will print the raw
+                   string directly, rather than a human-oriented
+                   representation of the value.
+$ terraform output
+##print specific  output with
+$ terraform output <name>
+$ terraform output vpc_idl
+##Update the state to match remote systems
+$ terraform  refresh
+##update the new change to terraform code
+$ terraform apply -refresh-only
 ## Show the current state or a saved plan
-When you applied your configuration, Terraform wrote data into a file called terraform.tfstate.
-Terraform stores the IDs and properties of the resources it manages in this file, so that it can update or destroy those resources going forward.
-The Terraform state file is the only way Terraform can track which resources it manages, and often contains sensitive information, so you must store your state file securely and restrict access to only trusted team members who need to manage your infrastructure. In production, we recommend storing your state remotely with Terraform Cloud or Terraform Enterprise. Terraform also supports several other remote backends you can use to store and manage your state.
-Inspect the current state using terraform show.
+ Inspect the current state using terraform show.
 $ terraform show
+
+##Key pair generating in terraform coded
+#First we need generate the public key using ssh-keygen
+$ ssh-keygen
+$ cat ~/.ssh/id_rsa.pub
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC9pXjkBHlAHEI62Y/3hqXSeSYelfPFL7mZg+296hZgG5LNVnP2DKfouA8wy3tX21RsaYJcPHNlwGSSv2QJVZoxtPdJbyDDxMagWkxuBr3HbXfvq43C9f/mR7ZOSRijVGUbOTb+oRR7xyZ9RI7+ohdDoQUOPYVLd+l0L/0WdHe4j/zCA4cetabq5LFEt8+nxDQ6Nm3kLscUK7N0y5BLiJYUjVroGAq/i+oBSTpxRum6DWF1xC4+1cFrO0ihvq+Q+R3C0y/OVe97/nUxXexftgkFIgZQ9A4sX/5f93nQPKqv+/BaVzbwAFhVrDEdz4ih/OL7XVoS8UsXRHiU51/rjFF0RtwDChcjow32SS0UgmbQhyx6Fd1ai7qF8iXtQXvHIxDrxScHj1XRhM6KeIfUGci6Xx8WEzoFVtGqp7XzAtHwSjNWu4fYZXJ+V+Z/f/bpEvOgtvT0Z1D1J8QtTHTTyoXNJiySv2j2SOS2M1K5D7w2z8svUGti3jzsURmE1T/SvPk= root@ansible.cntech.local
+It will create the public and private key 
+#Now in terraform  write code  for key pair
+resoure "aws_key_pair" "terraform" {
+  key_name = "terraform-key"
+  public_key = <"here we need to add that public key">
+   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC9pXjkBHlAHEI62Y/3hqXSeSYelfPFL7mZg+296hZgG5LNVnP2DKfouA8wy3tX21RsaYJcPHNlwGSSv2QJVZoxtPdJbyDDxMagWkxuBr3HbXfvq43C9f/mR7ZOSRijVGUbOTb+oRR7xyZ9RI7+ohdDoQUOPYVLd+l0L/0WdHe4j/zCA4cetabq5LFEt8+nxDQ6Nm3kLscUK7N0y5BLiJYUjVroGAq/i+oBSTpxRum6DWF1xC4+1cFrO0ihvq+Q+R3C0y/OVe97/nUxXexftgkFIgZQ9A4sX/5f93nQPKqv+/BaVzbwAFhVrDEdz4ih/OL7XVoS8UsXRHiU51/rjFF0RtwDChcjow32SS0UgmbQhyx6Fd1ai7qF8iXtQXvHIxDrxScHj1XRhM6KeIfUGci6Xx8WEzoFVtGqp7XzAtHwSjNWu4fYZXJ+V+Z/f/bpEvOgtvT0Z1D1J8QtTHTTyoXNJiySv2j2SOS2M1K5D7w2z8svUGti3jzsURmE1T/SvPk= root@ansible.cntech.local"
+}
+##Environment variables
+$ Terraform loads variables in the following order, with later sources taking precedence over earlier ones:
+1.Environment variables
+2.The terraform.tfvars file, if present.
+3.The terraform.tfvars.json file, if present.
+4.Any *.auto.tfvars or *.auto.tfvars.json files, processed in lexical order of their filenames.
+5.Any -var and -var-file options on the command line, in the order they are provided.
+ (This includes variables set by a Terraform Cloud workspace.)
+
+
+
+
+
+
 
 -----------------
 /*==== The VPC ======*/

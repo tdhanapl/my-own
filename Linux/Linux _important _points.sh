@@ -12,6 +12,8 @@ OR
 # systemctl --type=service 
 OR
 #systemctl list-unit-files
+OR 
+service --status-all -----in rhel 6
 
 ########################Top command#######################################
 1)Top Command After Specific repetition:  With below command top command will automatically exit after 10 number of repetition.

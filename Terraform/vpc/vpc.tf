@@ -92,7 +92,7 @@ resource "aws_route_table_association" "private" {
 }
 #6.create the security group
 resource "aws_security_group" "security-group" {
-  name        = "allow_pots"
+  name        = "allow_ports"
   description = "Allow ports inbound traffic"
   vpc_id      = aws_vpc.VPC-A.id
 
