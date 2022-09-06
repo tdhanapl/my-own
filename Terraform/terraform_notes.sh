@@ -79,21 +79,35 @@ https://www.terraform.io/language/expressions/strings
 
 ### variable types
 1.string 
-variable "string" {
- default     = "ami-06a0b4e3b7eb7a300"
+variable "ami_id" {
+  type        =  string
+  default     = "ami-06a0b4e3b7eb7a300"
 }
+#call string type varible in main.tf file
+instance_type = var.ami_id#varibale type string
+
 #2.list
-variable "list" {
-  default     = ["jenkins","docker","ansible"]
+variable "instance_type" {
+  description = "ec2 instance_type"
+  type        = list
+  #default    = t2.micro
+  default     = ["t2.micro","t2.small","t2.medium"]
 }
+#call list type varible in main.tf file
+instance_type = var.instance_type[0] #varibale type list
+
 #3.map
-variable "map" {
+variable "ami_image_id" {
+  type        = map
   default     = {
-    redhat-ami = "ami-06a0b4e3b7eb7a300"
-    amazon-ami = "ami-079b5e5b3971bd10d"
-	ubuntu-ami = "ami-068257025f72f470d"
+    redhat = "ami-06a0b4e3b7eb7a300"
+    amazon = "ami-079b5e5b3971bd10d"
+	ubuntu = "ami-068257025f72f470d"
   }
 }
+#call map type varible  in main.tf file
+instance_type = var.ami_image_id.redhat #varibale type = map
+
 ##Terraform visualing exexution plan
 #Install graphviz.x86_64 package
 This guide let you learn how to install graphviz.x86_64 package:
@@ -104,6 +118,7 @@ $ sudo dnf install graphviz.x86_64
 Please follow the step by step instructions below to uninstall graphviz.x86_64 package:
 $ sudo dnf remove graphviz.x86_64
 sudo dnf autoremove
+
 ##To create the terraform plan graphviz
 $ terraform graph -Tsvg > graph.svg
 
@@ -124,6 +139,7 @@ Success! The configuration is valid.
 ##Create or update infrastructure
 Apply the configuration now with the terraform apply command. Terraform will print output similar to what is shown below. We have truncated some of the output to save space.
 $ terraform apply
+
 ##Create or update infrastructure with auto-approve 
 #If we use "--auto-approve" it will not ask for yes or no prompt
 $ terraform apply --auto-approve 
@@ -148,10 +164,13 @@ $ terraform output
 ##print specific  output with
 $ terraform output <name>
 $ terraform output vpc_idl
+
 ##Update the state to match remote systems
 $ terraform  refresh
+
 ##update the new change to terraform code
 $ terraform apply -refresh-only
+
 ## Show the current state or a saved plan
  Inspect the current state using terraform show.
 $ terraform show
@@ -166,7 +185,7 @@ It will create the public and private key
 resoure "aws_key_pair" "terraform" {
   key_name = "terraform-key"
   public_key = <"here we need to add that public key">
-   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC9pXjkBHlAHEI62Y/3hqXSeSYelfPFL7mZg+296hZgG5LNVnP2DKfouA8wy3tX21RsaYJcPHNlwGSSv2QJVZoxtPdJbyDDxMagWkxuBr3HbXfvq43C9f/mR7ZOSRijVGUbOTb+oRR7xyZ9RI7+ohdDoQUOPYVLd+l0L/0WdHe4j/zCA4cetabq5LFEt8+nxDQ6Nm3kLscUK7N0y5BLiJYUjVroGAq/i+oBSTpxRum6DWF1xC4+1cFrO0ihvq+Q+R3C0y/OVe97/nUxXexftgkFIgZQ9A4sX/5f93nQPKqv+/BaVzbwAFhVrDEdz4ih/OL7XVoS8UsXRHiU51/rjFF0RtwDChcjow32SS0UgmbQhyx6Fd1ai7qF8iXtQXvHIxDrxScHj1XRhM6KeIfUGci6Xx8WEzoFVtGqp7XzAtHwSjNWu4fYZXJ+V+Z/f/bpEvOgtvT0Z1D1J8QtTHTTyoXNJiySv2j2SOS2M1K5D7w2z8svUGti3jzsURmE1T/SvPk= root@ansible.cntech.local"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC9pXjkBHlAHEI62Y/3hqXSeSYelfPFL7mZg+296hZgG5LNVnP2DKfouA8wy3tX21RsaYJcPHNlwGSSv2QJVZoxtPdJbyDDxMagWkxuBr3HbXfvq43C9f/mR7ZOSRijVGUbOTb+oRR7xyZ9RI7+ohdDoQUOPYVLd+l0L/0WdHe4j/zCA4cetabq5LFEt8+nxDQ6Nm3kLscUK7N0y5BLiJYUjVroGAq/i+oBSTpxRum6DWF1xC4+1cFrO0ihvq+Q+R3C0y/OVe97/nUxXexftgkFIgZQ9A4sX/5f93nQPKqv+/BaVzbwAFhVrDEdz4ih/OL7XVoS8UsXRHiU51/rjFF0RtwDChcjow32SS0UgmbQhyx6Fd1ai7qF8iXtQXvHIxDrxScHj1XRhM6KeIfUGci6Xx8WEzoFVtGqp7XzAtHwSjNWu4fYZXJ+V+Z/f/bpEvOgtvT0Z1D1J8QtTHTTyoXNJiySv2j2SOS2M1K5D7w2z8svUGti3jzsURmE1T/SvPk= root@ansible.cntech.local"
 }
 ##Environment variables
 $ Terraform loads variables in the following order, with later sources taking precedence over earlier ones:
@@ -176,6 +195,17 @@ $ Terraform loads variables in the following order, with later sources taking pr
 4.Any *.auto.tfvars or *.auto.tfvars.json files, processed in lexical order of their filenames.
 5.Any -var and -var-file options on the command line, in the order they are provided.
  (This includes variables set by a Terraform Cloud workspace.)
+
+##terraform cloud login
+#first generate the token in terraform cloud 
+$ terraform login
+	here paste the terraform token
+# New to TFC? Follow these steps to instantly apply an example configuration:
+$ git clone https://github.com/hashicorp/tfc-getting-started.git
+$ cd tfc-getting-started
+$ scripts/setup.sh
+
+
 
 
 

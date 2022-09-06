@@ -1,4 +1,12 @@
- terraform {
+terraform {
+  backend "remote" {
+    hostname = "app.terraform.io"
+    organization = "dhanapal"
+
+    workspaces {
+      name = "first-terraform"
+    }
+  }
   required_providers {
     aws = {
       source  = "hashicorp/aws"

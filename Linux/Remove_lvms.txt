@@ -1,0 +1,89 @@
+###############################removing the lvm########################
+[root@localhost opt]# ###remove lvms
+[root@localhost opt]# lsblk
+NAME                  MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                     8:0    0   30G  0 disk
+├─sda1                  8:1    0  300M  0 part /boot
+├─sda2                  8:2    0    2G  0 part [SWAP]
+└─sda3                  8:3    0 27.7G  0 part /
+sdb                     8:16   0    5G  0 disk
+└─sdb1                  8:17   0    5G  0 part
+  └─vg_root-lv_root   253:0    0    5G  0 lvm  /opt
+sdc                     8:32   0    5G  0 disk
+└─sdc1                  8:33   0    5G  0 part
+  └─vg_root1-lv_root1 253:1    0    5G  0 lvm
+sr0                    11:0    1  4.2G  0 rom  /run/media/dhana/RHEL-7.8 Server.x86_64
+###To remove logical volume
+#first unmount the mount partition
+[root@localhost opt]# umount /dev/vg_root1/lv_root1 /kubernetes
+[root@localhost opt]# lvscan
+  ACTIVE            '/dev/vg_root1/lv_root1' [<5.00 GiB] inherit
+  ACTIVE            '/dev/vg_root/lv_root' [<5.00 GiB] inherit
+[root@localhost opt]# lvremove /dev/vg_root1/lv_root1
+Do you really want to remove active logical volume vg_root1/lv_root1? [y/n]: y
+  Logical volume "lv_root1" successfully removed
+[root@localhost opt]# lvs
+  LV      VG      Attr       LSize  Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  lv_root vg_root -wi-ao---- <5.00g
+[root@localhost opt]# vgdisplay
+  --- Volume group ---
+  VG Name               vg_root1
+  System ID
+  Format                lvm2
+  Metadata Areas        1
+  Metadata Sequence No  4
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                0
+  Open LV               0
+  Max PV                0
+  Cur PV                1
+  Act PV                1
+  VG Size               <5.00 GiB
+  PE Size               4.00 MiB
+  Total PE              1279
+  Alloc PE / Size       0 / 0
+  Free  PE / Size       1279 / <5.00 GiB
+  VG UUID               UtnHJz-04rf-mpiC-aXdf-2cbw-sTTA-XRq5Yz
+
+  --- Volume group ---
+  VG Name               vg_root
+  System ID
+  Format                lvm2
+  Metadata Areas        1
+  Metadata Sequence No  2
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                1
+  Open LV               1
+  Max PV                0
+  Cur PV                1
+  Act PV                1
+  VG Size               <5.00 GiB
+  PE Size               4.00 MiB
+  Total PE              1279
+  Alloc PE / Size       1279 / <5.00 GiB
+  Free  PE / Size       0 / 0
+  VG UUID               Udcho2-c0wl-gjLI-hr5a-gFP5-50U4-K9WY5f
+###############remove volume group################
+[root@localhost opt]# vgremove vg_root1
+  Volume group "vg_root1" successfully removed
+###############remove physical volume################
+[root@localhost opt]# pvremove /dev/sdc1
+  Labels on physical volume "/dev/sdc1" successfully wiped.
+[root@localhost opt]# lsblk
+NAME                MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                   8:0    0   30G  0 disk
+├─sda1                8:1    0  300M  0 part /boot
+├─sda2                8:2    0    2G  0 part [SWAP]
+└─sda3                8:3    0 27.7G  0 part /
+sdb                   8:16   0    5G  0 disk
+└─sdb1                8:17   0    5G  0 part
+  └─vg_root-lv_root 253:0    0    5G  0 lvm  /opt
+sdc                   8:32   0    5G  0 disk
+└─sdc1                8:33   0    5G  0 part
+sr0                  11:0    1  4.2G  0 rom  /run/media/dhana/RHEL-7.8 Server.x86_64
+[root@localhost opt]#partprobe
+

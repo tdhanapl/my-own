@@ -29,7 +29,7 @@ resource "aws_instance" "test-terraform" {
   availability_zone            = var.availability_zone.AZ1
   #instance_state               = "running"
   #security_groups -- it for new security group while ec2_instance creating
-  vpc_security_group_ids = [ var.security_groups_id ]
+  vpc_security_group_ids = [ "sg-04e6c7ee02cef7364" ]
   #subnet_id = var.public_subnet_id
   subnet_id     = data.aws_subnet.selected.id
   #tenancy = tenancy

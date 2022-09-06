@@ -50,7 +50,7 @@ df -h  |grep -ivE "filesystem|tmpfs" | sed 's/%//gI' | awk '{print $5}'
 ##################################Fstab configurtion Fromat################################
 LABEL=cloudimg-rootfs   		/        ext4   			defaults,discard       0	 		1
 device name 		    mountpoint    file system type		permission            backup  		fsck(File System Consistency Check)
-$ du -hs * | sort -rh | head -10
+$ du -hs * | sort -rh | head -10 
 #################How to Change Runlevels (targets) in Systemd##############################
 Systemd is a modern init system for Linux: a system and service manager which is compatible with the popular SysV init system and LSB init scripts. It was intended to overcome the shortcomings of SysV init as explained in the following article.
 The Story Behind ‘init’ and ‘systemd’: Why ‘init’ Needed to be Replaced with ‘systemd’ in Linux
@@ -74,7 +74,7 @@ While the system is running, you can switch the target (run level), meaning only
 #To switch to runlevel 3, run the following command.
 $ systemctl isolate multi-user.target 
 #To change the system to runlevel 5, type the command below.
-$ systemctl isolate graphical.target
+$ systemctl isolate graphical.target 
 
 ################################### how many Type of File in Linux##########################
 --- ->Text file
@@ -306,7 +306,7 @@ $ vim /etc/fstab
 /dev/mapper/vgikt/logical /ikt ext4 defaults 0 0
 :wq
 $ mount -a
-###Extended the volume group
+##################Extended the volume group#############################
 $ pvcreate /dev/sda3
 $ gextend vgikt /dev/sda3
 $lvextend -L +5G /dev/vgikt/logical
@@ -563,14 +563,14 @@ $yum remove httpd
 	--here it does not removes the dependencies
 $ yum autoremove httpd
 	--here it removes all dependencies with packages 
+##############how to check open port in remote server##################
+$nmap -A <remote-sever-ip>
+$nmap -A 192.168.1.5
 
 ######################################creation Swap Space########################################
 # Scan new lun on server with below command
 ls /sys/class/scsi_host/host | while read host ; do echo "---" > /sys/class/scsi_host/$host/scan ; done
 
-##############how to check open port in remote server##################
-$nmap -A <remote-sever-ip>
-$nmap -A 192.168.1.5
 
 #############echo "---" > /sys/class/scsi_host/host{x}/scan
 #"---" {-=channel,-=scsi id,-=lun} In the above command means CTL["channel on HBA" "Target Scsi id" "LUN"] 
@@ -735,11 +735,9 @@ Options:
   -p, --password PASSWORD       use this encrypted password for the new group
   -r, --system                  create a system account
   -R, --root CHROOT_DIR         directory to chroot into
-      --extrausers              Use the extra users database
-	  
+      --extrausers              Use the extra users database	  
 #groupmod -h
 Usage: groupmod [options] GROUP
-
 Options:
   -g, --gid GID                 change the group ID to GID
   -h, --help                    display this help message and exit

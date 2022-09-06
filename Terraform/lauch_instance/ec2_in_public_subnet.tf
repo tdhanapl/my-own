@@ -1,3 +1,8 @@
+###terraform provisioners ##
+#it used to install sotfware, edit files, and provision machines created with terraform.
+#Terraform you to work with two different provisioners
+#1.cloud-init
+#2.packer
 
 #provider name and region 
 provider "aws" {
@@ -7,7 +12,7 @@ provider "aws" {
 }
 data "template_file" "user_data" {
   template = file("../userdata.yaml")
-
+}
 data "aws_subnet_ids" "public_subnet_id" {
   vpc_id = var.vpc_id
 
@@ -16,13 +21,13 @@ data "aws_subnet_ids" "public_subnet_id" {
   }
 }
 
-resource "aws_instance" "app" {
-  for_each      = data.aws_subnet_ids.public_subnet_id.ids
-  ami           = var.ami
-  instance_type = "t2.micro"
-  subnet_id     = each.value
-}
-===========
+#resource "aws_instance" "app" {
+#  for_each      = data.aws_subnet_ids.public_subnet_id.ids
+#  ami           = var.ami
+#  instance_type = "t2.micro"
+#  subnet_id     = each.value
+#}
+
 ##creating the ec2-instance
 resource "aws_instance" "test-terraform" {
   #count = 2 it will create two ec2-instance
