@@ -174,6 +174,8 @@ $ terraform apply -refresh-only
 ## Show the current state or a saved plan
  Inspect the current state using terraform show.
 $ terraform show
+## To chheck Workspace  management
+$ terraform workspace list
 
 ##Key pair generating in terraform coded
 #First we need generate the public key using ssh-keygen
