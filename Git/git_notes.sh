@@ -5,8 +5,7 @@
 2.Coleberative Development
 3.Revert the changes
 4.Who and When changes are made
-#############git token######
-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
+
 ###################
 Types of VCS
 =====
@@ -30,8 +29,6 @@ https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-
 														     |___________
 																		 |
 																		hot-fix (it is just patch  to production release, we create branch from master branch)	
-
-
 
 #Strong ability to troubleshoot any issues generated while building, deploying and in production support. 
 #########git command####
