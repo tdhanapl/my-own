@@ -43,7 +43,7 @@ Let’s begin by installing the ELK stack on the server, along with a brief expl
 
 ###############installation of Elasticsearch############
 1.Download rpm package
-$ wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.9.2-linux-x86_64.tar.gz
+$ wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.9.2-x86_64.rpm
 $ ll
 $  rpm -ivh elasticsearch-7.9.2-x86_64.rpm
 $whereis elasticsearch
@@ -140,7 +140,7 @@ $curl localhost:9200
 
 ###############installation of Kibana############
 ###downloading rpm package
-$wget https://artifacts.elastic.co/downloads/kibana/kibana-7.9.2-linux-x86_64.tar.gz
+$wget https://artifacts.elastic.co/downloads/kibana/kibana-7.9.2-x86_64.rpm
 $ rpm -ivh kibana-7.9.2-x86_64.rpm
 vim /etc/kibana/kibana.yml
 # =================================== Kibana ===================================
@@ -153,7 +153,7 @@ vim /etc/kibana/kibana.yml
  64   # Scheme and port can be left out and will be set to the default (http and 5601)
  65   # In case you specify and additional path, the scheme is required: http://localhost:5601/path
  66   # IPv6 addresses should always be defined as: https://[2001:db8::1]:5601
- 67   host: "localhost:5601" ##kibana installed server  ip adress or if its localhost
+ 67   host: "0.0.0.0" ##kibana installed server  ip adress or if its localhost
  68
  69   # Kibana Space ID
  70   # ID of the Kibana Space into which the dashboards should be loaded. By default,
@@ -752,6 +752,137 @@ $filebeat setup
 $ systemctl enable filebeat
 $ systemctl start  filebeat
 $ systemctl status filebeat
+
+##############Create index pattern###################
+->login into kibana
+->click menu icon
+->click stack management
+->click index management(under data option)
+->click index_patterns(under kibana option)
+->click  create index_pattern
+->index pattern name: <metricbeat>*->click next steps
+->select time field: @timestamp(under configure settings)
+->click create index pattern
+
+################create visualization##########
+-> click visualize
+-> click create visualization
+-> select lens or aggreation based -> now selecting aggreation based
+               or 
+   select aggreation based-> select pie charts
+-> choose a source(index pattern)= metricbeat*
+-> here display empty pie charts
+-> click add (under bucket right  side)
+-> select split slices->choose aggreation =terms (here your chose of selecting type)
+-> select field = client.geo.country_name_keyword
+-> here leave reaminig option deafult
+-> click update 
+-> now click metric(under bucket right side)
+-> slice size(under metrics)
+-> aggreation = sum (here your chose of selecting type)
+-> select field = http.reponse.body.bytes
+-> here leave reaminig option deafult
+-> click update 
+-> now click options (right side)(advance setting)
+->trun off of Donut (pie settings)-> click update
+Here expolre other options for new things
+-> now click save (on top right side)
+-> tittle = new pie chart system 
+-> select none (under add to dashboard)
+->click save and add to library
+
+###########create the dashboard########
+-> click dashboard(under menu)
+-> click create new dashboard
+-> click create panel or add existind visualization(from library)
+-> click add from library
+-> select <one of the visualization>
+-> again select <another visualization>
+-> now click save (both  select visualization)
+-> tite = system pie -> click save
+
+#########join two indices in kibana############
+we have 2 indices already. now join this indices
+-> go dev tool(console)
+#here we are adding the two indices
+POST /_aliases
+{
+ "actions" : [
+   { "add" : { "index" : "tmt-test.rack", "alias" : "join_sample" } },
+   { "add" : { "index" : "tmt-test.report", "alias" : "join_sample" } }
+ ]
+}
+-> now click icon sysmbol
+###now create index pattern for two join index
+->click stack management
+->click index management(under data option)
+->click index_patterns(under kibana option)
+->click  create index_pattern
+->index pattern name: join_sample (this is the alias for two indices)
+->click next steps
+->select time field: I dont want to use the filter 
+->click create index pattern
+##now go to discover platform
+->  now drop down select tmt-test.rack (under add filter)
+It some amount count 
+-> now drop down select tmt-test.report
+Here also show some amount count 
+->now drop down select join_sample (under add filter)
+Here it diplay both index amount count 
+
+############creating the alerts & monitoring in kibana###########
+##https://www.elastic.co/what-is/kibana-alerting
+-> login into kibana
+-> click menu icon
+-> click stack management
+-> click alerts and actions(under alerts and insights)
+Here it will diplay an error "you must set an encryption key"
+To create an alert, set value for 
+xpack.encryptedSavedObject.encryptionKey in your kibana.yaml
+-> now open kibana configuration file
+$ vim  /etc/kibana/kibana.yaml
+# ---------------------------- Elasticsearch Output ----------------------------
+ 91 output.elasticsearch:
+ 92   # Array of hosts to connect to.
+ 93   hosts: ["localhost:9200"]   ###elasticsearch installed server ip adress or if its localhost
+ 94   ##adding encryption for alert manager 
+ 95   xpack.encryptedSavedObject.encryptionKey: "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"
+ 96   # Protocol - either `http` (default) or `https`.
+ 97   #protocol: "https"
+ 98
+ 99   # Authentication credentials - either API key or username/password.
+100   #api_key: "id:api_key"
+101   #username: "elastic"
+102   #password: "changeme"
+103
+:wq!
+##now restart the kibana service 
+$ systemctl restart kibana
+
+##now go to kibana
+-> go to previous alert  actions
+-> click  alert
+-> Name: space file system alert
+-> check every: 1 minutes
+-> notify every: 5 minutes
+-> select a trigger type:  metric thersold 
+-> click save
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

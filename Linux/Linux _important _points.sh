@@ -85,6 +85,8 @@ b   -> blocked file
 p   -> proces id file
 .   -> selinux
 +   -> ACL
+############
+ yum install local ./python27-python-pip-7.1.0-2.el7.noarch.rpm
 
 ############################Disk identification#########################################################
 #fdisk -l
@@ -120,6 +122,7 @@ find /var/log -type d -mtime +30 -exec ls -rv {} \;
 find /var/dtpdev/tmp/ -type f -mtime +15 -exec r3m -f {} +
 find /path/to/files/ -type f -name *.php  -mtime +30 -exec rm {} \;
 
+find /home/xphenoapps/fcs_resumes -type d -mtime +547-exec ls -lrth {} \; | wc -l
 #####################find more +100m size #######################
 find /var/ -type f -size +100M -exec ls -ltr {} \;
 
@@ -543,6 +546,8 @@ $ rpm -Uhv <package_name>
 $ rpm -i --force <package>
 #List the files  in the  package 
 $ rpm -i <pacakage>
+##how check installation date of particular pacakage
+$ rpm -qa --last |grep kernel*
 #options
 -i -----> install
 -v -----> verbose
