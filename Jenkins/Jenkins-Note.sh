@@ -1,5 +1,7 @@
-#######################Configuration ##############################jenkins-pass=root123
-
+#######################Configuration ##############################
+jenkins server login deatils
+username=root
+pass=root123
 ###Home directory for jenkins
 By default, Jenkins stores all of its data in this directory on the file system
 $ ll /var/lib/jenkins
@@ -232,9 +234,9 @@ Parse user attribute for list of LDAP groups/Search for LDAP groups containing u
 
 4. ########################################Installation  maveen##############################
 $ cd /opt
-$ wget  https://dlcdn.apache.org/maven/maven-3/3.8.5/binaries/apache-maven-3.8.5-bin.tar.gz
-$ tar -xzvf apache-maven-3.8.5-bin.tar.gz
-$ mv apache-maven-3.8.5-bin  maven
+$ wget  https://dlcdn.apache.org/maven/maven-3/3.8.6/binaries/apache-maven-3.8.6-bin.tar.gz
+$ tar -xzvf apache-maven-3.8.6-bin.tar.gz
+$ mv apache-maven-3.8.6 maven
 $ cd maven
 $ cd bin
 $ ./mvn --version

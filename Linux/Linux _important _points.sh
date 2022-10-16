@@ -15,6 +15,15 @@ OR
 OR 
 service --status-all -----in rhel 6
 
+#########To filter particular field  with cut command #######
+cut -d ":" -f1,3 /etc/passwd
+cut -f 1 -d":" /etc/passwd
+cat /etc/passwd  | grep /bin/bash | cut -f1 -d ":"
+
+##  removed this users with ticket id 6603521
+##mupparaju.ikt   ALL=(ALL)  ALL
+
+
 ########################Top command#######################################
 1)Top Command After Specific repetition:  With below command top command will automatically exit after 10 number of repetition.
 $ top -n 10
@@ -1350,10 +1359,18 @@ $ realm join --user=administrator cntech.local
 now here prompt password for administartor: mcse@16
 $ realm list 
 here dispaly active directory information
-#######
-
-
-
+###############
+How to verify or check the integrity of the password file?
+# pwck <options> /etc/passwd or
+# pwck <options> /etc/shadow 
+ * The options are, -q ------> quiet
+					-r ------> read only
+					--s ------> sort the contents by uidin /etc/passwd and /etc/shadow files.
+How to verify or check the integrity of the group file?
+# grpck <options> /etc/group or
+# grpck <options> /etc/gshadow 
+ * The options are, -r -----> read only
+					-s -----> sort the contents by gidin /etc/group and /etc/gshadow files.
 
 #############interveiw question############
 *Linux* ✓ *(RHEL)*

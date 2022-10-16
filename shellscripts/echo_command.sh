@@ -22,7 +22,8 @@ Sr.No.	Escape 		& Description
 9		\v			vertical tab
 10		\e     		escape
 11		\0NNN  		byte with octal value NNN (1 to 3 digits)
-12      \xHH   		byte with hexadecimal value HH (1 to 2 digits)
+12            \xHH   		byte with hexadecimal value HH (1 to 2 digits)
+13            \s                   matches for space
 
 NOTE:  your  shell  may  have its own version of echo, which usually supersedes the version described here.  Please refer to your shells
        documentation for details about the options it supports.

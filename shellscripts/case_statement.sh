@@ -1,15 +1,17 @@
-#!/bin/sh
-tput setf 2
-option="${1}" 
-case ${option} in 
-	   -f) FILE="${2}" 
-		         echo "File name is $FILE"
-			       ;; 
-			          -d) DIR="${2}" 
-					        echo "Dir name is $DIR"
-						      ;; 
-						         *)  
-								       echo "`basename ${0}`:usage: [-f file] | [-d directory]" 
-								             exit 1 # Command to come out of the program with status 1
-									           ;; 
-								   esac
+#!/bin/bash
+
+echo -n "Are you a student? [yes or no]: "
+read response
+case $response in
+
+        "Y" | "y" | "YES" | "Yes" | "yes")
+                echo -n "Yes, I am a student."
+                ;;
+
+        "N" | "n" | "No" | "NO" | "no" | "nO")
+                echo -n "No, I am not a student.";
+                
+                ;;
+        *) echo -n "Invalid input"
+            ;;
+esac

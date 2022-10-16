@@ -15,10 +15,10 @@ touch -d "Mon 5 June 2021 12:23:15" Oldfile{1..5}.txt
 ################################find the 90 days old files#####################
 #find /var/log -mtime +90 -exec ls -l {} \;
 # rename the old files
-#find /opt/scripts -mtime +90 -exec mv {} {}.new \;
+$ find /opt/scripts -mtime +90 -exec mv {} {}.new \;
 
 ######Deleting the old 90 days files 
-#find /opt/scripts -mtime +90 -exec rm {} \;
+$ find /opt/scripts -mtime +90 -exec rm {} \;
 
 ###############archive the file , compress and move to the remote host or remote destination#####################
 tar -cvf /opt/backup.tar /var/log

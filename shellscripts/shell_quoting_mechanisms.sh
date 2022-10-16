@@ -1,9 +1,9 @@
 #!/bin/bash
-tput setf 2
+
 ##Double quotes take away the special meaning of all characters except the following −
 # $ for parameter substitution
-#Backquotes for command substitution
-
+# \ Backquotes for command substitution
+# \s matches for spaces
 # \$ to enable literal dollar signs
 # \` to enable literal backquotes
 # \" to enable embedded double quotes

@@ -21,23 +21,24 @@ Echo the STRING(s) to standard output.
    
 #If -e is in effect, the following sequences are recognized:
 Sr.No.	Escape 		& Description
-1		\\ 			backslash
-2		\a 			alert 	(BEL)
-3		\b			backspace
-4		\c			suppress trailing newline (or) produce no further output
-5		\f			form feed
-6		\n			new line
-7		\r			carriage return
-8		\t			horizontal tab
-9		\v			vertical tab
-10		\e     		escape
-11		\0NNN  		byte with octal value NNN (1 to 3 digits)
-12      \xHH   		byte with hexadecimal value HH (1 to 2 digits)
+1		\\ 			   backslash
+2		\a 			   alert 	(BEL)
+3		\b			      backspace
+4		\c			      suppress trailing newline (or) produce no further output
+5		\f			      form feed
+6		\n			      new line
+7		\r			      carriage return
+8		\t			      horizontal tab
+9		\v			      vertical tab
+10		\e     		   escape
+11    \s             matches for space
+12		\0NNN  		   byte with octal value NNN (1 to 3 digits)
+13    \xHH   		   byte with hexadecimal value HH (1 to 2 digits)
 
 NOTE:  your  shell  may  have its own version of echo, which usually supersedes the version described here.  Please refer to your shells
        documentation for details about the options it supports.
 	   
-#############Shell Functions###########
+##################Shell Functions##############
 #creating FunctionsTo declare a function, simply use the following syntax −
 function_name () {
 list of commands
@@ -56,9 +57,9 @@ Hello
 Upon execution, you will receive the following output −
 :wq!
 
-$./test.sh
+$ ./test.sh
 Hello World
-##########Qutoes#############
+########################Qutoes#########################
 var1=dhana
 var2=pal
 1."" double qutoes
