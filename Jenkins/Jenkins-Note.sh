@@ -6,17 +6,6 @@ pass=root123
 By default, Jenkins stores all of its data in this directory on the file system
 $ ll /var/lib/jenkins
 
-########jenkins document site
-https://www.jenkins.io/doc/
-https://www.jenkins.io/doc/book/pipeline/syntax/#options
-####refernces these site for shared libary in jenkins
-https://www.lambdatest.com/blog/use-jenkins-shared-libraries-in-a-jenkins-pipeline/?s=08
-
-##good content devopsec
-https://medium.com/@nanditasahu031/devsecops-implementing-secure-ci-cd-pipelines-9653726b4916
-https://medium.com/@nanditasahu031/jenkins-pipeline-jfrog-artifactory-and-jenkins-integration-4fed3fc8d556
-https://github.com/Savegirlchild/DevSecOps_Pipeline
-
 ##what is Continuous Integration,Continuous delivery,and Continuous Deployment.
 #Continuous Integration (CI)
 It  is a software engineering practice in which developers integrate code into a shared repository several times a day in order to obtain rapid feedback of the feasibility of that code. CI enables automated build and testing so that teams can rapidly work on a single project together.
@@ -38,12 +27,12 @@ It  is the process by which qualified changes in software code or architecture a
 3.stage(git checkout)
 4.stage(SonarQube analysis and Quality gate check)
 5.stage(source code bulit)
-6.stage(deploy artifact to jfrog)
-8.stage(Bulid docker image with artifact and push to jfrog) 
+6.stage(deploy artifact to jfrog/nexu/s3 bucket)
+8.stage(Bulid docker image with artifact and push to jfrog/s3 bucket) 
 9.stage(identifying misconfigs using datree in helm charts)
-10.stage(pushing the helm charts to jfrog)
-11.stage(manual approval for deploy in k8s development environment)
-12.stage(Deploying application on k8s cluster)
+10.stage(pushing the helm charts to jfrog/s3)
+11.stage(manual approval for deploy in k8s development/pre-production environment)
+12.stage(Deploying application on k8s eks cluster)
 13.post{
         always {
             junit '**/target/*.xml'
@@ -55,10 +44,27 @@ It  is the process by which qualified changes in software code or architecture a
 			// mail to: dhanapal703278@gmail.com, subject: The Pipeline sucess 
 		}
     }
-###Pugins 
+## Requried plugin
+1. File system scm plugin---->Filesystem Checkout
+2. SonarQube scanner plugin for jenkins--->SonarQube integration
+3.JaCoCo plugin----> JaCoCo code coverage
+4. Nexus Platform Plugin----->Nexus repository for storing repository
+5. Email Extension Plugin----> Email Intergation
+6. Deploy to container plugin--->Deploy to tomcat
+7. Docker Pipeline---->Build and use Docker containers from pipelines.
+8. Docker plugin--->This plugin integrates Jenkins with Docker
+9. S3 publisher plugin---> upload artifacts to s3
+10 SonarScanner-->For test code 
+11 Amazon ECR plugin--->This plugin generates Docker authentication token from Amazon Credentials to access Amazon ECR.
+12.Nexus Artifact Uploader--->This plugin to upload the artifact to Nexus Repository.
+13.Nexus Platform Plugin--->This plugin integrates Sonatype Nexus to Jenkins.
+14. Pipeline Utility StepsVersion--->Utility steps for pipeline jobs.
+Note: This above plugin is required for nexus artifact upload
+14.kubernetes--->This plugin integrates Jenkins with Kubernetes
 1. git, Build Timestamp Plugin, Build Timeout, Credentials, Pull Request Builder, Docker Pipeline, Email Extension,github,
    pipeline, maven, artifact, Role-based Authorization Strategy, bule ocean, input, kubernetes deploy, helm.	
-########integarting with jenkins###########
+
+#################integarting with jenkins########################
 1. git-> jenkins(git-webhook, git pollscm)
 2. sonarqube-> jenkins(we pom.xml in properties tag )
 3. jfrog-> jenkins(we mention jfrog details under dependency jfrog repository details)
@@ -70,169 +76,7 @@ It  is the process by which qualified changes in software code or architecture a
 #ansible version=2.10
 #git=2.30
 
-1.###############Reverse Proxy with nginx for jenkin url access########
-#set hostname with FQDN
-$ hostnamectl set-hostname jenkins.cntech.local
-$ echo `hostname -i | awk '{print $NF}'`" "`hostname`" "`hostname -s ` >> /etc/hosts
-##now install nginx 
-$ yum install nginx
- # Load modular configuration files from the /etc/nginx/conf.d directory.
-    # See http://nginx.org/en/docs/ngx_core_module.html#include
-    # for more information.
-    include /etc/nginx/conf.d/*.conf;
-
-    server {
-        listen       80 default_server;
-        listen       [::]:80 default_server;
-        server_name  _;
-        root         /usr/share/nginx/html;
-
-        # Load configuration files for the default server block.
-        include /etc/nginx/deffault.d/*.conf;
-
-        location / {
-        }
-
-        error_page 404 /404.html;
-            location = /40x.html {
-        }
-
-        error_page 500 502 503 504 /50x.html;
-            location = /50x.html {
-        }
-    }
-	-------------remove above line the in above configuration file 
-	------starting from server line to last flower bracket }
-:wq!
-##create new file in /etc/nginx/conf.d/jenkins-proxy.conf
-$ vim /etc/nginx/conf.d/jenkins-proxy.conf
-##
-####reverse proxy configuration link
-#https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/
-upstream jenkins {
-    #server <server-ip-address:8080>;
-	server 35.154.4.51:8080; 
-}
-server {
-    listen       80 default;
-    server_name   jenkins.cntech.local; # replace 'jenkins.cntech.local' with your server domain name
-	
-	access_log   /var/log/jenkins.access.log;
-	error_log   /var/log/jenkins.error.log;
-location / {
-    proxy_buffers 16 4k;
-    proxy_buffer_size 2k;
-    proxy_set_header Accept-Encoding "";
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_pass http://jenkins;
-
-	}
-}
-
-:wq!
-##To check configuration reverse proxy syntax error
-$  nginx -t
-$ systemctl restart nginx
-2. ###################Periodic Backup(plug-in)###############
-#Backup plugin allows archiving and restoring your Jenkins (and Hudson) home directory.
-#With Periodic Backup we schudle cron jobs for backup perpouse
-->Now go to jenkins 
-->manage jenkins->manage plugins->Periodic Backup(search available)->Periodic Backup(select)->install(without restart)
-->now to go jenkins server create a directory for storing jenkins backup data.
-$ mkdir /opt/backup-jenkins-data
-$chown -R jenkins:jenkins /opt/backup-jenkins-data
-->Again to manage jenkins->configure system->Periodic Backup Manager->click here to configure it->
-->Root Directory=/var/lib/jenkins
-->Temporary Directory=/tmp
-->Backup schedule (cron)=30 * * * * (every day  30 minutes)
-->Maximum backups in location=20
-->Store no older than (days)=15
-->File Management Strategy= ConfigOnly/FullBackup
-->Storage Strategy=Tar.GzStorage
-->Backup Location=/opt/backup-jenkins-data
-->mark enable this location
-->click validate
-->clik save
-###For taking backup 
--> click Backup Now
-###For restore backup  
-##if any important job deletd means we can restore with this 
--> click restore
-############### Securirty########
-->Now go to jenkins 
-->manage jenkins->manage plugins->Role-based Authorization Strategy(search available)->Role-based Authorization Strategy(select)->install(without restart)
-
-3.############LDAP configuration in jenkins##############
-##server LDAP configuration details (deatils for configure LDAP in jenkins###
-objectClass: top
-objectClass: dcObject 
-objectClass: organization
-o: example.com
-dc: example.com
-structuralobjectClass: organization
-entryUID: bies4684-739-1036-8256-33433ee5d363
-creatorsName: cn=admin,dc=example,dc=com
-createTimestamp: 202187210636232
-Security Realm createTimestamp: 287187216636737
-entryCSN: 20210721053623,32521320000000000000000
-modifiersName: cn=admin,dc=example,dc=com
-modifyTimestamp: 282187210636232
-
-dn: cn=admin,dc=example,dc=com
-objectClass simpleSecurityObject 
-objectClass: organizationalRole
-cn: admin
-description: LOAP administrator
-user Password: #INTSEF3atybJZOM VZVVFZIU
-structuralObjectClass: organizationalRole
-entryUID: bies4684-739-1036-8256-33433ee5d363
-creatorsName: cn=admin,dc=example,dc=com
-entryUID: bies4684-739-1036-8256-33433ee5d363
-createTimestamp: 202187210636232 
-entryCSN: 20210721053623,32521320000000000000000
-modifierstime: cn=admin,dc=example,dc=com 
-modifyTimestamp: 202107210636732
-------------------
-#Authentication(LDAP configuration)
-->Security Realm=LDAP
-Server
-->Server= 172.13.43.20:389(Syntax of server field is SERVER or SERVER:PORT or ldaps://SERVER[:PORT])
-->root DN= dc=example,dc=com(Allow blank rootDN)
-->User search base= OU=people
-->User search filter= uid={0}
-->Group search base= OU=groups
--> Group search filter= empty (leave default)
-->Group membership
-Parse user attribute for list of LDAP groups/Search for LDAP groups containing user
--> mark Search for LDAP groups containing user
-->Group membership filter= ((member={0})(uniqueMember={0})(memberUid={1}))
-->Manager DN= cn=admin,dc=example,dc=com
-->Manager Password= LDAP password
-->Display Name LDAP attribute= cn <displayname>
-->Email Address LDAP attribute= mail
--> Environment Properties--leave default
--> click test LDAP user-> username= dhana->password=dhan@1234
--> mark Disable Ldap Email Resolver
--> mark Disable Backward Compatibility for Roles
-->click save
--> click apply
-##Now go to jenkins  for security
-->manage jenkins->click Configure Global Security
-->Authorization= Role-Based Strategy
-->click save
--> click apply
-->now again manage jenkins
-->under Security
--> click Manage and Assign Roles 
-->click Manage Roles
-->Role to add= devops
-->click add
-->again Role to add= devolper
-->click add
--> here dispaly two user mark the required permission for the user
-
-4. ########################################Installation  maveen##############################
+########################################Installation  maveen##############################
 $ cd /opt
 $ wget  https://dlcdn.apache.org/maven/maven-3/3.8.6/binaries/apache-maven-3.8.6-bin.tar.gz
 $ tar -xzvf apache-maven-3.8.6-bin.tar.gz
@@ -260,7 +104,8 @@ export PATH=$PATH:$M2_HOME
 :wq!
 $ bash
 mvn --version
-5. ######################configure maven in jenkins#############
+
+######################configure maven in jenkins#############
 ##this use for if it required to bulid in par version only on that time we can add  that version
 #we bulid with particular version
 ->Now go to jenkins 
@@ -281,7 +126,8 @@ List of Maven installations on this system
 ->MAVEN_HOME= /opt/maven/ #/opt/maven/ home of maven path  and/opt/maven/bin path variables
 ->click save
 -> click apply
-6. #####################Integrate Your GitHub Repository to Your Jenkins Project##################################
+
+#####################Integrate Your GitHub Repository to Your Jenkins Project##################################
 Configuring GitHub
 Step 1: go to your GitHub repository and click on ‘Settings
 Step 2: Click on Webhooks and then click on ‘Add webhook’.
@@ -301,7 +147,7 @@ Step 5: In Jenkins, click on ‘New Item’ to create a new project.
 Step 6: Give your project a name, then choose ‘Pipeline’ and finally, click on ‘OK’.click pipeline project->click build trigger-
 ------->mark github hook trigger for GITSCM polling----->click apply.
 
-7. ################################Jenkins master--Slave configuration######################
+################################Jenkins master--Slave configuration######################
 #adding agent with Launch method via Launch agents via SSH
 #create ssh keygen pair
 $ ssh-keygen
@@ -339,7 +185,7 @@ $ ssh-copy-id  -i /root/.ssh/id_rsa <username@10.10.1.173>
 ->Adding the slave node to the master
 ->Log in to the Jenkins console via the browser and click on "Manage Jenkins" and scroll down to the bottom. From the list click on "Manage Nodes". In the new window click on "New Node".
 ->Add new node
-->Give a name to the node, select "Permanent Agent" and click on OK
+->Give a name to the node, select Permanent Agent and click on OK
 ->Jenkins Slave Node name
 ->In the remote root directory field enter a path in the slave node. Note that ssh user must have read/write access to this directory path. Here I use the ssh uses home directory.
 ->Enter the slave nodes IP address in the field.
@@ -356,7 +202,8 @@ $ ssh-copy-id  -i /root/.ssh/id_rsa <username@10.10.1.173>
 ->Troubleshooting
 ->You can click on the slave node and from there you can view the log. Fix any error shown in the log
 -------
-8. ##########pipeline-1 running in slave node###########
+
+##########pipeline running in slave node###########
 -----
 pipeline{
     agent any
@@ -375,7 +222,7 @@ pipeline{
                 sh "mvn clean install -DskipTests" //DskipTests-it skip tests in this stage
             }
         }
-        stage('Test') {
+        stage('Junit Test and Jacoco') {
             steps {
                 sh "mvn test" //here we are running the tests in this stage
                 junit allowEmptyResults: true, testResults: 'target/surefire-reports-/*.xml'
@@ -389,9 +236,10 @@ pipeline{
         }
     }
 }
-9. ##########pipeline-2 running on docker of another agent machine###########
+
+##########pipeline running on docker of another agent machine###########
 ###build docker image with java, git, maven
-$ Dockerfile
+$ vim  Dockerfile 
 FROM ubuntu
 LABEL owner="dhanapal"
 LABEL Description="creating image with git, maven, java for docker-jenkins-slave"
@@ -408,15 +256,17 @@ RUN  apt update -y \
      && export PATH=$PATH:/opt/maven/bin \
      &&  echo $PATH
 CMD  ["mvn", "--version"]
+:wq
 
 $docker build --tag docker_with_java_git_maven-3.8.5 .
 $ docker image tag docker_with_java_git_maven-3.8.5 dhanapal406/jenkins_java_git_maven-3.8.5
 $ docker push dhanapal406/jenkins_java_git_maven-3.8.5
-->In Pugins we need install Docker Pipeline
+
+--->In Pugins we need install "Docker Pipeline" in jenins
 
 ###multi stage docker file  to reduce image size
-#$ vim docker-jenkinsfile 
--------
+
+###########run pipeline in do
 pipeline{
     agent {
         docker { 
@@ -445,6 +295,7 @@ pipeline{
             steps {
                 sh "mvn --version"
                 sh "mvn clean install"
+                jacoco()
             }
         }
     }
@@ -462,9 +313,328 @@ pipeline{
   }
 }
 
-:wq
 
-10. #############stage level assign agent in this pipeline-3 and build-docker image in pipeline#######
+
+############################################SonarQube intergration with jenkins################################################################
+#######installation of Sonarqube
+##https://www.jenkins.io/doc/pipeline/steps/sonar/
+#do not all this things with root and created separate username as sonaruser
+$ wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-8.9.6.50800.zip
+$ apt install unzip 
+$ unzip sonarqube-8.9.6.50800.zip
+$ ls -lrt
+$ cd sonarqube-8.9.6.50800
+$ ls	-lrt
+$ cd conf/
+$ ls -lrt
+$ vi sonar.properties
+sonar.jbc.username=sonarqube
+sonar.jbc.password=sonarqube
+#sonar.embeddedDatabase.port=we are database port mysql or postgreql
+#web server
+sonar.web.host=0.0.0.0
+sonar.web.port=9000
+sonar.web.context=/sonarqube
+:wq
+$ vi wrapper.conf
+wrapper.java.command=/usr/lib/jvm/java-8-openjdk-amd64/bin/java
+:wq
+$cd bin 
+$ cd linux-x86-64
+$ ls -lrt
+./sonar.sh console
+go website
+->this url=3.104.45.3:9000/sonarqube
+ uersname=admin default
+ password=admin default
+ oldpassword=admin
+ newpassword=ikt@406
+ confirm password=ikt@406
+ #now go to SonarQube server to create token
+ -->click Administartor->security->users->click tokens->Generate tokens=jenkins->generate->copy that token
+ #Now goto jenkins continue to before part
+-->click add(jenkins credintaials)->domain =global credentails->kind=secret text(select)
+-->secret=eadb7c27fda4dd57981197bb761e97e5d3d63712 paste the copied sonarqube token->Descrition=jenkins->save---
+-->authication=Sonarjenkins->apply.
+ ######Now go to jenkins 
+ -->manage jenkins->manage plugins->sonarqube(search available)->sonarqube scanner(select)->install(without restart)
+ 
+ -->Again to manage jenkins->configure system->SonarQube Server->mark Environment variables->Add SonarQube->Name=Sonarjenkins->
+ -->Server Url=url=3.104.45.3:9000/sonarqube(SonarQube url add /sonarqube in url)---
+ 
+####pipeline with sonarqube#####
+ pipeline {
+        agent any
+        tools {
+            maven 'maven123'
+        }
+        stages {
+            stage('Checkout'){
+                steps {
+                    git 'https://github.com/dhanapal703278/maven.git'
+                }
+            }
+            stage('Build with maven') {
+                steps {
+                    mvn clean install
+                }
+            }
+            
+            stage("build & SonarQube analysis") {
+                steps {
+              withSonarQubeEnv('My SonarQube Server') {
+                sh 'mvn clean package sonar:sonar'
+                //sh '''mvn sonar:sonar \\
+                //-Dsonar.projectKey=maven-jenkins-pipeline \\
+                //-Dsonar.host.url=http://13.126.108.209:9000/'''
+                }
+            }
+          }
+          
+        }
+        post{
+            always {
+              deleteDir()  
+            }
+            failure{
+              mail bcc: '', body: 'test is failled', cc: '', from: '', replyTo: '', subject: 'Test  results', to: 'dhanapal703278@gmail.com' 
+            }
+            sucess {
+                mail bcc: '', body: 'test is sucess', cc: '', from: '', replyTo: '', subject: 'Test  results', to: 'dhanapal703278@gmail.com'
+                
+            }
+        }
+}
+		
+ ##In pipeline if quality gate sucess then only  it move to next stage else it fail next stage job in pipeline
+ #now go to SonarQube server to create quality gate
+
+->click Administartor->click configuration->click webhook create
+->Name= sonarqube-jenkins
+->URL= <http://jenkins url:8080/sonarqube-webhook/>
+->scerts= leave deafult
+->click create
+
+##########pipeline for sonarqube quality gate
+pipeline {
+        agent any
+        tools {
+            maven 'maven123'
+        }
+        stages {
+            stage('Checkout'){
+                steps {
+                    git 'https://github.com/dhanapal703278/maven.git'
+                }
+            }
+            stage('Build with maven') {
+                steps {
+                    mvn clean install
+                }
+            }
+            
+            stage("build & SonarQube analysis") {
+                 steps {
+                     withSonarQubeEnv(credentialsId: 'Sonnar-token') {
+                        \\sh 'mvn clean package sonar:sonar'
+                        sh "mvn sonar:sonar \
+                        -Dsonar.projectKey=maven-jenkins-pipeline \
+                        -Dsonar.host.url=http://13.126.108.209:9000/"
+                        }
+                    }
+            }
+            stage("Quality Gate") {
+                steps {
+                    timeout(time: 1, unit: 'HOURS') {
+                        waitForQualityGate abortPipeline: true
+                       //waitForQualityGate abortPipeline: true, credentialsId: 'Sonnar-token'
+                    }
+                }
+            }
+        }
+        post{
+            always {
+              deleteDir()  
+            }
+            failure{
+              mail bcc: '', body: 'test is failled', cc: '', from: '', replyTo: '', subject: 'Test  results', to: 'dhanapal703278@gmail.com' 
+            }
+            sucess {
+                mail bcc: '', body: 'test is sucess', cc: '', from: '', replyTo: '', subject: 'Test  results', to: 'dhanapal703278@gmail.com'
+                
+            }
+        }
+}
+#########upload artifact to S3 bucket############
+--->Go AWS -->create a "IAM user" --> add  permission policy of "AmazonS3FullAccess" --> download or note the Access key and Secret key
+###Now go to jenkins
+--->Dashboard->click manage jenkins->manage jenkins->manage plugins->S3 publisher plugin & Amazon S3 Bucket Credentials Plugin(search available)
+  -> S3 publisher plugin & Amazon S3 Bucket Credentials Plugin(select)->install(without restart)
+ 
+ -->Again to manage jenkins->configure system-> Amazon S3 profiles->Profile name=S3-Artifactupload-->mark Use IAM Role 
+  ->Add SonarQube->Name=Sonarjenkins->Access key=AKIA4PNPSDJFMC3ES4P->Secret key=an57dsdnds1ldldDD/@DD-->click test connection(it show check passed)-->click apply-->save
+##now run pipeline to upload artifact to s3 bucket####
+pipeline{
+    agent  any
+    tools {
+            maven 'maven-3.8.6'
+        }
+    options {
+        //discardbuilds 
+        buildDiscarder logRotator(artifactDaysToKeepStr: '30', artifactNumToKeepStr: '10', daysToKeepStr: '5', numToKeepStr: '5')
+        
+    }
+    stages{
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                sh "mvn --version"
+                sh "mvn  install -DskipTests" //DskipTests-it skip tests in this stage
+            }
+        }
+        stage('Test Maven - JUnit and Jacoco') {
+            steps {
+              sh "mvn test"
+               jacoco()
+            }
+            
+        }
+        stage('upload artifcat to s3') {
+            steps {
+                s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'myartifact-store', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: false, noUploadOnFailure: true, selectedRegion: 'ap-south-1', showDirectlyInBrowser: true, sourceFile: '**/*.war', storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 'S3-Artifactupload', userMetadata: []
+            }
+            
+        }
+        
+    }
+}
+##################build-docker image and push to ECR in pipeline###################
+##Go AWS 
+-->create a "IAM user" or exissting user --> add  permission policy of "AmazonEC2ContainerRegistryFullAccess" --> download or note the Access key and Secret key
+### create ECR on AWS
+-->Amazon ECR-->Repositories--> click Create repository-->mark public-->leave deafult reamining-->click repository.
+###Now go to jenkins for installation AWS ECR plugin
+--->Dashboard->click manage jenkins->manage jenkins->manage plugins->Amazon ECR plugin(search available)
+  -> Amazon ECR plugin(select)->install(without restart)
+##Now create Environment variables on jenkins
+->Now to manage jenkins->configure system->Environment variable-->List of variables-->-->click add-->Name=AWS_ACCESS_KEY_ID Value=AKhHSHSAMXCJHWC3ES4P 
+-->click add-->Name=AWS_SECRET_ACCESS_KEY Value=MlfaTC1/9eLBJIizwm -->click add -->Name=AWS_DEFAULT_REGION Value=ap-south-1
+
+##pipeline
+pipeline{
+    agent  any
+    environment {
+        AWS_ACCOUNT_ID="857751058578"
+        AWS_DEFAULT_REGION="ap-south-1"
+        IMAGE_REPO_NAME="myown-docker-repository"
+        IMAGE_TAG="v2.2"
+        REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
+    }
+    tools {
+            maven 'maven-3.8.6'
+        }
+    options {
+        //discardbuilds 
+        buildDiscarder logRotator(artifactDaysToKeepStr: '30', artifactNumToKeepStr: '10', daysToKeepStr: '5', numToKeepStr: '5')
+        
+    }
+    stages{
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                sh "mvn --version"
+                sh "mvn  install -DskipTests" //DskipTests-it skip tests in this stage
+            }
+        }
+        stage('Test Maven - JUnit and Jacoco') {
+            steps {
+              sh "mvn test"
+               jacoco()
+            }
+            
+        }
+        stage('upload artifcat to s3') {
+            steps {
+                s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'myartifact-store', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: false, noUploadOnFailure: true, selectedRegion: 'ap-south-1', showDirectlyInBrowser: true, sourceFile: '**/*.war', storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 'S3-Artifactupload', userMetadata: []
+            }
+            
+        }
+        stage (' Bulid Images & Publish to ECR') {
+            steps {
+                //sh 'aws ecr-public get-login-password --region ap-south-1 | docker login --username AWS --password-stdin public.ecr.aws/t7e2c6o4'
+                //withAWS(credentials: 'aws-credential-iam', region: 'ap-south-1') {
+                //withEnv(["AWS_ACCESS_KEY_ID=${env.AWS_ACCESS_KEY_ID}", "AWS_SECRET_ACCESS_KEY=${env.AWS_SECRET_ACCESS_KEY}", "AWS_DEFAULT_REGION=${env.AWS_DEFAULT_REGION}"]) {
+		        sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+				sh "docker tag alpine ${REPOSITORY_URI}:$IMAGE_TAG"
+                sh "docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}"
+            }
+            
+        }
+
+        
+    }
+}
+
+######testing
+pipeline{
+    environment {
+        AWS_ACCOUNT_ID="857751058578"
+        AWS_DEFAULT_REGION="ap-south-1"
+        IMAGE_REPO_NAME="myown-docker-repository"
+        IMAGE_TAG="v2.2"
+        REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
+    }
+    agent  {
+        label 'docker-node'
+    }
+    tools {
+        maven 'maven-3.8.6'
+        }
+    options {
+        //discardbuilds 
+        buildDiscarder logRotator(artifactDaysToKeepStr: '30', artifactNumToKeepStr: '10', daysToKeepStr: '5', numToKeepStr: '5')
+        
+    }
+    stages{
+       stage('Checkout'){
+           steps {
+               git 'https://github.com/dhanapal703278/maven.git'
+           }
+        }
+        stage('upload artifcat to s3') {
+            steps {
+                s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'myartifact-store', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: false, noUploadOnFailure: true, selectedRegion: 'ap-south-1', showDirectlyInBrowser: true, sourceFile: '**/*.war-$BUILD_NUMBER', storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 'S3-Artifactupload', userMetadata: []
+            }
+            
+        }
+        stage (' Bulid Images & Publish to ECR') {
+            steps {
+                //sh 'aws ecr-public get-login-password --region ap-south-1 | docker login --username AWS --password-stdin public.ecr.aws/t7e2c6o4'
+                //withAWS(credentials: 'aws-credential-iam', region: 'ap-south-1') {
+                //withEnv(["AWS_ACCESS_KEY_ID=${env.AWS_ACCESS_KEY_ID}", "AWS_SECRET_ACCESS_KEY=${env.AWS_SECRET_ACCESS_KEY}", "AWS_DEFAULT_REGION=${env.AWS_DEFAULT_REGION}"]) {
+		        sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+				sh "docker tag alpine ${REPOSITORY_URI}:$IMAGE_TAG"
+                sh "docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}"
+            }
+            
+        }
+        
+    }
+}
+
+
+
+############# build-docker image and push to docker-hub in pipeline #######
 ###Default Environment Variables by Jenkins 
 Jenkins provides several environment variables by default like - BRANCH_NAME, BUILD_NUMBER, BUILD_TAG, WORKSPACE, etc.
 
@@ -515,8 +685,8 @@ pipeline {
         
     }
 }
-######stage level assign agent in this pipeline and ########
 
+######stage level assign agent in this pipeline and ########
 pipeline{
     agent none
     environment {
@@ -557,7 +727,8 @@ pipeline{
         }
     }
 }
-11.#################pipeline-4 of option use##############
+
+#################pipeline-4 of option use##############
 ##Available Options
 $ buildDiscarder
 Persist artifacts and console output for the specific number of recent Pipeline runs. For example: options { buildDiscarder(logRotator(numToKeepStr: '1')) }
@@ -603,7 +774,7 @@ pipeline {
         timestamps()
         warnError('Error messages')
         disableResume()
-        disableConcurrentBuilds abortPrevious: true
+        //disableConcurrentBuilds abortPrevious: true
         timeout(activity: true, time: 40)
     }
 
@@ -616,7 +787,8 @@ pipeline {
 	}
 }
 
-12. ########Configure Clouds agent(EC2 instance)
+
+########Configure Clouds agent(EC2 instance)
 ->Now go to jenkins 
 ->click manage jenkins->manage plugins->Amazon ec2 instance, docker and kubernetes (search available)->Amazon ec2 instance, docker and kubernetes (select)->install(without restart)
 ###Now go aws console for create IAM group and user assigned AmazonEC2FullAccess policy
@@ -716,148 +888,10 @@ click test connection --here display sucess
 -> mark Connect by SSh
 ->click apply
 ->click save
-13. ############################################SonarQube intergration with jenkins################################################################
-##https://www.jenkins.io/doc/pipeline/steps/sonar/
-#do not all this things with root and created separate username as sonaruser
-$ wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-8.9.6.50800.zip
-$ apt install unzip 
-$ unzip sonarqube-8.9.6.50800.zip
-$ ls -lrt
-$ cd sonarqube-8.9.6.50800
-$ ls	-lrt
-$ cd conf/
-$ ls -lrt
-$ vi sonar.properties
-sonar.jbc.username=sonarqube
-sonar.jbc.password=sonarqube
-#sonar.embeddedDatabase.port=we are database port mysql or postgreql
-#web server
-sonar.web.host=0.0.0.0
-sonar.web.port=9000
-sonar.web.context=/sonarqube
-:wq
-$ vi wrapper.conf
-wrapper.java.command=/usr/lib/jvm/java-8-openjdk-amd64/bin/java
-:wq
-$cd bin 
-$ cd linux-x86-64
-$ ls -lrt
-./sonar.sh console
-go website
-->this url=3.104.45.3:9000/sonarqube
- uersname=admin default
- password=admin default
- oldpassword=admin
- newpassword=ikt@406
- confirm password=ikt@406
- ->Now go to jenkins 
- ->manage jenkins->manage plugins->sonarqube(search available)->sonarqube scanner(select)->install(without restart)
- 
- ->Again to manage jenkins->configure system->SonarQube Server->mark Environment variables->Add SonarQube->Name=Sonarjenkins->
- -->Server Url=url=3.104.45.3:9000/sonarqube(SonarQube url add /sonarqube in url)---
- #now go to SonarQube server to create token
- click Administartor->security->users->click tokens->Generate tokens=jenkins->generate->copy that token
- #Now goto jenkins continue to before part
-click add(jenkins credintaials)->domain =global credentails->kind=secret text(select)
-->secret=eadb7c27fda4dd57981197bb761e97e5d3d63712 paste the copied sonarqube token->Descrition=jenkins->save---
-->authication=Sonarjenkins->apply.
-####pipeline with sonarqube#####
- pipeline {
-        agent any
-        tools {
-            maven 'maven123'
-        }
-        stages {
-            stage('Checkout'){
-                steps {
-                    git 'https://github.com/dhanapal703278/maven.git'
-                }
-            }
-            stage('Build with maven') {
-                steps {
-                    mvn clean install
-                }
-            }
-            
-            stage("build & SonarQube analysis") {
-            steps {
-              withSonarQubeEnv('My SonarQube Server') {
-                sh 'mvn clean package sonar:sonar'
-              }
-            }
-          }
-          
-        }
-        post{
-            always {
-              deleteDir()  
-            }
-            failure{
-              mail bcc: '', body: 'test is failled', cc: '', from: '', replyTo: '', subject: 'Test  results', to: 'dhanapal703278@gmail.com' 
-            }
-            sucess {
-                mail bcc: '', body: 'test is sucess', cc: '', from: '', replyTo: '', subject: 'Test  results', to: 'dhanapal703278@gmail.com'
-                
-            }
-        }
-}
-		
- ##In pipeline if quality gate sucess then only  it move to next stage else it fail next stage job in pipeline
- #now go to SonarQube server to create quality gate
 
-->click Administartor->click configuration->click webhook create
-->Name= sonarqube-jenkins
-->URL= <http://jenkins url:8080/sonarqube-webhook/>
-->scerts= leave deafult
-->click create
-##########pipeline for sonarqube quality gate
-pipeline {
-        agent any
-        tools {
-            maven 'maven123'
-        }
-        stages {
-            stage('Checkout'){
-                steps {
-                    git 'https://github.com/dhanapal703278/maven.git'
-                }
-            }
-            stage('Build with maven') {
-                steps {
-                    mvn clean install
-                }
-            }
-            
-            stage("build & SonarQube analysis") {
-            steps {
-              withSonarQubeEnv('My SonarQube Server') {
-                sh 'mvn clean package sonar:sonar'
-              }
-            }
-          }
-          stage("Quality Gate") {
-            steps {
-              timeout(time: 1, unit: 'HOURS') {
-                waitForQualityGate abortPipeline: true
-              }
-            }
-          }
-        }
-        post{
-            always {
-              deleteDir()  
-            }
-            failure{
-              mail bcc: '', body: 'test is failled', cc: '', from: '', replyTo: '', subject: 'Test  results', to: 'dhanapal703278@gmail.com' 
-            }
-            sucess {
-                mail bcc: '', body: 'test is sucess', cc: '', from: '', replyTo: '', subject: 'Test  results', to: 'dhanapal703278@gmail.com'
-                
-            }
-        }
-}
 
-15. #############################Jfrog Artifactory Installation###########################################################
+
+#############################Jfrog Artifactory Installation###########################################################
 ##Installation Steps
 #Pre-requisites:
 ->An AWS T2.small EC2 instance (Linux)
@@ -895,7 +929,8 @@ After create repository here  dispaly five file
 3. jcenter--it store all thrid dependency
 4. lib-release--it store the dependency
 
-16. #################copy jar from one server to another and work for remote server from jenkins###########
+
+#################copy jar from one server to another and work for remote server from jenkins###########
 #create ssh-keygen
 #copy public key to remote server into .ssh/authorized_keys 
 #create credentails in jenkins of ssh with private (copy private from  ssh-key generate server##
@@ -963,7 +998,8 @@ pipeline{
         
         
 }
-17.  ########################run pipeline in parallel and trigger with cron jobs##########
+
+########################run pipeline in parallel and trigger with cron jobs##########
 #The ways to trigger a Jenkins Job/Pipeline?
 
 There are many ways we can trigger a job in Jenkins. Some of the common ways are as below -
@@ -1036,7 +1072,7 @@ pipeline {
     }
 }
 
-18 ###########################pipeline trigger with pollscm########
+###########################pipeline trigger with pollscm########
 
 pipeline {
     agent any
@@ -1100,7 +1136,7 @@ pipeline {
 }
 
 
-19. ################################################Integrate Artifactory with Jenkins######################################
+################################################Integrate Artifactory with Jenkins######################################
 pre-requisites
 ->An Artifactory server 
 ->A Jenkins Server 
@@ -1125,8 +1161,173 @@ http://<jfrog server ip:8081/artifactory>
 ->Username : jenkins
 ->Password : redhat
 ->click test connection->here found Artifactory version 
-========
-19. #############Pipeline of Post stage########
+
+
+###############Reverse Proxy with nginx for jenkin url access########
+#set hostname with FQDN
+$ hostnamectl set-hostname jenkins.cntech.local
+$ echo `hostname -i | awk '{print $NF}'`" "`hostname`" "`hostname -s ` >> /etc/hosts
+##now install nginx 
+$ yum install nginx
+ # Load modular configuration files from the /etc/nginx/conf.d directory.
+    # See http://nginx.org/en/docs/ngx_core_module.html#include
+    # for more information.
+    include /etc/nginx/conf.d/*.conf;
+
+    server {
+        listen       80 default_server;
+        listen       [::]:80 default_server;
+        server_name  _;
+        root         /usr/share/nginx/html;
+
+        # Load configuration files for the default server block.
+        include /etc/nginx/deffault.d/*.conf;
+
+        location / {
+        }
+
+        error_page 404 /404.html;
+            location = /40x.html {
+        }
+
+        error_page 500 502 503 504 /50x.html;
+            location = /50x.html {
+        }
+    }
+	-------------remove above line the in above configuration file 
+	------starting from server line to last flower bracket }
+:wq!
+##create new file in /etc/nginx/conf.d/jenkins-proxy.conf
+$ vim /etc/nginx/conf.d/jenkins-proxy.conf
+##
+####reverse proxy configuration link
+#https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/
+upstream jenkins {
+    #server <server-ip-address:8080>;
+	server 35.154.4.51:8080; 
+}
+server {
+    listen       80 default;
+    server_name   jenkins.cntech.local; # replace 'jenkins.cntech.local' with your server domain name
+	
+	access_log   /var/log/jenkins.access.log;
+	error_log   /var/log/jenkins.error.log;
+location / {
+    proxy_buffers 16 4k;
+    proxy_buffer_size 2k;
+    proxy_set_header Accept-Encoding "";
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_pass http://jenkins;
+
+	}
+}
+
+:wq!
+##To check configuration reverse proxy syntax error
+$  nginx -t
+$ systemctl restart nginx
+
+###################Periodic Backup(plug-in)###############
+#Backup plugin allows archiving and restoring your Jenkins (and Hudson) home directory.
+#With Periodic Backup we schudle cron jobs for backup perpouse
+->Now go to jenkins 
+->manage jenkins->manage plugins->Periodic Backup(search available)->Periodic Backup(select)->install(without restart)
+->now to go jenkins server create a directory for storing jenkins backup data.
+$ mkdir /opt/backup-jenkins-data
+$chown -R jenkins:jenkins /opt/backup-jenkins-data
+->Again to manage jenkins->configure system->Periodic Backup Manager->click here to configure it->
+->Root Directory=/var/lib/jenkins
+->Temporary Directory=/tmp
+->Backup schedule (cron)=30 * * * * (every day  30 minutes)
+->Maximum backups in location=20
+->Store no older than (days)=15
+->File Management Strategy= ConfigOnly/FullBackup
+->Storage Strategy=Tar.GzStorage
+->Backup Location=/opt/backup-jenkins-data
+->mark enable this location
+->click validate
+->clik save
+###For taking backup 
+-> click Backup Now
+###For restore backup  
+##if any important job deletd means we can restore with this 
+-> click restore
+
+################################## Securirty########################
+->Now go to jenkins 
+->manage jenkins->manage plugins->Role-based Authorization Strategy(search available)->Role-based Authorization Strategy(select)->install(without restart)
+
+############LDAP configuration in jenkins##############
+##server LDAP configuration details (deatils for configure LDAP in jenkins###
+objectClass: top
+objectClass: dcObject 
+objectClass: organization
+o: example.com
+dc: example.com
+structuralobjectClass: organization
+entryUID: bies4684-739-1036-8256-33433ee5d363
+creatorsName: cn=admin,dc=example,dc=com
+createTimestamp: 202187210636232
+Security Realm createTimestamp: 287187216636737
+entryCSN: 20210721053623,32521320000000000000000
+modifiersName: cn=admin,dc=example,dc=com
+modifyTimestamp: 282187210636232
+
+dn: cn=admin,dc=example,dc=com
+objectClass simpleSecurityObject 
+objectClass: organizationalRole
+cn: admin
+description: LOAP administrator
+user Password: #INTSEF3atybJZOM VZVVFZIU
+structuralObjectClass: organizationalRole
+entryUID: bies4684-739-1036-8256-33433ee5d363
+creatorsName: cn=admin,dc=example,dc=com
+entryUID: bies4684-739-1036-8256-33433ee5d363
+createTimestamp: 202187210636232 
+entryCSN: 20210721053623,32521320000000000000000
+modifierstime: cn=admin,dc=example,dc=com 
+modifyTimestamp: 202107210636732
+------------------
+#Authentication(LDAP configuration)
+->Security Realm=LDAP
+Server
+->Server= 172.13.43.20:389(Syntax of server field is SERVER or SERVER:PORT or ldaps://SERVER[:PORT])
+->root DN= dc=example,dc=com(Allow blank rootDN)
+->User search base= OU=people
+->User search filter= uid={0}
+->Group search base= OU=groups
+-> Group search filter= empty (leave default)
+->Group membership
+Parse user attribute for list of LDAP groups/Search for LDAP groups containing user
+-> mark Search for LDAP groups containing user
+->Group membership filter= ((member={0})(uniqueMember={0})(memberUid={1}))
+->Manager DN= cn=admin,dc=example,dc=com
+->Manager Password= LDAP password
+->Display Name LDAP attribute= cn <displayname>
+->Email Address LDAP attribute= mail
+-> Environment Properties--leave default
+-> click test LDAP user-> username= dhana->password=dhan@1234
+-> mark Disable Ldap Email Resolver
+-> mark Disable Backward Compatibility for Roles
+->click save
+-> click apply
+##Now go to jenkins  for security
+->manage jenkins->click Configure Global Security
+->Authorization= Role-Based Strategy
+->click save
+-> click apply
+->now again manage jenkins
+->under Security
+-> click Manage and Assign Roles 
+->click Manage Roles
+->Role to add= devops
+->click add
+->again Role to add= devolper
+->click add
+-> here dispaly two user mark the required permission for the user
+ 
+#############Pipeline of Post stage########
 
 Always/success/failure
 ---------------------
@@ -1292,7 +1493,7 @@ pipeline{
 
 ---------------------------------------Jenkins(CI continue intergration/Continue delivery CD)---------------------------------------------------
 ->source code commit--trigger automatically(web-hook)-->checkout(Git)-->Build(maveen)-->sonar analysis(SonarQube)-->test(junit)---------
-->upload artifactory(nexus/jfrog)-->Build source code the docker image with tomcat(Docker Environment)---->Deploy to Devploment(Kubernetes).
+->upload artifactory(nexus/jfrog/S3)-->Build source code jar/war the docker image (Docker Environment)---->upload the docker images to (ECR/jfrog/nexus)---->Deploy to Devploment(Kubernetes).
 pipeline {
     agent any
 	tools {

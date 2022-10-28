@@ -56,7 +56,7 @@ $ docker image tag docker_with_java_git_maven-3.8.5 dhanapal406/jenkins_java_git
 $ docker push dhanapal406/jenkins_java_git_maven-3.8.5
 ->In Pugins we need install Docker Pipeline
 
-$ vim docker-jenkinsfile
+###docker-jenkinsfile
 pipeline{
     agent {
         docker { 

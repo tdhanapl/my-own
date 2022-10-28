@@ -1,6 +1,6 @@
 ##########################################Git ################################
 
-##VCS
+##VCS(version control systems)
 =============
 1.Track the changes
 2.Coleberative Development
@@ -13,6 +13,7 @@ Types of VCS
 1.Local VCS
 2.Centralized VCS ----subversion
 3.Distributed VCS ----Gitlab, github, Bitbucket
+
 ## security on branches rules
 https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/managing-a-branch-protection-rule
 

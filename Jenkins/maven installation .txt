@@ -13,14 +13,14 @@ After verifying java version on your system. Download Apache Maven from its offi
 command to download Apache Maven 3.6.2.
 $cd /opt
 $ wget https://www-eu.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz
-$sudo tar xzf apache-maven-3.6.3-bin.tar.gz
+$ sudo tar xzf apache-maven-3.6.3-bin.tar.gz
 $ cd /opt/apache-maven-3.6.3/bin
 $ mvn -version
 not dispaly mvn version
 $./mvn -version 
 here display version
 $echo $PATH
-$export PATH=$PATH:"/opt/apache-maven-3.6.3/bin"
+$ export PATH=$PATH:"/opt/apache-maven-3.6.3/bin"
 $echo $PATH
 $sudo vi /etc/profile.d/maven.sh
 #!/bin/bash
