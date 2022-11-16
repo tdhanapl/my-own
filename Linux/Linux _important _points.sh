@@ -20,10 +20,6 @@ cut -d ":" -f1,3 /etc/passwd
 cut -f 1 -d":" /etc/passwd
 cat /etc/passwd  | grep /bin/bash | cut -f1 -d ":"
 
-##  removed this users with ticket id 6603521
-##mupparaju.ikt   ALL=(ALL)  ALL
-
-
 ########################Top command#######################################
 1)Top Command After Specific repetition:  With below command top command will automatically exit after 10 number of repetition.
 $ top -n 10

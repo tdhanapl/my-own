@@ -8,6 +8,7 @@
 3. deletion line
 4. Insertion anything before the line number. 
 5. Appending anything after the line number.
+
 ##sed command works on the line numbers
 ###deatils of using sed with option
 Sr.No.	Range & 				Description
@@ -25,7 +26,6 @@ Sr.No.	Range & 				Description
 12		',10d'					This would also generate syntax error
 Note:-
 While using the p action, you should use the -n option to avoid repetition of line printing
-
 
 ##syntax 
 $ sed <action or option > filename
@@ -53,6 +53,7 @@ Note:-
 ##To print the line number randomly 
 $ sed -n '1,3p;5p;7,9p;13,$p' <filename>
 $ sed -n '1,3p;5p;7,9p;13,$p'  sudoers
+
 ###############Search and replace the string############
 Notes:-
 1.On the Screen replace and dsiplay

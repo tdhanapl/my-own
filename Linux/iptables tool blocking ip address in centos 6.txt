@@ -1,0 +1,8 @@
+#########iptables tool blocking ip address######
+1.iptables is commonly pre-installed on all Linux operating systems.
+Run the following command to block the IP address: 
+$ iptables -I INPUT -s 104.248.181.156 -j DROP
+2.Run the following command to save the settings. The settings persist after the server reboots.
+$ service iptables save
+3.Run the following command to list and verify the new rule:
+$ sudo iptables -L
