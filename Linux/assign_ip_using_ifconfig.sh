@@ -28,6 +28,7 @@ eth0      Link encap:Ethernet  HWaddr 00:0B:CD:1C:18:5A
           collisions:0 txqueuelen:1000
           RX bytes:293912265 (280.2 MiB)  TX bytes:1044100408 (995.7 MiB)
           Interrupt:185 Memory:f7fe0000-f7ff0000
+          
 4. How to Enable a Network Interface
 The “up” or “ifup” flag with interface name (eth0) activates a network interface if it is not inactive state and allowing to send and receive information. For example, “ifconfig eth0 up” or “ifup eth0” will activate the eth0 interface.
 $ ifconfig eth0 up

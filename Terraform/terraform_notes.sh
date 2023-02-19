@@ -5,6 +5,7 @@ To follow this tutorial you will need:
 3. AWS account and associated credentials that allow you to create resources.
 ##good content  url
 https://medium.com/appgambit/provisioning-a-jenkins-server-on-aws-with-terraform-bf04a6a6ef7f
+https://medium.com/@awsyadav/automating-ecs-ec2-type-deployments-with-terraform-569863c60e69
 
 ##Installation of terraform in linux of rhel/centos
 $ sudo yum install -y yum-utils

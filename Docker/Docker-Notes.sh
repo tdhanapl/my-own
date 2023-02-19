@@ -144,6 +144,7 @@ Example(Dockerfile):
 FROM centos:latest
 LABEL name="dhana"
 LABEL email="dhanapal70328@gmail.com"
+
 ## adding environment variable
 ENV name dhana
 ENV  password ikt
@@ -176,7 +177,7 @@ EXPOSE 80
 CMD ["-D", "FOREGROUND"]
 ENTRYPOINT ["/usr/sbin/httpd"]
 :wq
-	Note:--The major difference between both Dockerfile we not repeting the run command in 2nd Dockerfile with the 2nd Dockerfile size will be reduce and less layer of docker image will created.
+Note:--The major difference between both Dockerfile we not repeting the run command in 2nd Dockerfile with the 2nd Dockerfile size will be reduce and less layer of docker image will created.
 ###To Build the Dockerfile has docker image
 $ docker build --tag <tag_name:version>
    -t--tag_name

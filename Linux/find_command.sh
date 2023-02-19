@@ -1,7 +1,7 @@
 ##########Finding files and file listing########
 ##Search based on name or regular expression match
 $ find /home/slynux -name '*.txt' -print
-#The find command has an option -iname (ignore case), which is similar to -name, but it matches filenames regardless of case.
+#The find command has an option -iname (ignore casesentive), which is similar to -name, but it matches filenames regardless of casesentive.
 #Consider the following example:
 $ ls
 example.txt EXAMPLE.txt file.txt

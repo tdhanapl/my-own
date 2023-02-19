@@ -1,0 +1,15 @@
+ name: Improve SSH security
+  hosts: all
+  handlers:
+  - name: restart-sshd
+    action: service name=sshd state=restarted enabled=yes
+
+  tasks:
+  - name: CIS RHEL6 v1.2.0 - 6.2.11 Use Only Approved Cipher in Counter Mode
+    action: lineinfile dest=/etc/ssh/sshd_config backup=yes state=present insertafter=EOF
+                       regexp='^(?i)Ciphers\s' line='Ciphers aes128-ctr,aes192-ctr,aes256-ctr'
+    notify: restart-sshd
+  - name: Use Only Approved MAC Modes
+    action: lineinfile dest=/etc/ssh/sshd_config backup=yes state=present insertafter=EOF
+                       regexp='^(?i)MACs\s' line='MACs hmac-sha1,hmac-ripemd160'
+    notify: restart-sshd

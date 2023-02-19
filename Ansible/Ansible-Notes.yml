@@ -15,14 +15,15 @@
 1.method1(temporary):
 $ export 	ANSIBLE_Host_KEY_CHECKING=False
 2.method(Permanent):
-$vim /etc/ansible/ansible.cfg
+$ vim /etc/ansible/ansible.cfg
 host_key_checking=False
 :wq
-#Note:
+ 
+#Difference between command and shell in adhoc command.
 1.command-->we can not excute two or more commands at a time in ansible adhoc commands
 2.shell---->we can excute two or more commands at a time in ansible adhoc commands
 
-##Mainting the owne configuration  file inventory
+##Mainting the own configuration  file inventory
 $ ansible --version
 $ mkdir my_ansible_working_directory
 $ cp -rvf /etc/ansible/* ./my_ansible_working_directory
@@ -39,7 +40,7 @@ $ vim  inventory
 
 ##To excute ansible playbook we need specify inventory path while excuting command
 $ ansible-playbook -i inventory -m ping ---->for playbook
-$ ansible webserver -i inventory    -m service -a "name=httpd stated=restarted"
+$ ansible webserver -i inventory -m service -a "name=httpd stated=restarted"
 Note:-
 -i inventory is we add own configuration inventory that why we use ("-i inventory")
 
@@ -95,7 +96,7 @@ like creating users,assigning home dirs deleting users etc
 
 18 docker_image: Used to run command related to docker images
 
-19  docker_login: Used to login into the docker registry
+19 docker_login: Used to login into the docker registry
 
 20 docker_swarm: Used to setup of docker swarm architecture
 
@@ -152,8 +153,8 @@ $vim multiple-directory.yml
   tasks:
     - name: This the copy from content of varible
       command: mkdir "/opt/{{ item}}"
-	  with_item:
-	    - folder1
+	    with_item:
+	      - folder1
         - folder2
         - folder3
 :wq
@@ -183,15 +184,15 @@ $ vim register.yml
 $ vim register.yml
 4- hosts: all
   tasks:
-    - name: create the file
+    - name: check the server uptime
       shell: uptime
       register: up_time
       
-    - name: create the file
+    - name: check the hostname 
       shell: hostname
       register: host_name
     
-    - name: create the file
+    - name: check ram size
       shell: free -h
       register: ram_info 
     - debug: var={{item}}
@@ -250,15 +251,20 @@ $ vim nginx.yml
   tags:
     - nginx
   notify: Restart Nginx
-
 :wq
+
+## Privilege Escalation & Remote user
+$ ansible web -m user -a 'name=test' -b --become-user=dhanapal -K
+Note:
+If you given --become-usr=dhanapal means when ypu run playbook it will run that palybook with given "--become-user=dhanapal"
 
 ##Let’s go through playbook step by step
 1.This defined our hosts section
 hosts: which hosts I want to run this playbook(generally we run it on groups defined under /etc/ansible/hosts)
 remote_user: remote user we going to operate(i.e ansible user which is a privileged user)
-become: yes(means root user, as the command we want to execute on remote host need root privilege)
+become: yes(means root user, as the command we want to execute on remote host need root privilege. it excute the task as root user)
 become_method: sudo(it’s optional and default)
+ask_pass: true (if we apply means it wil ask for password whenever you run  the ansible playbook it will prompt for password)
 connection: ssh(by default connection type is ssh we can use parimiko or local connection)
 gather_facts: yes(facts that are returned when it started running playbook against the hosts eg:OS)
 

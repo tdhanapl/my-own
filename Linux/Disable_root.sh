@@ -1,4 +1,4 @@
-###########Disable the root##############
+###########Disable the root Login##############
 1. Change root User’s Shell
  #$ sudo vim /etc/passwd
  Change the line:

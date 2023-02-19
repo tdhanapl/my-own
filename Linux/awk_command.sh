@@ -11,7 +11,7 @@ sunil peon sales 13000
 satvik director purchase 80000 
 
 Note:-
-Press ctrl + D to save
+Press ctrl + D to save file in cat command
 
 ##Default behavior of Awk: By default Awk prints every line of data from the specified file.  
 $ awk '{print}' employee.txt
@@ -58,17 +58,6 @@ ORS: It is used to store the output record separator. It separates the output re
 Examples: 
 Use of NR built-in variables (Display Line Number)  
 
-$ awk '{print NR, NF}' employee.txt 
-Output:  
-1 ajay manager account 45000
-2 sunil clerk account 25000
-3 varun manager sales 50000
-4 amit manager account 47000
-5 tarun peon sales 15000
-6 deepak clerk sales 23000
-7 sunil peon sales 13000
-8 satvik director purchase 80000 
-
 ##In the above example, the awk command with NR prints all the lines along with the line number. 
 ##Use of NF built-in variables (Display Last Field)  
 $ awk '{print $1,$NF}' employee.txt 
@@ -97,7 +86,6 @@ Output:
 
 #For the given text file:  
 $cat > geeksforgeeks.txt
-
 A   	 B    	C
 Tarun    A12    1
 Man    	B6    	2
@@ -122,9 +110,6 @@ M42
 ##To print any non empty line if present  
 $ awk 'NF < 0' geeksforgeeks.txt
 here NF should be 0 not less than and the user have to print the line number also:
-correct answer : awk ‘NF == 0 {print NR}’  geeksforgeeks.txt
-OR 
-awk ‘NF <= 0 {print NR}’  geeksforgeeks.txt
 ##To find the length of the longest line present in the file:  
 $ awk '{ if (length($0) > max) max = length($0) } END { print max }' geeksforgeeks.txt
 13
@@ -147,7 +132,7 @@ square of 4 is 16
 square of 5 is 25
 square of 6 is 36 
 ##This command will report the number of lines in a file:
-$ awk 'BEGIN { i=0 } { i++ } END{ print i}' filename
+$   filename
 		Or
 $ awk "BEGIN { i=0 } { i++ } END{ print i }" filename
 ##Passing an external variable to awk

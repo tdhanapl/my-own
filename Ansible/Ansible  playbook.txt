@@ -1,6 +1,6 @@
-patching ---security updates  and kernerl upadete exculed
-sucess
-reboot
+#patching ---security updates  and kernerl upadete exculed
+# sucess
+# reboot
 ###################################3
  tasks:
 

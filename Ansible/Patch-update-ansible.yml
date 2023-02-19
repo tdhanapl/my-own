@@ -2,7 +2,7 @@
   hosts: all
   become: true
   tasks:
-    - name: patching check updates
+    - name: check  security patch updates
       shell: "yum --security check-update"
       register: shell_output
     - debug:
@@ -10,6 +10,13 @@
 # Patching  only security updates and exclude kernerl
     - name: patching only security updates and exclude kernel
       shell: "yum update --security --exculde=kernel*"
+      register : shell_output
+    - debug:
+        msg: "{{shell_output.stdout}}"
+
+# Patching all  updates and exclude kernerl
+    - name: patching only security updates and exclude kernel
+      shell: "yum update  --exculde=kernel*"
       register : shell_output
     - debug:
         msg: "{{shell_output.stdout}}"

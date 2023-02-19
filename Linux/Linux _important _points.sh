@@ -1,4 +1,4 @@
-##################################To known all  services status################################
+#########################To known all  services status##########################
 # systemctl list-units --type=service --state=active
 OR
 # systemctl daemon-reload
@@ -11,7 +11,7 @@ OR
 OR
 # systemctl --type=service 
 OR
-#systemctl list-unit-files
+# systemctl list-unit-files
 OR 
 service --status-all -----in rhel 6
 
@@ -21,7 +21,8 @@ cut -f 1 -d":" /etc/passwd
 cat /etc/passwd  | grep /bin/bash | cut -f1 -d ":"
 
 ########################Top command#######################################
-1)Top Command After Specific repetition:  With below command top command will automatically exit after 10 number of repetition.
+1)Top Command After Specific repetition:
+With below command top command will automatically exit after 10 number of repetition.
 $ top -n 10
 2) Display Specific User Process
 $ top -u paras
@@ -39,9 +40,10 @@ $ top -s
 $ top -c
 11) Delay time : It tells delay time between screen updates.
 $ top -d seconds.tenths
+
 ###To known the cpu usage percentage only  with top command 
 $ top -b -n 2 -d1 | grep -i "cpu(s)" | tail -n1 | awk '{print $2}'  | awk -F . '{print $1}'
-	options:
+options:
 	-F fs        --field-separator=fs
 Ex:-
 	 awk -F: '{ print $1 }' /etc/passwd
@@ -51,11 +53,15 @@ echo `hostname -i | awk '{print $NF}'`" "`hostname`" "`hostname -s`  >> /etc/hos
 
 ################filter the disk usage percentage for shell scripit####################
 df -h  |grep -ivE "filesystem|tmpfs" | sed 's/%//gI' | awk '{print $5}'
- 
+option:
+  -E, --extended-regexp     PATTERN is an extended regular expression (ERE)
+  -v, --invert-match        select non-matching lines(string word will not display)
+
 ##################################Fstab configurtion Fromat################################
 LABEL=cloudimg-rootfs   		/        ext4   			defaults,discard       0	 		1
 device name 		    mountpoint    file system type		permission            backup  		fsck(File System Consistency Check)
-$ du -hs * | sort -rh | head -10 
+$ du -hs * | sort -rh | head -10
+ 
 #################How to Change Runlevels (targets) in Systemd##############################
 Systemd is a modern init system for Linux: a system and service manager which is compatible with the popular SysV init system and LSB init scripts. It was intended to overcome the shortcomings of SysV init as explained in the following article.
 The Story Behind ‘init’ and ‘systemd’: Why ‘init’ Needed to be Replaced with ‘systemd’ in Linux
@@ -90,8 +96,6 @@ b   -> blocked file
 p   -> proces id file
 .   -> selinux
 +   -> ACL
-############
- yum install local ./python27-python-pip-7.1.0-2.el7.noarch.rpm
 
 ############################Disk identification#########################################################
 #fdisk -l
@@ -111,12 +115,33 @@ $netstat -nutlp
 $ sed -i '/^$/d' <filename>
 $ sed -i  '/^$/d' file.txt
 
-#########To delete all line in vi mode of the file############
+#########To delete all line in vi editor of the file############
 #In escape mode
 :1,$d 
 
 ###############To check if a certain user has sudo access, use########
 $ sudo -l -U  <username>
+
+#####To disable and enable of yum respository##########
+##To enable Red Hat Subscription Management repositories:
+$ subscription-manager repos --enable <repo>
+##To enable custom repositories:
+$ yum-config-manager --enable <repo>
+##To disable Red Hat Subscription Management repositories:
+$ subscription-manager repos --disable <repo>
+##To disable custom repositories:
+$ yum-config-manager --disable <repo>
+############ installing the rpm pacakage using yum########################
+$ yum install local ./python27-python-pip-7.1.0-2.el7.noarch.rpm
+
+############## To check yum installed list package ########
+$ yum list installed httpd 
+
+##############To check latest patch update in the server########
+$ yum check-update
+
+###########To check last update of particular package###########
+$ rpm -qa --last | grep kernel
 
 ##############################Find old 90 or 30 days and remove that files#####################
 find /var/log -type f -mtime +30 -exec ls -lrth {} \;  ##f--means file 
@@ -126,8 +151,8 @@ find /var/log -type d -mtime +90 -exec ls -lrth {} \;  ###d--means directory,  +
 find /var/log -type d -mtime +30 -exec ls -rv {} \;
 find /var/dtpdev/tmp/ -type f -mtime +15 -exec r3m -f {} +
 find /path/to/files/ -type f -name *.php  -mtime +30 -exec rm {} \;
+find /home/apps/fcs_resumes -type d -mtime +547 -exec ls -lrth {} \; | wc -l
 
-find /home/xphenoapps/fcs_resumes -type d -mtime +547-exec ls -lrth {} \; | wc -l
 #####################find more +100m size #######################
 find /var/ -type f -size +100M -exec ls -ltr {} \;
 
@@ -164,21 +189,21 @@ DEVICE=eno1
 ONBOOT=yes
 IPADDR=192.16.4.17
 PREFIX=23
-GATEWAY=172.16.4.251
-DNS1=10.33.0.19
-DNS2=10.33.0.22
+GATEWAY=192.16.4.251
+DNS1=10.13.0.19
+DNS2=10.13.0.22
 IPV6_PRIVACY=no
 :wq
 
 #######################################add route table######################################
 https://www.redhat.com/sysadmin/route-ip-route
 ############create temporary route table#################################################
-#route add default gw 192.168.4.254
-#route add -i net 192.169.1.0/24 netmask  255.255.0.9 gateway 192.168.1.1
+# route add default gw 192.168.4.254
+# route add -i net 192.169.1.0/24 netmask  255.255.0.9 gateway 192.168.1.1
 # route add -net 17.16.4.0 netmask 255.255.254.0 gw 172.16.4.251
-#route add -net 172.16.100.0 netmask 255.255.255.0 gw 172.16.100.1
-#route add -net 192.168.85.0 netmask 255.255.255.0 gw 192.168.85.99
-#route  add -net 10.33.58.0 netmask 255.255.255.0 gw  10.32.39.254
+# route add -net 172.16.100.0 netmask 255.255.255.0 gw 172.16.100.1
+# route add -net 192.168.85.0 netmask 255.255.255.0 gw 192.168.85.99
+# route  add -net 10.33.58.0 netmask 255.255.255.0 gw  10.32.39.254
 
 ####################################Create Permanent Static Routes#########################################
 The static routes configured in the previous section are all transient, in that they are lost on reboot.
@@ -210,6 +235,7 @@ RUN  apk update  \
      && apk   add git  \
      && apk add wget  \
      && apk add openjdk11  
+
 #we need to repalce apk into   apt and add into install 
 #go escape mode 
 :%s /<old world>/<new world>/gI #g=global and I= insert
@@ -239,12 +265,13 @@ $ renice -10 <PID>
 $ renice -10 16995
 
 ########what is range of nice value####################
- from -20 to +20 
+from -20 to +20 
 
 #########################Find Top Running Processes by Highest Memory and CPU Usage in Linux##################
 #Find Top Running Processes by Highest Memory and CPU Usage in Linux
  $ ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head
  $ ps -eo pid,ppid,%cpu,%mem,cmd --sort=-%mem | head
+ $ ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%cpu | head
 #options
 Parameter Description
 pcpu 	  Percentage of CPU
@@ -262,8 +289,8 @@ euid 	  The effective user
 stat	  Process state
 
 ############Find Top 15 Processes by Memory Usage with ‘top’ in Batch Mode######
-$top -b -o +%MEM | head -n 22
-$top -b -o +%MEM | head -n 22 > topreport.txt
+$ top -b -o +%MEM | head -n 22
+$ top -b -o +%MEM | head -n 22 > topreport.txt
 
 ################To know traffic to server or capture traffic##########
 $ tcpdump  -A . port
@@ -314,12 +341,13 @@ $ vim /etc/fstab
 /dev/mapper/vgikt/logical /ikt ext4 defaults 0 0
 :wq
 $ mount -a
+
 ##################Extended the volume group#############################
 $ pvcreate /dev/sda3
-$ gextend vgikt /dev/sda3
+$ vgextend vgikt /dev/sda3
 $lvextend -L +5G /dev/vgikt/logical
 Note:-
-we have mention if not mention it will reduce to 5GB only not adding 5GB and data will also lose.
+we have to +5G  addtional sysmbol mention if not mention it will reduce to 5GB only not adding 5GB and data will also lose.
 # To update the resize LV
 $ resize /dev/vgikt/logical
 $ df -h
@@ -364,6 +392,7 @@ log rotation
 /etc/cron.weekly
 
 ####################################Port number#######################
+
 tcp-6
 udp-17
 ftp-20-data tranfer and 21 communication bewteen two computer
@@ -429,7 +458,8 @@ vmstat-----------To check virtual memory statics
 iostat-----------To check i/p, o/p static disk
 sar--------------To check load average
 top--------------To check cpu utilization
-$ systemctl get-default---To known system default run levels or target 
+
+$ systemctl get-default ---To known system default run levels or target 
 $ uptime (to see from how long the system is running and also gives the load average report)
 * The load average is having 3 fields. 1 - present status, 2 - 5 minutes back and 3 - 15 minutes back.
 $ iostat 5 2 (to monitor the input and output statistics for every 5 seconds upto 10 times)
@@ -442,6 +472,92 @@ $ lscpu (to see the no. of CPUs present in the system)
 $ lsusb (to see the no. of USB devices present in the system)
 $ lsblk (to see all the partitions or block devices information)
 $ cat /etc/redhat-release (to see the RHEL version of system)
+
+$ man dmidecode
+NAME
+       dmidecode - DMI table decoder
+
+SYNOPSIS
+       dmidecode [OPTIONS]
+
+DESCRIPTION
+       dmidecode  is  a  tool for dumping a computer's DMI (some say SMBIOS) table contents in a human-readable format. This table
+       contains a description of the system's hardware components, as well as other useful pieces of information  such  as  serial
+       numbers  and  BIOS revision. Thanks to this table, you can retrieve this information without having to probe for the actual
+       hardware.  While this is a good point in terms of report speed and safeness, this also makes the presented information pos‐
+       sibly unreliable.
+DMI TYPES
+       The SMBIOS specification defines the following DMI types:
+
+       Type   Information
+       ────────────────────────────────────────────
+          0   BIOS
+          1   System
+          2   Baseboard
+          3   Chassis
+          4   Processor
+		  5   Memory Controller
+          6   Memory Module
+          7   Cache
+          8   Port Connector
+          9   System Slots
+         10   On Board Devices
+         11   OEM Strings
+         12   System Configuration Options
+         13   BIOS Language
+         14   Group Associations
+         15   System Event Log
+         16   Physical Memory Array
+         17   Memory Device
+
+         18   32-bit Memory Error
+         19   Memory Array Mapped Address
+         20   Memory Device Mapped Address
+         21   Built-in Pointing Device
+         22   Portable Battery
+         23   System Reset
+         24   Hardware Security
+         25   System Power Controls
+         26   Voltage Probe
+         27   Cooling Device
+         28   Temperature Probe
+         29   Electrical Current Probe
+         30   Out-of-band Remote Access
+         31   Boot Integrity Services
+         32   System Boot
+         33   64-bit Memory Error
+         34   Management Device
+         35   Management Device Component
+         36   Management Device Threshold Data
+         37   Memory Channel
+         38   IPMI Device
+         39   Power Supply
+         40   Additional Information
+         41   Onboard Devices Extended Information
+
+Keywords can be used instead of type numbers with --type.  Each keyword is equivalent to a list of type numbers:
+
+       Keyword     Types
+       ──────────────────────────────
+       bios        0, 13
+       system      1, 12, 15, 23, 32
+       baseboard   2, 10, 41
+       chassis     3
+       processor   4
+       memory      5, 6, 16, 17
+       cache       7
+       connector   8
+       slot        9
+
+       Keywords are matched case-insensitively. The following command lines are equivalent:
+
+       · dmidecode --type 0 --type 13
+
+       · dmidecode --type 0,13
+
+       · dmidecode --type bios
+
+       · dmidecode --type BIOS
 $ dmidecode (to see the complete hardware information of the system)
 $ dmidecode -t memory (to see the memory information of the system)
 $ dmidecode -t bios (to see the systems bios information)
@@ -451,6 +567,7 @@ $ dmidecode -t 1 (to check the Systems Serial No. information)
 $ dmidecode -t 4 (to see the processor's (CPU's) information)
 $ dmidecode -t 16 (to check the Max. RAM capacity of the system)
 $ dmidecode -t 17 (to check how much RAM the system is using)
+
 $ pidstat (to monitoring the individual tasks currently being managed by the Linux kernel)
 $ nfsiostat (to monitor the NFS input and output statistics)
 $ cifsiostat (to monitor the Samba input and output statistics)
@@ -579,7 +696,7 @@ $nmap -A 192.168.1.5
 
 ######################################creation Swap Space########################################
 # Scan new lun on server with below command
-ls /sys/class/scsi_host/host | while read host ; do echo "---" > /sys/class/scsi_host/$host/scan ; done
+ls /sys/class/scsi_host/ | while read host ; do echo "- - -" > /sys/class/scsi_host/$host/scan ; done
 
 
 #############echo "---" > /sys/class/scsi_host/host{x}/scan
@@ -891,6 +1008,39 @@ But this can be changed if required by editing /etc/login.defs file.
 17.Change in file system structure
 In rhel6 /bin,/sbin,/lib and /lib64 are usually under /
 In rhel7, now /bin,/sbin,/lib and /lib64 are nested under /usr.
+#############patching on ubuntu os ########
+##Run the command To refresh package database. 
+$ sudo apt update  
+
+##Show information about available update/packages/pathces, run:
+$ sudo apt list --upgradable
+## Apply security updates and patches for all installed apps, run:
+$ sudo apt upgrade
+##List all possible versions that we can install or update using the following syntax:
+$ sudo apt list --all-versions --upgradable
+##t is also possible to create a list of all installed software as follow
+$ dpkg --get-selections > ~/packages-list-dd-mm-yyyy.txt
+##We can restore em if required later:
+$ sudo dpkg --set-selections < ~/packages-list-dd-mm-yyyy.txt
+## restore it ##
+$ sudo apt-get dselect-upgrade
+##If nginx package already installed it will try to update to the latest version. If you do not want to install new packages; when used in conjunction with install, only-upgrade will install upgrades for already installed packages only and ignore requests to install new packages. Try:
+$ sudo apt --only-upgrade install nginx
+
+#How to exclude Ubuntu 22.04 or 20.04 LTS package from a update
+#Use the apt-mark command as follows to held back given package, which will prevent the package from being automatically installed, upgraded or removed from the system:
+$ sudo apt-mark hold {package}
+$ sudo apt-mark hold bash
+
+#Want to cancel a previously set hold on a package to allow all actions again? Pass the unhold option as follows:
+$ sudo apt-mark unhold {package}
+$ sudo apt-mark unhold bash
+
+#We can use the following simple command to print a list of packages on hold in the same way as for the other show commands:
+$ sudo apt-mark showhold
+$ sudo apt-mark showhold | grep nginx
+Note:
+This url for the futher reference purpose https://linuxopsys.com/topics/exclude-specific-package-apt-upgrade
 
 ##############patching on red hat linux 7####################
 #yum updateinfo list available   ------>To list all available erratas without installing them
@@ -905,7 +1055,7 @@ In rhel7, now /bin,/sbin,/lib and /lib64 are nested under /usr.
 # installing start from here
 
 #####installation#####
-
+baapt0706r
 1.#yum update --security ---------download and apply all available security updates from Red Hat Setwork hosted or Rent Network Satellite
 
 2.#yum update-minimal security --------To install the package that have a security errate use
@@ -921,8 +1071,7 @@ e.g.
 6.#yum updateinfo  RHSA-2020:1336------- know more information about this advisory before to apply it
 
 7.#yum updateinfo list cves----view CEs which affect the system with
-
-Password- harshsffdd677
+8.# yum update --exclude kernel* ----exclude the kernel* packages.
 
 8.#man yum-security to know about command
 
@@ -967,8 +1116,8 @@ To enable “–releasever” option, you need to register a system through subs
 # subscription-manager register --auto-attach
 
 4.List the subscription available version  all release
-#subscription-manager release --list
-#subscription-manager release --set=7.9 
+# subscription-manager release --list
+# subscription-manager release --set=7.9 
 
 5. If the current OS version is RHEL 7.4 and the requirement is to update to 7.9 , please use the following command to update the system to specific release. 
 If you don’t specify “releasever” parameter ,then system will be updated to latest major release.
@@ -1155,15 +1304,15 @@ ANSWER:
 #nmcli connection modify "System eth0" ipv4.dns-search "example.com"
 
 ###################Setup an HostName and your hostname as "serverx.example.com"################
-#hostnamectl set-hostname servero.example.com
-#bash or exec bash ##forcelly update the kernel
+$ hostnamectl set-hostname servero.example.com
+$ bash or exec bash ##forcelly update the kernel
+
 #####################Configure Selinux. Set the selinux policy in Enfrocing mode####################
 $ vim /etc/sysconfig/selinux 
 SELINUX=Enforcing
 :wq
 #sestatus
 #setenforce 1
-
 
 #######################################LVM_Restore####################################
 ##scan the new hard disk
@@ -1271,13 +1420,10 @@ After above step it sucessful load
 ######################Kernel Panic Error Resolution of  initramfs image is missing or corrupted in RHEL 7/8##################
 -----------------------------------------------------------------------------------------------------------------------------
 1. See the details of Kernel Panic Error (Identify the reason behind it eg. New Kernel, Corrupted initramfs, New Packages after Patching, Hardware change etc.)
-
 2. Login the system with root credentials through rescue mode.
-
 3. Take necesarry action as the reason of getting this error.
 If it is due to new kernel, then downgrade it.
 If it is due to corrupted or missing initramfs, regenerate it.
-
 4. In our case it is due to corrupted/absent initramfs file. First check your kernel version.
 # uname -r
 5.After get kernel panic reboot the server
@@ -1333,6 +1479,17 @@ CRN no 328538997
 accno. 2913388890
 sudo SUSEConnect -r REGISTRATION_CODE -e EMAIL _ADDRESS
 
+#####To set Time and date ##########
+$ timedatectl set-time 14:12:00
+$ date +%T%p -s "14:04:00PM"
+##set timezone
+$ timedatectl set-timezone Asia/Kolkata
+##set time synchronization using  ntp
+$ timedatectl set-ntp  true
+
+##stop ntp synchronization
+$ timedatectl set-ntp  true
+
 #####Join the Linux machine into active directory of windows server##################
 #Prerequisites
 This article presupposes that you have at least some introductory-level experience with Active Directory, especially around user and computer account management. Aside from that, the following obvious requirements need to be met:
@@ -1367,6 +1524,10 @@ How to verify or check the integrity of the group file?
 # grpck <options> /etc/gshadow 
  * The options are, -r -----> read only
 					-s -----> sort the contents by gidin /etc/group and /etc/gshadow files.
+
+#############extend an LVM swap partition in Linux#####
+Below site clear steps for LVM swap extend 
+https://www.thegeekdiary.com/how-to-extend-an-lvm-swap-partition-in-linux/
 
 #############interveiw question############
 *Linux* ✓ *(RHEL)*

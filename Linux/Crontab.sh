@@ -15,7 +15,7 @@ To list the cron job
 *********************Crontab job store path**************
 #cd /var/spool/cron
 here list all cron jobs with username also.
-####realtime cron job
+####realtime cron job purpose
 backup
 compress
 archive

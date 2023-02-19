@@ -93,6 +93,12 @@ $ cat user.txt | sed 's/root/admin/g; s/shutdown/reboot/gi'
 $sed '/root/a "Welcome to cn technologies"' user.txt
 ##To add a line after  5 lines given a string
 $ sed '5a "welcome to cn technologies"' user.txt
+###Adding the line in the last of the file 
+$ sed -i -e '$a\
+add in last line 1\
+add in last line 2' <filename>
+Note:
+Use sed 'append (a)' command. For example, to append two lines at the end of file
 ##Add line before a matche
 $ sed '/ftp/i Welcome to cn technologies'  user.txt
 $ sed '3i welcome to cn technologies' user.txt

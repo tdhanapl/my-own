@@ -1,12 +1,12 @@
 #######################################add route table######################################
 https://www.redhat.com/sysadmin/route-ip-route
 ############create temporary route table#################################################
-#route add default gw 192.168.4.254
-#route add -i net 192.169.1.0/24 netmask  255.255.0.9 gateway 192.168.1.1
-# route add -net 17.16.4.0 netmask 255.255.254.0 gw 172.16.4.251
-#route add -net 172.16.100.0 netmask 255.255.255.0 gw 172.16.100.1
-#route add -net 192.168.85.0 netmask 255.255.255.0 gw 192.168.85.99
-#route  add -net 10.33.58.0 netmask 255.255.255.0 gw  10.32.39.254
+$ route add default gw 192.168.4.254
+$ route add -i net 192.169.1.0/24 netmask  255.255.0.9 gateway 192.168.1.1
+$ route add -net 17.16.4.0 netmask 255.255.254.0 gw 172.16.4.251
+$ route add -net 172.16.100.0 netmask 255.255.255.0 gw 172.16.100.1
+$ route add -net 192.168.85.0 netmask 255.255.255.0 gw 192.168.85.99
+$ route  add -net 10.33.58.0 netmask 255.255.255.0 gw  10.32.39.254
 
 ####################################Create Permanent Static Routes#########################################
 The static routes configured in the previous section are all transient, in that they are lost on reboot.

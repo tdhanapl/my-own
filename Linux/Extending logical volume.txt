@@ -63,7 +63,7 @@ $  lsblk
 $ pvcreate /dev/sdc1
 $ vgextend vg_root /dev/sdc1
 $lvextend -L +500G /dev/vg_root/lv_root
-##assgin full vg to logical voulme 
+#assgin full vg to logical voulme 
 $lvcreate -l +100%FREE -n vg_root lv_root
 Note:-
 we have mention if not mention it will reduce to 5GB only not adding 5GB and data will also lose.

@@ -1,0 +1,1 @@
+ ncli user reset-password user-name=aniket password=Zee@Nu@1

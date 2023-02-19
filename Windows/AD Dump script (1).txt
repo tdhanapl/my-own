@@ -1,0 +1,109 @@
+AD Dump:-
+
+get-aduser -Filter *  -Properties * | export-csv -path c:\users\amruteshwar.a-n\desktop\export.csv
+
+get-adcomputer -Filter *  -Properties * | export-csv -path c:\users\amruteshwar.a-n\desktop\export.csv
+
+Computers Dump:-
+
+Get-ADComputer -filter * | Export-CSV c:\users\amruteshwar.a-n\desktop\computers.csv -NoTypeInformation
+
+
+Get-ADUser -Filter * -Properties * | Select-Object name,displayname,samaccountname,mail,enabled,passwordneverexpires,passwordexpired,passwordlastset,lastlogondate,employeetype | Export-Csv C:\users.csv
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SYNC O365 immidiately:-
+
+Start-ADSyncSyncCycle -PolicyType Delta
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Windows Activation Keys:-
+
+88GNR-PQG2H-VYK9D-RK4V9-JXDD2    2016 STD
+GCNCC-WRF6Q-QBWKH-G6PJV-HXKCJ    2012 R2
+DW3Q6-MMN6M-FD7MY-X3C84-4YBMQ    2019
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+enable GUI from core version OS:-
+
+Install-WindowsFeature Server-Gui-Shell, Server-Gui-Mgmt-Infra –Restart (Powershell)
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+delete Computers From AD:-
+
+Get-Content -Path C:\inactivelist.txt | Remove-ADComputer
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+Microsft seciroft security portal:-
+
+https://security.microsoft.com/threatexplorer?tid=56bd48cd-f312-49e8-b6c7-7b5b926c03d6
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+Password Expiry enable:-
+
+import-csv c:\change.csv | ForEach-Object {Set-ADUser -Identity $_.SamAccountName -PasswordNeverExpires:$FALSE}
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Export Users from AD Group:-
+
+Get-ADGroupMember -Identity 'CTC_SAFENET' -Recursive | export-csv -path c:\users\amruteshwar.a-n\desktop\CTC_SAFENET.csv
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ script to check cores and processor:-
+
+Get-WmiObject –class Win32_processor | ft NumberOfCores,NumberOfLogicalProcessors
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+To export Applied GP policy from Server.
+
+gpresult -h c:\Users\amruteshwar.a-n\Desktop\gp.html
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CMD for password expiry 
+
+net user rambir /domain
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Mimecast Script to enable Identifier.
+
+Set-ADFSRelyingPartyTrust -TargetIdentifier "https://mixpanel.com/security/sso/v2/authorize/" -NotBeforeSkew 1
+
+to Check identifier
+
+Get-AdfsRelyingPartyTrust -Identifier "https://mixpanel.com/security/sso/v2/authorize/"
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+To set Time Zone IST (Powershell)
+
+Set-TimeZone -Name "India Standard Time"
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+powershell command to disable users in ad
+
+Import-Module ActiveDirectory
+
+$users=Get-Content c:\it\Test1.txt
+ForEach ($user in $users)
+{
+Disable-ADAccount -Identity $user
+write-host "user $($user) has been disabled"
+}
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Powershell command to  Delete The users in AD:
+
+Import-Csv C:\Test1.csv | Foreach-Object {Remove-ADUser -Identity $_.SamAccountName -Confirm:$False}
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Power shell script to add bulk users into O365 DL
+
+get-content F:\DL.txt | ForEach-Object{Add-DistributionGroupMember -Identity DesignatedPersons -Member $_}
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Delete the Guest Ids from Azure AD:-
+
+Connect-AzureAD
+ 
+$DeletedUser = Import-Csv -Path "C:\Users\amruteshwar.a\Desktop\Test"
+$DeletedUser.UserPrincipalName
+foreach($r in $DeletedUser){Remove-AzureADUser -ObjectId $r.UserPrincipalName}
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Password reset O365 users. CSV format( Userprinciple name| Password)
+
+Connect-MsolService
+
+Import-csv "c:\testusers2.csv" | % {Set-MsolUserPassword -UserPrincipalName $_.userPrincipalName -NewPassword $_.Password -ForceChangePassword $False}
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Migrate International Users O365 (Powershell Script)
+
+get-mailbox rafif.dasouki@zee.com -softdeletedmailbox | FL exchangeguid
+
+get-mailbox rafif.dasouki@zee.com | FL exchangeguid
+
+New-MailboxRestoreRequest -SourceMailbox "c39b9747-18f1-40b7-9a50-ed3c5e4e082b" -TargetMailbox "0e60d062-dd95-449c-be22-fb58b2ac421f" -AllowLegacyDNMismatch
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------

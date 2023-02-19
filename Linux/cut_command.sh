@@ -40,6 +40,7 @@ $cut -c [(k)-(n)/(k),(n)/(n)] filename
 Here,k denotes the starting position of the character and n denotes the ending position of the character in each line, 
 if k and n are separated by “-” otherwise they are only the position of character in each line from the file taken as an input.
 
+#Below  cut command prints second, fifth and seventh character from each line of the file.
 $ cut -c 2,5,7 state.txt
 nr
 rah
@@ -47,16 +48,13 @@ sm
 ir
 hti
 
-#Above cut command prints second, fifth and seventh character from each line of the file.
-
 $ cut -c 1-7 state.txt
-
 Andhra
 Arunach
 Assam
 Bihar
 Chhatti
-
+# Below  command prints starting from first character to end. Here in command only starting position is specified and the ending position is omitted.
 $ cut -c 1- state.txt
 
 Andhra Pradesh
@@ -65,17 +63,14 @@ Assam
 Bihar
 Chhattisgarh
 
-#Above command prints starting from first character to end. Here in command only starting
-position is specified and the ending position is omitted.
-
+#Below  command prints starting position to the fifth character. Here the starting position is omitted and the ending position is specified.
 $ cut -c -5 state.txt
 Andhr
 Aruna
 Assam
 Bihar
 Chhat
-#Above command prints starting position to the fifth character. Here the starting position
-is omitted and the ending position is specified.
+
 3. -f (field): -c option is useful for fixed-length lines. 
 Syntax:
 $ cut -f FIELD_LIST filename
@@ -109,7 +104,7 @@ Arunachal Pradesh
 Assam
 Bihar
 Chhattisgarh
-5. The  –complement option will display all the fields except those defined by -f.
+5. The  – complement option will display all the fields except those defined by -f.
 This command displays all fields except 3:
 This option can be used in the combination with other options either with -f or with -c.
 

@@ -1,0 +1,309 @@
+This script from amruteshwar
+###To get anonymous Login  users
+C:\Users\admin> $Events = Get-WinEvent -Logname security -FilterXPath "Event[System[(EventID=4624)]]and Event[EventData[Data[@Name='LmPackageName']='NTLM V1']]" | Select-Object `
+@{Label='Time';Expression={$_.TimeCreated.ToString('g')}},
+@{Label='UserName';Expression={$_.Properties[5].Value}},
+@{Label='WorkstationName';Expression={$_.Properties[11].Value}},
+@{Label='LogonType';Expression={$_.properties[8].value}},
+@{Label='ImpersonationLevel';Expression={$_.properties[20].value}}
+$Events | Out-GridView
+
+#### To check EnableSMB1Protocol is enabled or not #####
+C:\Users\admin> Get-SmbServerConfiguration | Select EnableSMB1Protocol
+
+###To get Enable NT\DNSClient
+C:\Users\admin> Get-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Windows NT\DNSClient" -name EnableMulticast\
+
+### To get hostname #####
+C:\Users\admin> Hostname
+
+
+##AD Dump:-
+
+C:\Users\admin> get-aduser -Filter *  -Properties * | export-csv -path c:\users\amruteshwar.a-n\desktop\export.csv
+
+C:\Users\admin> get-adcomputer -Filter *  -Properties * | export-csv -path c:\users\amruteshwar.a-n\desktop\export.csv
+
+##Computers Dump:-
+
+C:\Users\admin> Get-ADComputer -filter * | Export-CSV c:\users\amruteshwar.a-n\desktop\computers.csv -NoTypeInformation
+
+
+C:\Users\admin> Get-ADUser -Filter * -Properties * | Select-Object name,displayname,samaccountname,mail,enabled,passwordneverexpires,passwordexpired,passwordlastset,lastlogondate,employeetype | Export-Csv C:\users.csv
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+##SYNC O365 immidiately:-
+
+C:\Users\admin> Start-ADSyncSyncCycle -PolicyType Delta
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+##Windows Activation Keys:-
+
+C:\Users\admin> 88GNR-PQG2H-VYK9D-RK4V9-JXDD2    2016 STD
+C:\Users\admin> GCNCC-WRF6Q-QBWKH-G6PJV-HXKCJ    2012 R2
+C:\Users\admin> DW3Q6-MMN6M-FD7MY-X3C84-4YBMQ    2019
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+##enable GUI from core version OS:-
+
+C:\Users\admin> Install-WindowsFeature Server-Gui-Shell, Server-Gui-Mgmt-Infra –Restart (Powershell)
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+##delete Computers From AD:-
+
+C:\Users\admin> Get-Content -Path C:\inactivelist.txt | Remove-ADComputer
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+##Microsft seciroft security portal:-
+
+https://security.microsoft.com/threatexplorer?tid=56bd48cd-f312-49e8-b6c7-7b5b926c03d6
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+##Password Expiry enable:-
+
+C:\Users\admin> import-csv c:\change.csv | ForEach-Object {Set-ADUser -Identity $_.SamAccountName -PasswordNeverExpires:$FALSE}
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+## Export Users from AD Group:-
+
+C:\Users\admin> Get-ADGroupMember -Identity 'CTC_SAFENET' -Recursive | export-csv -path c:\users\amruteshwar.a-n\desktop\CTC_SAFENET.csv
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+##script to check cores and processor:-
+
+C:\Users\admin> Get-WmiObject –class Win32_processor | ft NumberOfCores,NumberOfLogicalProcessors
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+##To export Applied GP policy from Server.
+
+C:\Users\admin> gpresult -h c:\Users\amruteshwar.a-n\Desktop\gp.html
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+##CMD for password expiry 
+
+C:\Users\admin> net user rambir /domain
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+##Mimecast Script to enable Identifier.
+
+C:\Users\admin>Set-ADFSRelyingPartyTrust -TargetIdentifier "https://mixpanel.com/security/sso/v2/authorize/" -NotBeforeSkew 1
+
+##To Check identifier
+
+C:\Users\admin> Get-AdfsRelyingPartyTrust -Identifier "https://mixpanel.com/security/sso/v2/authorize/"
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+##To set Time Zone IST (Powershell)
+
+C:\Users\admin> Set-TimeZone -Name "India Standard Time"
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+##powershell command to disable users in ad
+
+C:\Users\admin> Import-Module ActiveDirectory
+
+$users=Get-Content c:\it\Test1.txt
+ForEach ($user in $users)
+{
+Disable-ADAccount -Identity $user
+write-host "user $($user) has been disabled"
+}
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+##Powershell command to  Delete The users in AD:
+
+C:\Users\admin> Import-Csv C:\Test1.csv | Foreach-Object {Remove-ADUser -Identity $_.SamAccountName -Confirm:$False}
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+##Power shell script to add bulk users into O365 DL
+
+C:\Users\admin> get-content F:\DL.txt | ForEach-Object{Add-DistributionGroupMember -Identity DesignatedPersons -Member $_}
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+##Delete the Guest Ids from Azure AD:-
+
+Connect-AzureAD
+C:\Users\admin> $DeletedUser = Import-Csv -Path "C:\Users\amruteshwar.a\Desktop\Test"
+$DeletedUser.UserPrincipalName
+foreach($r in $DeletedUser){Remove-AzureADUser -ObjectId $r.UserPrincipalName}
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+##Password reset O365 users. CSV format( Userprinciple name| Password)
+
+Connect-MsolService
+
+C:\Users\admin> Import-csv "c:\testusers2.csv" | % {Set-MsolUserPassword -UserPrincipalName $_.userPrincipalName -NewPassword $_.Password -ForceChangePassword $False}
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+##Migrate International Users O365 (Powershell Script)
+
+C:\Users\admin> get-mailbox rafif.dasouki@ikt.com -softdeletedmailbox | FL exchangeguid
+
+C:\Users\admin> get-mailbox rafif.dasouki@ikt.com | FL exchangeguid
+
+C:\Users\admin>  New-MailboxRestoreRequest -SourceMailbox "c39b9747-18f1-40b7-9a50-ed3c5e4e082b" -TargetMailbox "0e60d062-dd95-449c-be22-fb58b2ac421f" -AllowLegacyDNMismatch
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+This Script from Guna
+##Import-Module ExchangeOnlineManagement
+$UserCredential = Get-Credential
+Connect-ExchangeOnline -Credential $UserCredential -ShowProgress $true
+1.	Connect the Azure AD command:
+Connect-AzureAD
+2.	Input the following command:
+Get-AzureADGroup | where{$_.proxyaddresses -like "*@ikt.com"} | export-csv -path "C:\Users\sabrinaw\Desktop\exportzee.csv"
+Get-AzureADGroup | where{$_.proxyaddresses -like "*@ikt.com"} | export-csv -path "C:\Users\sabrinaw\Desktop\exportzeeesselgroup.csv"
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+##command to extract users based on last logon date
+C:\Users\admin> Get-Mailbox -ResultSize Unlimited | Get-MailboxStatistics | Select-Object DisplayName,LastLogonTime
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+##azure ad sync issue
+C:\Users\admin> Set-ADSyncScheduler -SchedulerSuspended $false
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+##command to remove and update users from group
+C:\Users\admin> Update-DistributionGroupMember -Identity "content-dom" -Members naval.kishore@ikt.com,
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+##command to export transport rules
+C:\Users\admin> Get-TransportRule
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+##command to delete bulk mailboxes
+C:\Users\admin> import-csv f:\northusers.csv | Remove-Mailbox -Confirm:$false
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## command to extract one drive report for all license user
+C:\Users\admin> Connect-SPOService -Url https://ebexnoida.sharepoint.com
+$Result=@()
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#Get all OneDrive for Business sites
+C:\Users\admin> $oneDriveSites = Get-SPOSite -IncludePersonalSite $true -Limit All -Filter "Url -like '-my.sharepoint.com/personal/'"
+$oneDriveSites | ForEach-Object {
+$site = $_
+$Result += New-Object PSObject -property @{
+OneDrive_Owner = $site.Owner
+Storageused_inMB = $site.StorageUsageCurrent
+StorageQuota_inGB = $site.StorageQuota/1024
+WarningSize_inGB =  $site.StorageQuotaWarningLevel/1024
+OneDriveSiteUrl = $site.URL
+}
+}
+$Result | Select OneDrive_Owner, Storageused_inMB, StorageQuota_inGB, WarningSize_inGB, OneDriveSiteUrl |
+Export-CSV "C:\OneDrive-for-Business-Size-Report.csv" -NoTypeInformation -Encoding UTF8
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+##to retrieve deleted users one drive
+
+C:\Users\admin> Restore-SPODeletedSite -Identity https://ikt-my.sharepoint.com/personal/nitin_darekar_ikt_com
+
+
+Enable-Mailbox abhishek.chavan@ikt.com -AutoExpandingArchive
+
+for Autoexpanding not running use below command
+
+Set-Mailbox sanjoy.chatterjee@ikt.com -RetentionHoldEnabled $false
+
+Start-ManagedFolderAssistant -Identity sanjoy.chatterjee@ikt.com
+
+To creating the retention TAG
+
+New-RetentionPolicyTag -Name "Recoverableitem for 01 days" -Type RecoverableItems -AgeLimitForRetention 01 -RetentionAction MoveToArchive
+
+
+For immediate move to Archive use below command
+
+
+while($true)
+
+{
+
+start-managedfolderassistant kunal.kaul@ikt.com
+
+write-host "waiting"; start-sleep -seconds 300;
+
+}
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+##For increase the onedrive size.
+ Share point online management shell - application
+step1 - connect-sposervice
+step1 -https://ikt-admin.sharepoint.com
+step2 - user name & password
+step 3 - Set-SPOSite -Identity https://ikt-my.sharepoint.com/personal/rupesh_manjrekar_zee_com -StorageQuota 5024000
+ 
+    in O365- user - 	get access of file- click link - copy in user then paste.
+
+--------------------------------------------------------------
+
+##For adding the external domain in Teams
+
+O365admin - Teams -  users- External access - +add domain.
+----------------------------------------------------------------
+
+##Restoring and share the data to particular user.
+1-Open SharePoint Online Management Shell
+2-connect-SPOService -URL https://ikt-admin.sharepoint.com (Sign in wth a Global Admin or SharePoint Onlien Admin credentials)
+3-Set-SPOUser -Site https://ikt-my.sharepoint.com/personal/nandita_markandan_zee_com -loginname "Uemail of the user to whom you'd like to give access" -issitecollectionadmin $true
+--------------------------------------------------------------
+
+##For Disabling the user id in AD.
+Open Powershell ise
+
+type - import-module ActiveDirectory
+
+Import-Csv "C:\Users\gunaseelan\Desktop\guna6.csv" | ForEach-Object {
+ $samAccountName = $_."samAccountName" 
+Get-ADUser -Identity $samAccountName | Disable-ADAccount
+}
+----------------------------------------------------------
+
+##For deleting the user id in AD
+import-module ActiveDirectory
+Import-Csv C:\Users\gunaseelan\Desktop\users1.csv | Foreach-Object {Remove-ADUser -Identity $_.SamAccountName -Confirm:$False }
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+##For adding the members in DL
+Import-CSV C:\Users\Amrut\Downloads\members_IKT@ikt.com.csv | ForEach {Add-DistributionGroupMember -Identity content-dom@ikt.com -Member $_.Members}
+-----------------------------------------------------------
+
+##For user laptop send / receicve error - unable to send and receive the mails,
+
+step 1 - regedit - Hkey_current_user - Software - Microsoft - office -16.0 - Outlook - PST (if pst name not there then create)
+
+   -  (right side) - create - Dword(32bit) value - MaxLargeFileSize - (Deceimal Value) - 100000   & 1 more - Dword(32bit) value - WarnLargeFileSize - (Deceimal Value) - 95000.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+##For geting VPN user list in AD
+
+cd\
+cd .\users
+cd .\gunaseelan
+cd .\Desktop
+Get-ADGroupMember "VPN_BMS" -recursive | Select-Object Name | Export-csv -Path C:\Users\gunaseelan\Desktop\VPNBMS.csv -NoTypeInformation
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+##For geting folder access user list in drive.
+
+Get-Acl E:\priya | Select -ExpandProperty Access | ft -AutoSize > C:\users\gunaseelan\desktop\priya.csv
+
+-----------------------------------------------------------------
+
+##Extract VPN user in AD group.
+Get-AdGroupMember -Identity 'VPN_BMS' | Get-AdUser -Properties * | Select Name,Mail,id| Export-csv -Path D:\BMS.csv  -NoTypeInformation
+
+----------------------------------------------------------------------
+
+##AD dump
+Get-ADUser -Filter * -Properties * | export-csv c:\ADusers.csv
+
+---------------------------------------------------------------------
+
+##Password expires check
+
+net user rambir /domain
+----------------------------------------------------------------
+
+##liti
+$User = Import-Csv C:\Users\gunaseelan.t.INKNOWTECH\Desktop\setlitigationhold.csv 
+foreach($user in $user){ 
+Write-Progress -Activity "Placing litigation hold to -$user..." 
+Set-Mailbox -Identity $User.User -LitigationHoldEnabled $True 
+If($?) 
+{ 
+Write-Host Placed Litigation Hold Successfully to $User.user -ForegroundColor Green 
+} 
+Else 
+{ 
+Write-Host Error occurred while placing litigation hold to $User.user -ForegroundColor Red 
+} 
+}
+
+
