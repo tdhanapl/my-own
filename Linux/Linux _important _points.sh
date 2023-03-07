@@ -46,13 +46,13 @@ $ top -b -n 2 -d1 | grep -i "cpu(s)" | tail -n1 | awk '{print $2}'  | awk -F . '
 options:
 	-F fs        --field-separator=fs
 Ex:-
-	 awk -F: '{ print $1 }' /etc/passwd
+	awk -F: '{ print $1 }' /etc/passwd
 	 
 #######Entry hostname with FQDN and ip address  in /etc/hosts############
 echo `hostname -i | awk '{print $NF}'`" "`hostname`" "`hostname -s`  >> /etc/hosts
 
 ################filter the disk usage percentage for shell scripit####################
-df -h  |grep -ivE "filesystem|tmpfs" | sed 's/%//gI' | awk '{print $5}'
+$ df -h  |grep -ivE "filesystem|tmpfs" | sed 's/%//gI' | awk '{print $5}'
 option:
   -E, --extended-regexp     PATTERN is an extended regular expression (ERE)
   -v, --invert-match        select non-matching lines(string word will not display)
@@ -131,6 +131,7 @@ $ yum-config-manager --enable <repo>
 $ subscription-manager repos --disable <repo>
 ##To disable custom repositories:
 $ yum-config-manager --disable <repo>
+
 ############ installing the rpm pacakage using yum########################
 $ yum install local ./python27-python-pip-7.1.0-2.el7.noarch.rpm
 
@@ -171,7 +172,8 @@ we taken approval and we restart the application then admin is able login
 3.#application is unable to access due to cpu utilization high the application  is able access  after cpu utillization  under stable.
 
 ############################Assgine static IP Address############################
-vi /etc/sysconfig/network-scripts/ifcfg-ens33
+$ vi /etc/sysconfig/network-scripts/ifcfg-ens33
+
 TYPE=Ethernet
 PROXY_METHOD=none
 BROWSER_ONLY=no
@@ -195,6 +197,8 @@ DNS2=10.13.0.22
 IPV6_PRIVACY=no
 :wq
 
+$ systemctl restart network
+$ 
 #######################################add route table######################################
 https://www.redhat.com/sysadmin/route-ip-route
 ############create temporary route table#################################################
@@ -258,7 +262,7 @@ $ ps -ef
 The -f (full) option displays more columns of information
 The -e (every) and -ax (all) options provide a report on every process that is running on the system.
 The -e  option generates a long report. This example filters the output with IFBE to display the first five entries.
-The-o PARAMETER1, PARAMETER2 option specifies the data to be displayed
+The -o PARAMETER1, PARAMETER2 option specifies the data to be displayed
 
 #################change priority values or renice value###########
 $ renice -10 <PID>
@@ -272,6 +276,7 @@ from -20 to +20
  $ ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head
  $ ps -eo pid,ppid,%cpu,%mem,cmd --sort=-%mem | head
  $ ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%cpu | head
+
 #options
 Parameter Description
 pcpu 	  Percentage of CPU
@@ -320,7 +325,7 @@ Next, add the configuration below in both files.
 auth    required       pam_listfile.so \
         onerr=succeed  item=user  sense=deny  file=/etc/ssh/deniedusers
 		
-##########################################Logical voulme Creation############################
+##########################Logical voulme Creation############################
 $ fdisk /dev/sda
 $ pvcreate /dev/sda
 $ pvs
@@ -345,9 +350,9 @@ $ mount -a
 ##################Extended the volume group#############################
 $ pvcreate /dev/sda3
 $ vgextend vgikt /dev/sda3
-$lvextend -L +5G /dev/vgikt/logical
+$ lvextend -L +5G /dev/vgikt/logical
 Note:-
-we have to +5G  addtional sysmbol mention if not mention it will reduce to 5GB only not adding 5GB and data will also lose.
+we have to give  +5G  addtional sysmbol mention if not mention + it will reduce to 5GB only not adding 5GB and data will also lose.
 # To update the resize LV
 $ resize /dev/vgikt/logical
 $ df -h
@@ -370,7 +375,8 @@ CMD      Command         Any command to be executed.
 how to set crontab 
 #crontab -e
 To list the cron job
-#crontab -l
+#crontab -l 
+
 *********************Crontab job store path**************
 #cd /var/spool/cron
 here list all cron jobs with username also.
@@ -395,7 +401,7 @@ log rotation
 
 tcp-6
 udp-17
-ftp-20-data tranfer and 21 communication bewteen two computer
+ftp- 20-data tranfer and 21 communication bewteen two computer
 ssh-22
 telnet-23 
 smtp-25
@@ -448,6 +454,8 @@ Zombie process which is running without child process .it is identified  with 'z
 4-KERNEL-kernel execute the /sbin/init program.since init 1st program to be executed by kernel, it has the process id(PID) of 1
 5-INIT- It looks the /etc/inittab file to decide the linux run levels
 6-RUN LEVELS-when the Linux booting up in run levels check deafult then services in the up
+###################Getting the Server Model###############
+$ dmidecode -t1 | grep "Product Name" | cut -d':' -f2 | cut -d'-' -f1 | sed 's/^[ \t]//;s/[ \t]$//'
 
 ##########################Linux system information###############################
 lspci------------To check mechine is physical or virtual server 
@@ -1486,10 +1494,10 @@ $ date +%T%p -s "14:04:00PM"
 $ timedatectl set-timezone Asia/Kolkata
 ##set time synchronization using  ntp
 $ timedatectl set-ntp  true
-
+timedatectl set-time 17:00:00
 ##stop ntp synchronization
 $ timedatectl set-ntp  true
-
+date +%T%p -s "17:07:00PM"
 #####Join the Linux machine into active directory of windows server##################
 #Prerequisites
 This article presupposes that you have at least some introductory-level experience with Active Directory, especially around user and computer account management. Aside from that, the following obvious requirements need to be met:

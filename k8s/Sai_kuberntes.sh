@@ -6,6 +6,7 @@ note:
 vs--virtual service 
 n-- namespace
 If not there create RBAC role and rolebinding
+
 #################################Create Role and Rolebinding##################################
 ###ceratintg Role 
 $ vi ns-rcp-ros-role1.yaml
@@ -29,6 +30,7 @@ $ kubectl create -f ns-rcp-ros-role0.yaml
 $ kubectl create rolebinding ns-rcp-ros-rolebinding9 --role=ns-rcp-ros-role1  --user=anup.fukat-a --user=yatin.agrawal-a --user=yatin.agrawal-a --user=Utkarsh.chouhan-a --user=Jayesh.gehlod-a --user=rachit.soni-a --user=mohit.sahu-a --user=Puneet.Joshi-a --user=ajay.sharma-a --namespace=ns-rcp-ros
 
 ##########Create yaml file of role and rolebinding for the user ##############
+
 $ vim role_rolebonding-sai.yaml
 
 apiVersion: rbac.authorization.k8s.io/v1
@@ -53,7 +55,8 @@ roleRef:
   name: full-permission-role
   apiGroup: rbac.authorization.k8s.io
 :wq!
-$ kubectl cerate -f role_rolebonding-sai.yaml
+
+$ kubectl create -f role_rolebonding-sai.yaml
 
 #########################Create role and rolebinding using commandline   ######################################
 $ kubectl create role fm-role12 -n ns-rn-ros-fm --verb=# --resource=rs
@@ -93,6 +96,7 @@ rules:
   resources: ["nodes"]
   verbs: ["get", "list", "watch"]
 :wq!
+
 $ kubectl create -f node-view-role.yaml
 
 ##second add the created role to the rolebinding with username
@@ -161,7 +165,7 @@ docker load -i k8simg.tar.gz
 Adding labels to the namespace
 ##########################################
 kubectl label namespaces ns-rm-rsp proj=rsp   --over-write=true
-kubectl get namespace <namespacensame> --show-labels.
+kubectl get namespace <namespacensame> --show-labels
 for over deleteing label
 kubectl label node <nodename> proj-
 
@@ -191,19 +195,23 @@ if host status is probepending then execute below command
  systemctl status kublet.service
  systemctl restart kublet.service
  then automatically node will come up.
+
 ######################################Taint a node with key=value labels########################8
 kubectl taint nodes uhn7kl5r7rbms001.rmnkiba.local node-role.kubernetes.io/master:NoSchedule
 ##############For removing the taint on node level############################################
 kubectl taint nodes uhn7kls2drbms001.rmnkiba.local node-role.kubernetes.io/master:NoSchedule- 				for untainting
 kubectl taint nodes node1 key1=value1:NoExecute
 kubectl taint nodes node1 key2=value2:NoSchedule
+
 ############################################################Large files to find######################################################
  find /var -type f -size +1G -exec ls -lrth {} \;
+
 ##########################Pod exec timeout issue################################
  robin config list | grep timeout
  If it is not 15mins we can update to 15mins by below commands.
  # robin config update manager client_timeout 15m
 ~# robin config update manager server_timeout 15m
+
 ###########################################################################
  Hi Team,
 Process for Internet access to the pods. 
@@ -214,6 +222,7 @@ Process for Internet access to the pods.
 4. ACI configuraton(Prateek team)
 5. Cluster level ip-pool allocation (Build team)
 6. Pod/helm/robin app level ip pool allocation need to be defined(static or dynamic).
+
 ###############################################################################
  Robin app delete 
  Check sjl logs and delete the pod 
@@ -228,6 +237,7 @@ rbash robin
 ajl <job id>
 to check the present logs
 press SHIFT G
+
 #########save a docker image and execute it on all the worker nodes by using for command###########
  docker image ls | grep k8s-prometheus-adapter-amd64:v0.6.0
  docker image ls | grep k8s-prometheus-adapter-amd
@@ -257,7 +267,8 @@ press SHIFT G
    
    for i in `user-list.txt`; do robin user list $i ; done
    
-   for i in `namespace.txt`; do robin namespace share $i user; done 
+   for i in #`namespace.txt; do robin namespace share $i user; done 
+
 ###################################collecting sa logs###################################################################
 scp -r root@[240b:c0e0:102:55d8:b483:2:1:0]:/tmp/uhn7kls28rbwk003.rmnkiba.local_resource.txt .
  for i in $(seq -w 7 16); do echo ----- $i -----; sar -A -f /var/log/sa/sa$i; done
@@ -314,16 +325,6 @@ docker login klstg-docker.slb-wartifactory-v.stg.rmn.local/rakuten/zadara/csi-dr
   791  31/01/23 18:48:08 docker image pull klstg-docker.slb-wartifactory-v.stg.rmn.local/rakuten/b2b_bss/dep_account_management:2023-01-2426
   792  31/01/23 18:51:13 docker image pull klstg-docker.slb-wartifactory-v.stg.rmn.local/rakuten/b2b_bss/dep_account-management:2023-01-31-2426
 
-https://[240b:c0e0:102:54e9:c06b:2:0:1]/artifactory/Mobility-Solutions-Group/Vendors/Rakuten/Robin_Platform/Early-Releases/5.3.11/5.3.11-217/k8s-images-5.3.11-217.tar.gz"
-user: lab-ro
-pwd: RMI@lab-ro!23$
-
-https://[240b:c0e0:102:54e9:c06b:2:0:1]/ui/login/
-https://confluence.rakuten-it.com/confluence/pages/viewpage.action?pageId=3307859740
-
-
-
-
 ########################
 ansible-playbook -i ../rcp-inventory-kiba/uhn7klr25/inventory_uhn7klr25.yml -i inventory/common/kiba/inventory_staging_common.yml istio-integ.yml  --extra-vars ansible_ssh_user=root --ask-pass
 
@@ -348,22 +349,22 @@ RCA Format #
      Analysis :
      Corrective action :
 
-################################## 
-Robin SRE Onboarding @Kiba Lab - Roles and Responsibilities
-#1. Robin SREs should monitor "robin.sre" queue on LMP/QZEN portal (https://qzen.rmb-ss.jp/qzen/home).
-#2. SREs should take robin related tickets from "robin.sre" queue by themselves and may raise RSD if required.
-#3. SREs should be aligned with the reporter and should update LMP/RSD tickets accordingly. 
-#4. SREs need to work independently.
-#5. Leads/IMs/Rakuten SREs can be contacted in case of any support required.
+##################refernce  url for utilise X509 Client Certificates & RBAC to secure Kubernetes###################
 
 
+https://medium.com/swlh/how-we-effectively-managed-access-to-our-kubernetes-cluster-38821cf24d57
 
--robin metrics start --media SSD --resource-pool default --faultdomain host --replicas 3 --retention-period 7
+#####3What is CrashLoopBackOff Status
+In K8s, CrashLoopBackOff is a common error that you may have encountered when deploying your Pods. A pod in a CrashLoopBackOff state indicates that it is repeatedly crashing and being restarted by the k8s system. 
+This can happen for the following reasons:
 
-
-
-
-
+1)Incorrect Pod Configuration: The pod or container might be configured with wrong parameters or flags leading to crash.
+2)Container image issues: The container image may be missing or corrupted, causing the container to crash as soon as it starts.
+3)Resource constraints: The pod may be requesting more resources (e.g. CPU, memory) than are available on the node, causing the container to crash due to resource starvation.
+4)Incompatible environment: The container may be expecting certain environment variables or configurations that are not present in the pod, causing the container to crash.
+5)Application bugs: The application inside the container may have bugs that cause it to crash.
+6)Issue with Third-Party Services (DNS Error): Sometimes, the CrashLoopBackOff error is caused by an issue with one of the third-party services, such as unable to resolve DNS.
+7)Missing Dependencies: Runtime dependencies (i.e., the var, run, secrets, kubernetes.io, or service account) are missing.
 
 
 

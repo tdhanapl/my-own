@@ -20,7 +20,7 @@ The Unix / Linux standard I/O streams with numbers:
 
 2. Appends  
 “>>” standard output
-“<<” standard input
+"<<" standard input
 
 3. Merge
 “p >& q” Merges output from stream p with stream q
@@ -30,6 +30,7 @@ The Unix / Linux standard I/O streams with numbers:
 $ command > /dev/null 2>&1
 ##Here 2 represents STDERR and 1 represents STDOUT. You can display a message on to STDERR by redirecting STDOUT into STDERR as follows −
 $ echo message 1>&2
+
 
 
 ##Redirections

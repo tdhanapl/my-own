@@ -56,17 +56,19 @@ Now no need to -i inventory because we add in ansible.cfg for inventory.
 
 #############Important modules in Ansible#####################
 1 command: This is used to execute linux commands on the remote managed
-nodes.It is the default module of Ansible
+nodes.It is the default module of Ansible. 
+we can not excute two or more commands at a time in ansible adhoc commands
 
 2 shell: This is used to execute shell scripts on the remote managed nodes
-  it can execute command related to redirection and piping
+it can execute command related to redirection and piping. 
+we can excute two or more commands at a time in ansible adhoc commands
 
 3 user: This is used to perform user administartion on the remote servers
-like creating users,assigning home dirs deleting users etc
+like creating users,assigning home dirs deleting users etc.
 
-4 file: Used for creating files/directories on the managed nodes
+4 file: Used for creating files/directories on the managed nodes.
 
-5 copy: This used to copy files/directories to the managed node
+5 copy: This used to copy files/directories to the managed node.
 
 6 fetch: Used to copy files/directories from managed nodes to controller
 
@@ -181,8 +183,9 @@ $ vim register.yml
       register: up_time
       debug: var=up_time.stdout
 :wq
+
 $ vim register.yml
-4- hosts: all
+  hosts: all
   tasks:
     - name: check the server uptime
       shell: uptime
@@ -201,6 +204,7 @@ $ vim register.yml
         - host_name.stdout
         - ram_info.stdout      
 :wq
+
 #####
 1.Configuration of yum for Docker and Installing Docker
 $ vim docker_repo.yml
@@ -268,7 +272,14 @@ ask_pass: true (if we apply means it wil ask for password whenever you run  the 
 connection: ssh(by default connection type is ssh we can use parimiko or local connection)
 gather_facts: yes(facts that are returned when it started running playbook against the hosts eg:OS)
 
-2.A role directory structure contains directories: defaults, vars, tasks, files, templates, meta, handlers. Each directory must contain a main.yml file which contains relevant content. 
+2. A role directory structure contains directories: 
+1.defaults, 
+2.vars, 
+3.tasks, 
+4.files, 
+5.templates, 
+6. meta, 
+7.handlers. Each directory must contain a main.yml file which contains relevant content. 
 Let’s look little closer to each directory.  This is the major section
 defaults: contains default variables for the role. Variables in default have the lowest priority so they are easy to override.
 vars: contains variables for the role. Variables in vars have higher priority than variables in defaults directory.
@@ -278,7 +289,7 @@ templates: contains file template which supports modifications from the role. We
 meta: contains metadata of role like an author, support platforms, dependencies.
 handlers: contains handlers which can be invoked by “notify” directives and are associated with service.
 
-$ vim apache.ynl
+$ vim apache.yml
 # This is an example playbook to install Apache on Centos
 - hosts: myserver
   remote_user: ansible
@@ -306,7 +317,8 @@ root@localhost:/ansible-ws/roles/haproxy/vars
 [root@localhost haproxy]# cd vars 
 # cat main.yml
 # vars file for haproxy
-software: "haproxy" port: 8080 
+software: "haproxy" 
+port: 8080 
 :wq
 [root@localhost vars]#
 

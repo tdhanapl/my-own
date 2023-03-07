@@ -1,14 +1,11 @@
-#patching ---security updates  and kernerl upadete exculed
-# sucess
-# reboot
 ###################################3
  tasks:
-
  - name: check for updates (yum)
    yum: list=updates update_cache=true
    register: yumoutput
    when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
  - debug: msg={{ yumoutput.stdout | from_json }}
+
 ###########################################
 - name: checking update with shell
             shell: "yum --security check-update"
@@ -17,6 +14,7 @@
 
             - debug:
                  msg: "{{ shell_output.stdout_lines }}"
+
 #########################
 
 tasks:
@@ -49,9 +47,9 @@ To view the contents of yum_packages:
 		
 		
 		
-- name: installing httpd
+- name: Copy using content to httpd configuration file 
 - name: Copy using inline content
   copy:
-    content: '# This file was moved tofile to httpd'
+    content: '# This line file was moved to httpd file  '
     dest: /var/www/html/index.html
 
