@@ -41,7 +41,7 @@ $ top -c
 11) Delay time : It tells delay time between screen updates.
 $ top -d seconds.tenths
 
-###To known the cpu usage percentage only  with top command 
+########To known the cpu usage percentage only  with top command ############
 $ top -b -n 2 -d1 | grep -i "cpu(s)" | tail -n1 | awk '{print $2}'  | awk -F . '{print $1}'
 options:
 	-F fs        --field-separator=fs
@@ -454,6 +454,7 @@ Zombie process which is running without child process .it is identified  with 'z
 4-KERNEL-kernel execute the /sbin/init program.since init 1st program to be executed by kernel, it has the process id(PID) of 1
 5-INIT- It looks the /etc/inittab file to decide the linux run levels
 6-RUN LEVELS-when the Linux booting up in run levels check deafult then services in the up
+
 ###################Getting the Server Model###############
 $ dmidecode -t1 | grep "Product Name" | cut -d':' -f2 | cut -d'-' -f1 | sed 's/^[ \t]//;s/[ \t]$//'
 
@@ -704,7 +705,7 @@ $nmap -A 192.168.1.5
 
 ######################################creation Swap Space########################################
 # Scan new lun on server with below command
-ls /sys/class/scsi_host/ | while read host ; do echo "- - -" > /sys/class/scsi_host/$host/scan ; done
+$ ls /sys/class/scsi_host/ | while read host ; do echo "- - -" > /sys/class/scsi_host/$host/scan ; done
 
 
 #############echo "---" > /sys/class/scsi_host/host{x}/scan

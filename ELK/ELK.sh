@@ -8,12 +8,14 @@
 #https://www.elastic.co/downloads/past-releases/merticbeat-7-9-2
 
 ###############################Installation provide site by meduim.com###################################
-$$$$  https://medium.com/@ammadb/installing-elk-stack-6d524db72d52 (very important)
-$$$ https://medium.com/make-it-heady/what-and-why-ekl-stack-378e6c4765b9   (very important)
-$$$$$  https://medium.com/getting-started-with-the-elk-stack      (very important)
+ https://medium.com/@ammadb/installing-elk-stack-6d524db72d52 (very important)
+https://medium.com/make-it-heady/what-and-why-ekl-stack-378e6c4765b9   (very important)
+https://medium.com/getting-started-with-the-elk-stack      (very important)
 https://nischalnewar.medium.com/elk-stack-the-beginners-guide-cd3e88bb5868
 https://medium.com/@knoldus/fundamentals-of-elk-stack-with-demo-part-1-f131da3c41a7
 https://medium.com/dataseries/elk-stack-architecture-deep-dive-41168732f0e3
+https://souravatta.medium.com/monitor-jenkins-build-logs-using-elk-stack-697e13b78cb1
+https://www.elastic.co/guide/en/elasticsearch/reference/7.3/index-lifecycle-management.html
 #####################################
 https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-elasticsearch-on-centos-7
 ###https://www.tecmint.com/install-elasticsearch-logstash-and-kibana-elk-stack-on-centos-rhel-7/
