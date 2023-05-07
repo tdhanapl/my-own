@@ -1,0 +1,73 @@
+[root@jenkins ~]# ansible-doc -l
+cron  					Manage cron.d and crontab entries
+copy                    Copy files to remote locations
+command                 Execute commands on targets
+debug               	Print statements during execution
+dnf                 	Manages packages with the `dnf' package manager
+docker_compose          Manage multi-container Docker applications with Docker Compose
+docker_config           Manage docker configs
+docker_container        manage docker containers
+docker_container_info   Retrieves facts about docker container
+docker_host_info        Retrieves facts about docker host and lists of objects of the services
+docker_image            Manage docker images
+docker_image_info       Inspect docker images
+docker_login            Log into a Docker registry
+docker_network          Manage Docker networks
+docker_network_info     Retrieves facts about docker network
+docker_node             Manage Docker Swarm node
+docker_node_info        Retrieves facts about docker swarm node from Swarm Manager
+docker_prune            Allows to prune various docker objects
+docker_secret           Manage docker secrets
+docker_stack            docker stack module
+docker_swarm            Manage Swarm cluster
+docker_swarm_info       Retrieves facts about Docker Swarm cluster
+docker_swarm_service    docker swarm service
+docker_swarm_service_info Retrieves information about docker services from a Swarm Manager
+docker_volume           Manage Docker volumes
+docker_volume_info      Retrieve facts about Docker volumes
+dpkg_selections         Dpkg package selection selections
+expect                  Executes a command and responds to prompts
+facter                  Runs the discovery program `facter' on the remote system
+fail                    Fail with custom message
+fetch                   Fetch files from remote nodes
+file                    Manage files and file properties
+filesystem              Makes a filesystem
+find                    Return a list of files based on specific criteria
+firewalld               Manage arbitrary ports/services with firewalld
+get_url                 Downloads files from HTTP, HTTPS, or FTP to node
+group                   Add or remove groups
+group_by                Create Ansible groups based on facts
+iptables                Modify iptables rules
+k8s                     Manage Kubernetes (K8s) objects
+k8s_auth                Authenticate to Kubernetes clusters which require an explicit login step
+k8s_info                Describe Kubernetes (K8s) objects
+k8s_scale               Set a new size for a Deployment, ReplicaSet, Replication Controller, or Job
+k8s_service             Manage Services on Kubernetes
+lvg                     Configure LVM volume groups
+lvol                    Configure LVM logical volumes
+include 				USed to call child playbooks from a parent playbook
+replace 				Used to replace specific portions of the text in a file
+mount                   Control active and configured mount points
+nmcli                   Manage Networking
+package                 Generic OS package manager
+package_facts           package information as facts
+packet_device           Manage a bare metal server in the Packet Host
+service                 Used to start stop or restart services on the managed nodes
+shell                   Execute shell commands on targets
+seboolean               Toggles SELinux booleans
+sefcontext              Manages SELinux file context mapping definitions
+selinux                 Change policy and state of SELinux
+selinux_permissive      Change permissive domain in SELinux policy
+selogin                 Manages linux user to SELinux user mapping
+systemd                 Manage services
+stat					Used to capture detailed info about files/directories on the managed nodes
+sysctl                  Manage entries in sysctl.conf
+telnet                  Executes a low-down and dirty telnet command
+tempfile                Creates temporary files and directories
+ufw                     Manage firewall with UFW
+uri                     Interacts with webservices
+user                    Manage user accounts
+yum                     Manages packages with the `yum' package manager
+yum_repository          Add or remove YUM repositories
+zypper                  Manage packages on SUSE and openSUSE
+zypper_repository       Add and remove Zypper repositories

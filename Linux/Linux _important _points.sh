@@ -15,10 +15,21 @@ OR
 OR 
 service --status-all -----in rhel 6
 
+#####tcp dump log#########
+$ tcpdump -A -ni any port 530
+
+####To check speed test in Linux#####
+##install the speedtest-cli package	
+$ yum install speedtest-cli
+##run the speedtest command 
+$ speedtest-cli
+########To remove the hostname#########
+$ hostnamectl  set-hostname ""
+
 #########To filter particular field  with cut command #######
-cut -d ":" -f1,3 /etc/passwd
-cut -f 1 -d":" /etc/passwd
-cat /etc/passwd  | grep /bin/bash | cut -f1 -d ":"
+$ cut -d ":" -f1,3 /etc/passwd
+$ cut -f 1 -d":" /etc/passwd
+$ cat /etc/passwd  | grep /bin/bash | cut -f1 -d ":"
 
 ########################Top command#######################################
 1)Top Command After Specific repetition:
@@ -57,9 +68,10 @@ option:
   -E, --extended-regexp     PATTERN is an extended regular expression (ERE)
   -v, --invert-match        select non-matching lines(string word will not display)
 
-##################################Fstab configurtion Fromat################################
+###################Fstab configurtion Fromat################################
 LABEL=cloudimg-rootfs   		/        ext4   			defaults,discard       0	 		1
 device name 		    mountpoint    file system type		permission            backup  		fsck(File System Consistency Check)
+
 $ du -hs * | sort -rh | head -10
  
 #################How to Change Runlevels (targets) in Systemd##############################
@@ -105,6 +117,7 @@ p   -> proces id file
 
 ##To check openport ruuning in the server##################
 $netstat -nutlp 
+Note:
 	--n=numeric 
 	--t=tcp
 	--u=udp
@@ -236,7 +249,7 @@ FROM alpine as build
 LABEL owner="dhanapal"
 LABEL Description="creating image with git, maven, java for docker-jenkins-slave"
 RUN  apk update  \
-     && apk   add git  \
+     && apk add git  \
      && apk add wget  \
      && apk add openjdk11  
 
@@ -314,7 +327,7 @@ $ !998
   root:x:0:0:root:/root:/bin/bash
  to
  root:x:0:0:root:/root:/sbin/nologin
-3.Disabl SSH Root Login
+3.Disable SSH Root Login
 $ sudo vim /etc/ssh/sshd_config
   the directive PermitRootLogin:no and set its value to no 
 4. Restrict root Acess to Services Via PAM
@@ -618,7 +631,7 @@ alias custom='/usr/bin/ps -aux'
 [root@server6 ~]# custom
 
 ##########################How to Send a Message to Logged Users in Linux Terminal###############
- echo "server is down from 12-3 pm " | wall
+echo "server is down from 12-3 pm " | wall
  
 ############################################### yum repository redhat 8 version ########################################
 mkdir  /opt/yum-repository/BaseOs  /opt/yum-repository/Appstream
@@ -1316,12 +1329,18 @@ ANSWER:
 $ hostnamectl set-hostname servero.example.com
 $ bash or exec bash ##forcelly update the kernel
 
-#####################Configure Selinux. Set the selinux policy in Enfrocing mode####################
+#####################Configure Selinux ####################
+##Configure Permanent  selinux 
+##Set the selinux policy in Enfrocing mode
 $ vim /etc/sysconfig/selinux 
 SELINUX=Enforcing
 :wq
-#sestatus
-#setenforce 1
+Note:
+After Editing  selinux configuration we  have to reboot machine.
+	or 
+##Configure temporary selinux	
+$ sestatus
+$ setenforce 1
 
 #######################################LVM_Restore####################################
 ##scan the new hard disk
@@ -1338,7 +1357,7 @@ sr0            11:0    1 1024M  0 rom
 ##create lvm file system
  $ vgcreate rhel /dev/sdb1
 $ vgcreate vg1 /dev/sdb1
-##assgin full vg to logical voulme 
+##assgin full vg to logical voulme  Dh@n@406
 $lvcreate -l +100%FREE -n lv1 vg1
 ##assgin certain size from volume to logical voulme
 $ lvcrate -L 1G -n lv1 vg1
@@ -1471,6 +1490,23 @@ A file with the attribute ‘d‘, will no more candidate for backup when the du
 When a file has ‘u‘ attribute is deleted, its data are saved. This enables the user to ask for its undeletion.
 
 ##############################SUSE Enterprise Linux  patching##################################
+##Summery of all commands for patching
+zypper command	 		Description										Example(s)
+refresh, ref	 		Refresh all repositories.						zypper ref
+refresh-services,refs	Refresh all services.	    					zypper refs
+list-updates, lu		List available updates.	    					zypper lu
+list-patches, lp	    List needed patches.	    					zypper lp
+update, up				Update installed packages with newer versions.	zypper up
+ps	List running processes which might still use files and libraries deleted by recent upgrades.	zypper ps -s
+
+###refresh all repositories
+$ zypper refresh
+##list available updates on SUSE Enterprise Linux server
+$ zypper lp
+$ zypper list-updates
+##update installed packages with newer versions
+$ sudo zypper update
+
 #zypper lu ---list out all patched 
 #zypper 1p ---category security -----list out all patched
 #ZYpper lu -- list out all updates
@@ -1478,10 +1514,12 @@ When a file has ‘u‘ attribute is deleted, its data are saved. This enables t
 #zypper patch ---it will patch all
 #zypper patch --category security
 #zypper 1p-a-cve-CVE2020-14621 ---see security cve
-Open a root shell.
->Run "zypper ref -a" to refresh all services and repositories. 
-> Run "zypper update" to install package management updates.
+
+##Open a root shell.
+>Run "zypper ref " to refresh all repositories. 
+>Run "zypper update" to install package management updates.
 >Reboot the server
+
 http://192.168.166.240/sles15/packi
 01246165722
 CRN no 328538997
@@ -1489,16 +1527,14 @@ accno. 2913388890
 sudo SUSEConnect -r REGISTRATION_CODE -e EMAIL _ADDRESS
 
 #####To set Time and date ##########
-$ timedatectl set-time 14:12:00
-$ date +%T%p -s "14:04:00PM"
 ##set timezone
 $ timedatectl set-timezone Asia/Kolkata
 ##set time synchronization using  ntp
 $ timedatectl set-ntp  true
 timedatectl set-time 17:00:00
 ##stop ntp synchronization
-$ timedatectl set-ntp  true
-date +%T%p -s "17:07:00PM"
+$ timedatectl set-ntp  false
+
 #####Join the Linux machine into active directory of windows server##################
 #Prerequisites
 This article presupposes that you have at least some introductory-level experience with Active Directory, especially around user and computer account management. Aside from that, the following obvious requirements need to be met:
@@ -1652,5 +1688,15 @@ This helps the system to run faster because disk information is already in memor
 * What is SSHFS ?
 * What is Kerberos ?
 * How to secure NFS with Kerberos ?
+###########Promethus##############
+https://computingforgeeks.com/monitor-linux-server-with-prometheus-grafana/
+https://lightsail.aws.amazon.com/ls/docs/en_us/articles/amazon-lightsail-install-prometheus
+
+##############100days devops ##################
+https://github.com/100daysofdevops
 ------------------
 https://hc.apache.org/httpcomponents-client-4.5.x/current/httpclient/apidocs/org/apache/http/conn/DnsResolver.html
+
+###prometheus and grafana###########
+https://computingforgeeks.com/monitor-linux-server-with-prometheus-grafana/
+https://lightsail.aws.amazon.com/ls/docs/en_us/articles/amazon-lightsail-install-prometheus

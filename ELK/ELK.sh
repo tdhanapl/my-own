@@ -128,6 +128,7 @@ network.host: 0.0.0.0 #or 192.168.1.50  ###uncomment mention  elasticsearch serv
 discovery.type: single-node
 
 :wq
+
 $ systemctl daemon-reload
 $ systemctl enable elasticsearch.service
 $ systemctl start elasticsearch.service

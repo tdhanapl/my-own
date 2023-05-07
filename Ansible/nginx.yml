@@ -1,0 +1,28 @@
+- name: install nginx
+  hosts: all 
+  become: true
+  tasks: 
+    - name: install nginx package
+      apt:
+        name: nginx
+        state: present
+
+    - name: copy application.conf file 
+      copy:
+        src: /project/nginx/application.conf
+        dest: /etc/nginx/sites-enbaled/application.conf
+
+    - name: Extract the file
+      unarchive: 
+        src: /project/www.tar.gz
+        dest: /var/www/html
+    - name: start the ngnix service 
+      service:
+        name: nginx
+        state: started
+        enabled: true
+    
+    - name: test the url
+      url: http://localhost/
+      
+          

@@ -3,6 +3,7 @@ To follow this tutorial you will need:
 1. The Terraform CLI (1.2.0+) installed.
 2. The AWS CLI installed.
 3. AWS account and associated credentials that allow you to create resources.
+
 ##good content  url
 https://medium.com/appgambit/provisioning-a-jenkins-server-on-aws-with-terraform-bf04a6a6ef7f
 https://medium.com/@awsyadav/automating-ecs-ec2-type-deployments-with-terraform-569863c60e69
@@ -91,7 +92,6 @@ instance_type = var.ami_id#varibale type string
 variable "instance_type" {
   description = "ec2 instance_type"
   type        = list
-  #default    = t2.micro
   default     = ["t2.micro","t2.small","t2.medium"]
 }
 #call list type varible in main.tf file
@@ -103,9 +103,10 @@ variable "ami_image_id" {
   default     = {
     redhat = "ami-06a0b4e3b7eb7a300"
     amazon = "ami-079b5e5b3971bd10d"
-	  ubuntu = "ami-068257025f72f470d"
+	ubuntu = "ami-068257025f72f470d"
   }
 }
+
 #call map type varible  in main.tf file
 instance_type = var.ami_image_id.redhat #varibale type = map
 
@@ -118,7 +119,7 @@ $ sudo dnf install graphviz.x86_64
 #Uninstall / Remove graphviz.x86_64 package
 Please follow the step by step instructions below to uninstall graphviz.x86_64 package:
 $ sudo dnf remove graphviz.x86_64
-sudo dnf autoremove
+$ sudo dnf autoremove
 
 ##To create the terraform plan graphviz
 $ terraform graph -Tsvg > graph.svg
@@ -161,22 +162,44 @@ options:-
                    converted to a string, will print the raw
                    string directly, rather than a human-oriented
                    representation of the value.
+
 $ terraform output
-##print specific  output with
+
+##print specific  resource output with below command
 $ terraform output <name>
 $ terraform output vpc_idl
 
-##Update the state to match remote systems
+##Update the terraform state file  to match remote systems
 $ terraform  refresh
 
-##update the new change to terraform code
+##update the new change like delete or add from console level from remote  to terraform code file.
 $ terraform apply -refresh-only
 
 ## Show the current state or a saved plan
- Inspect the current state using terraform show.
+Inspect the current state using terraform show.
 $ terraform show
+
 ## To chheck Workspace  management
 $ terraform workspace list
+
+## To check the current terraform state file of source create in aws 
+$ terraform state list
+aws_iam_user.user_name[0]
+aws_iam_user.user_name[1]
+aws_iam_user.user_name[2]
+aws_vpc.VPC-A
+
+## To destroy the specific target soruce in terraform state file 
+$ terraform destroy -target aws_iam_user.user_name[2]
+
+## How to do changes in the configuration of already created resources using terraform 
+ For that we can use one command called terraform import 
+ $ terraform import <resource_type>.<resource_name> [unique_id_from_aws] 
+##If you lose the terraform state file 
+The process of recovering a deleted state file is never easy. You should import all the resources with terraform import
+
+##If you have 20 resource  in that we want to delete particular resource
+$ terraform destroy -target aws_iam_user.user_name[2]
 
 ##Key pair generating in terraform coded
 #First we need generate the public key using ssh-keygen
@@ -207,3 +230,9 @@ $ terraform login
 $ git clone https://github.com/hashicorp/tfc-getting-started.git
 $ cd tfc-getting-started
 $ scripts/setup.sh
+
+####Terraform questions##########
+1. when you excute the terraform init it getting error ""plugin out-of-date, provider unable to sync?
+Answer: 
+terraform init -upgrade  it update new-releases
+2. what is taint resoruces in terraform

@@ -8,8 +8,8 @@
    - name: copy the content into file
      copy:
        content: "{{ my_content }}"       
-       dest: \tmp\var_file1.txt
-    
+       dest: \tmp\content1
+ 
    - name: creating file with content 
      copy:
       content: | #pipe is used for add more line content at time

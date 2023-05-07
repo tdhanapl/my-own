@@ -126,11 +126,18 @@ $ ansible webserver -m shell -a "rpm -aq |grep httpd"
 $ ansible webserver -m yum -a "name=httpd state=latest or present" -k
 	-k-->promot for password
 $ ansible webserver -m yum -a "name=httpd state=latest or present" -b
-	-k-->without promot for password
+	-b-->without promot for password
 $ ansible webserver -m cpoy -a "src=/root/index.html dest=/var/www/html/"
 
 ##Create a file on remote node with content
 $ ansible webserver -m cpoy -a "content='create file with content for index.html\n'       dest=/var/www/html/index.html"
+##Ansible stdout Formatting
+https://stackoverflow.com/questions/50009505/ansible-stdout-formatting
+##add in configuration 
+$ vim /etc/ansible/ansible.cfg
+stdout_callback = unixy
+bin_ansible_callbacks = True
+:wq
 
 ##varible ansible playbook
 Varible list are represent with "var" key value.

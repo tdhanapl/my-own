@@ -1,0 +1,28 @@
+- name: Add multiple lines to file
+  hosts: localhost
+  tasks:
+    - name: Add lines to file
+      lineinfile:
+        dest: /root/newfile.txt
+        line: "{{ item }}"
+      with_items:
+        - "line 1"
+        - "line 2"
+        - "line 3"
+
+
+- name: Add multiple lines to file
+  hosts: localhost
+  tasks:
+    - name: Upgrade all packages, excluding kernel  packages
+      yum:
+        name: '*'
+        state: latest
+        exclude: kernel*, grub2*
+
+     - name: Get installed packages
+       yum:  list=installed
+       register: yum_packages
+       changed_when: False 
+     - debug:   #To view the contents of yum_packages:
+       var: yum_packages
