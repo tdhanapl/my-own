@@ -1,4 +1,4 @@
-- name: Create the "{{ vg_name }}" Volume group.
+- name: Create new the Pyhsical volume and new  Volume group.
   lvg:
     pvs: "/dev/{{ raw_disks }}"
     vg: "{{ vg_name }}"
@@ -7,7 +7,7 @@
     force: no
     state: present
  
-- name: Create the "{{ lv_name }}" Logical Volume.
+- name: Create the "{{ lv_name }}" Logical Volume with exiting physical volume and volume group.
   lvol:
     vg: "{{ vg_name }}"
     lv: "{{ lv_name }}"

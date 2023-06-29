@@ -155,7 +155,8 @@ $ sed 'x,yd' filename.txt
 Example:
 $ sed '3,6d' filename.txt
 4. To Delete from nth to last line
-
+###Enabling binary repos in redhat-rhui.repo
+$ sed -i 's/enabled=0/enabled=1/' /etc/yum.repos.d/redhat-rhui-client-config.repo
 Syntax:
 $ sed 'nth,$d' filename.txt
 Example:

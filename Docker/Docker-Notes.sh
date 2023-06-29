@@ -108,7 +108,7 @@ $ docker import 301851ffcd -o  my_centos_git_tree.tar
 $ docker image import <base_image_name.tar> <store_in_localrepository>
 ##create docker image from running container
 $ docker container commit --author "dhana" -m "this my first commit" <conatiner_id>  <base_image_name>
-$ docker container commit --author "dhana" -m "this my first test commit" 301851ffcd my_test_centos
+$ docker container commit --author "dhana" -m "this my first test commit" 301851ffcd   my_test_centos
 ##Tag the docker image name for push to docker-hub.
 $ docker image tag my_test_centos dhanapal406/centos-7.5
 ##push the image to docker hub
@@ -121,6 +121,7 @@ $ docker commit  2b62    production:webserver
 $ docker save production:webserver > /tmp/production.tar
          OR
 $ docker save -o /tmp/production.tar production:webserver
+
 ##To unzip the image from tar(docker load command)
 $ docker load -i /tmp/production.tar
 $ docker images
@@ -129,7 +130,7 @@ Dockerfile is used to create docker image
 ##In Dockerfile elements
 1.FROM--It sets the base image for sub-squenent instruction
 2.LABEL--It adds the metadata
-3.ENV--It sets the environment variable.
+3.ENV--It is used to sets the environment variable.
 4.RUN--It will execute any command where docker images are created.
 5.WORKDIR--It set the workdir directory or WORKDIR instruction is used to set the working directory for all the subsequent Dockerfile instructions
 6.USER--It set username or user-id
@@ -158,6 +159,7 @@ EXPOSE 80
 CMD ["-D", "FOREGROUND"]
 ENTRYPOINT ["/usr/sbin/httpd"]
 :wq
+
 ##To reduce the file size of Dockerfile while creation
 2.$ vim Dockerfile
 FROM centos:latest
@@ -179,7 +181,7 @@ ENTRYPOINT ["/usr/sbin/httpd"]
 :wq
 Note:--The major difference between both Dockerfile we not repeting the run command in 2nd Dockerfile with the 2nd Dockerfile size will be reduce and less layer of docker image will created.
 ###To Build the Dockerfile has docker image
-$ docker build --tag <tag_name:version>
+$ docker build --tag <tag_name:version> .
    -t--tag_name
 ## Change tag name of docker image
 $ docker image tag  <old_image_name> <new_image_name>
@@ -199,16 +201,17 @@ $docker run -itd -p 3306:3306 -e 	MYSQL_ROOT_PASSWORD='Password' -v mysql-data:/
 ##To known the docker volume  details 
 $ docker volume inspect <volume_name>
 $ docker volume inspect wordpress-data
+
 ##Types of docker volume
-1.$Host volumes
+1.Host volumes
 A host volume can be accessed from within a Docker container and is stored on the host, as per the name. To create a host volume, run:
 bind mount: note that the host path should start with ‘/’. Use $(pwd) for convenience.
 EX:-
 $ docker run -v </path/on/host_server:/path/in/container>
-2.$unnamed volume
+2.unnamed volume
 creates a folder in the host with an arbitrary name
 $ docker container run -v /container-path image-name  
-3.$ named volume
+3. named volume
 should not start with ‘/’ as this is reserved for bind mount. ‘volume-name’ is not a full path here. the command will cause a folder to be created with path “/var/lib/docker/volume-name” in the host.
 $ docker container run -v  <volume-name:container-path image-name> 
 ########################################
@@ -270,6 +273,19 @@ RUN [“npm”, “start”]
 :wq
 ##build the image
  $docker build  -t  dhana:v1 -f Dockerfile-1 .
+
+###Scan the docker image  for vulnerability test
+##url for references
+#https://aquasecurity.github.io/trivy/v0.27.1/docs/vulnerability/examples/report/
+
+$ trivy image  <docker image>
+
+##HTML format output
+$ trivy image --format template --template "@contrib/html.tpl" -o report.html golang:1.12-alpine
+
+##The following example shows use of default HTML template when Trivy is installed using rpm.
+$ trivy image --format template --template "@/usr/local/share/trivy/templates/html.tpl" -o report.html golang:1.12-alpine
+
 ##################docker shared voulme################
 sharable Docker volumes
 ============================
@@ -323,7 +339,7 @@ used by c1 and c3 should use the volume used by c2
    docker rm -f c1 c2 c3
 
 14 Check if the files are still present
-   cd "source_path_from"step12
+   cd "source_path_from" step12
    
    
 ================

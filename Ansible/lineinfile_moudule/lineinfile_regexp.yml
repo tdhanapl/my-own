@@ -1,0 +1,11 @@
+- name: using lineinfile module
+  hosts: localhost
+  tasks:
+    - name: add line in the file 
+      lineinfile:
+        path: /tmp/test.conf
+        line: 'new line with regexp : \1'
+        regexp: "^test ([0-2])$"  #matcing this line and replacling the words using line
+        backrefs: yes
+        state: present
+        create: true  # Note if file  is not exists  means then create a file and add the lines.

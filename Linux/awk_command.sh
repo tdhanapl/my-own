@@ -76,13 +76,14 @@ In the above example $1 represents Name and $NF represents Salary. We can get th
 	-F fs        --field-separator=fs
 Ex:-
 $ awk -F: '{ print $1 }' /etc/passwd
-Another use of NR built-in variables (Display Line From 3 to 6)  
-$ awk 'NR==3, NR==6 {print NR,$0}' employee.txt 
+
+##Display Line From 3 to 6 using NR bulit  
+$ awk 'NR==3, NR==6 {print $1, $NF}' employee.txt 
 Output:  
-3 varun manager sales 50000
-4 amit manager account 47000
-5 tarun peon sales 15000
-6 deepak clerk sales 23000 
+3 varun  50000
+4 amit   47000
+5 tarun  15000
+6 deepak 23000 
 
 #For the given text file:  
 $cat > geeksforgeeks.txt

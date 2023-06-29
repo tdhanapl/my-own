@@ -30,9 +30,10 @@
       lineinfile:
         dest: /etc/sudoers
         state: present
-        
         line: "{{ username }} ALL=(ALL)  ALL"
         validate: 'visudo -cf %s'
         insertafter: "^root"
+
+    - name: 
 
 ## this yaml file working for creating user and adding in sudoers file 100%

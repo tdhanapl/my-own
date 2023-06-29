@@ -1,10 +1,8 @@
 #####################For RBAC permission of kubernetes########################
 ##For checking user is having resource RBAC permission or not
-$ kubectl auth can-i create pod --as rachit.soni-a -n  ns-rcp-ros
-note:
+$ kubectl auth can-i create pod --as rachit.soni-a -n  ns-rcp-ros	
+Note:
 If not there create RBAC role and rolebinding
-##vs--virtual service 
-##n-- namespace
 
 #################Create Role and Rolebinding##################################
 ###creatintg Role 
@@ -151,7 +149,7 @@ $ kubectl taint nodes node1 key1=value1:NoExecute
 $ kubectl taint nodes node1 key2=value2:NoSchedule
 
 ############################################################Large files to find######################################################
- find /var -type f -size +1G -exec ls -lrth {} \;
+$ find /var -type f -size +1G -exec ls -lrth {} \;
 
 #########save a docker image and execute it on all the worker nodes by using for command###########
 $ docker image ls | grep k8s-prometheus-adapter-amd64:v0.6.0
@@ -183,7 +181,27 @@ $ for i in #`namespace.txt; do robin namespace share $i user; done
 #################password for viewing ansible vault to check###########################################
 $ ansible-vault view vault_pass_cis_uhn7kl5r1.ini --vault-password-file ~/.vault_password
 $ ansible-vault encrypt vault_pass_cis_uhn7klr27.ini --vault-password-file ~/.vault_password
- 
+
+###############Get the cluster  activity through api endpoint using curl #####
+$ kubectl get endpoints -n default  |grep kubernetes
+$ kubectl get endpoints -n default --no-headers |awk '{print $2}'
+##add this endpoint as variable 
+$ APISEVER=$(kubectl get endpoints -n deafult  --no-headers |awk '{print $2}')
+##get Token 
+$ kubectl get scret 
+$ Token=$(kubectl get secrets machine-learing-token-rvzhf \
+-o jsonpath='{.data/token}' |base64 -d)
+
+## work with the api server
+$ curl -X GET \ 
+https://$APISERVER/api \
+--header "authorization: Bearer $Token" \
+--insecure
+$ curl -X GET \
+https://$APISERVER/api/v1/namespaces/fraud/pods \
+--header "authorization: Bearer $Token" \
+--insecure
+
 ###################kls29 webhook issue#####################################################
 $ kubectl api-resources | grep -i webhook 
 $ kubectl get validatingwebhookconfigurations
@@ -227,5 +245,6 @@ This can happen for the following reasons:
 5)Application bugs: The application inside the container may have bugs that cause it to crash.
 6)Issue with Third-Party Services (DNS Error): Sometimes, the CrashLoopBackOff error is caused by an issue with one of the third-party services, such as unable to resolve DNS.
 7)Missing Dependencies: Runtime dependencies (i.e., the var, run, secrets, kubernetes.io, or service account) are missing.
+
 
 

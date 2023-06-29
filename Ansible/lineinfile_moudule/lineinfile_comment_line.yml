@@ -1,0 +1,12 @@
+- name: using lineinfile module
+  hosts: localhost
+  tasks:
+    - name: add line in the file 
+      lineinfile:
+        path: /etc/sudoers
+        line: '#dhana ALL=(ALL)         ALL'
+        regexp: '^dhana'  #matcing this line and replacling the words using line
+        #line: '#\1'
+        #regexp: '^(dhana ALL=(ALL)         ALL)'
+        #backrefs: yes
+        state: present

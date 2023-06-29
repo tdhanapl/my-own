@@ -3,13 +3,38 @@
 ->By using ansible we can automated the configuration management, application deployment, automatic backup, Provising orchestration(squennce of task)
 -> Ansible is agent less.
 ->ansible is push mechanism
+->ansible excute the task on managed nodes parallel but you can make it as serial by keeping forks=1 in ansible.cfg
+->anible by deafult will excute a task on 5 servers parallel. If we want run tasks parallel on more servers change forks=20 in ansible.cfg 
+
+#####moudle#### 
+moudle is predefine program that program able to excute the task on managed nodes.
+###task##
+task is nothing but provide the modules.
+##play##
+collection of task running on one or more servers
+##playbook###
+colection of the plays are nothing but playbook 
+
 #https://prithvirajsingh1604.medium.com/w-4c1c31cd5f81
 #https://www.softwaretestinghelp.com/ansible-roles-jenkins-integration-ec2-modules/ for ansible role
+
 #####Ansible use case
 1.patching
 2.install packages
 3.managing services
 ##what is tasks
+
+##########Ansible dynamic inventory#######
+##Required package for dynamic inentory 
+$ sudo yum install ansible-core python-pip python-devel 
+## Now we need install boto and boto3
+$ pip install boto
+
+$ pip install boto3 
+## install aws modules 
+$ ansible-galaxy collection install amazon.aws
+
+
 
 ##To disbale the hostkeychecking
 1.method1(temporary):
@@ -43,7 +68,7 @@ $ ansible-playbook -i inventory -m ping ---->for playbook
 $ ansible webserver -i inventory -m service -a "name=httpd stated=restarted"
 Note:-
 -i inventory is we add own configuration inventory that why we use ("-i inventory")
-
+ 
 ##change default location of inventory
 $ vim ansible.cfg
 [deafult]
@@ -54,7 +79,18 @@ $ ansible webserver     -m service -a "name=httpd stated=restarted"
 Note:-
 Now no need to -i inventory because we add in ansible.cfg for inventory.
 
-#############Important modules in Ansible#####################
+###search for inventory file looked in the following order
+1. <current dirctory>/hosts
+2. /home/user/.ansible/hosts
+3. /etc/ansible/hosts --default inventory file location 
+
+##search for ansible.cfg file looked in the following order
+1. ANSIBLE_CONFIG --environment variable 
+2. ./ansible.cfg  --from current directory 
+3. ~/.ansible.cfg --present in the home directory 
+4. /et/ansible/ansible.cfg --default location
+
+#############Important modules in Ansible##################### 
 1 command: This is used to execute linux commands on the remote managed
 nodes.It is the default module of Ansible. 
 we can not excute two or more commands at a time in ansible adhoc commands
@@ -103,7 +139,7 @@ like creating users,assigning home dirs deleting users etc.
 20 docker_swarm: Used to setup of docker swarm architecture
 
 ######To check the list of hosts server in inventory file##########
-$ ansible all --lists-hosts
+$ ansible all --list-hosts
 
 ##To check all modules
 $ ansible-doc -l | grep less
@@ -131,6 +167,11 @@ $ ansible webserver -m cpoy -a "src=/root/index.html dest=/var/www/html/"
 
 ##Create a file on remote node with content
 $ ansible webserver -m cpoy -a "content='create file with content for index.html\n'       dest=/var/www/html/index.html"
+
+## Privilege Escalation & Remote user
+$ ansible web -m user -a 'name=test' -b --become-user=dhanapal -K
+Note:
+If you given --become-usr=dhanapal means when ypu run playbook it will run that palybook with given "--become-user=dhanapal"
 ##Ansible stdout Formatting
 https://stackoverflow.com/questions/50009505/ansible-stdout-formatting
 ##add in configuration 
@@ -138,7 +179,26 @@ $ vim /etc/ansible/ansible.cfg
 stdout_callback = unixy
 bin_ansible_callbacks = True
 :wq
+#######
+########Let’s go through playbook step by step############
+This defined our hosts section
+hosts: which hosts I want to run this playbook(generally we run it on groups defined under /etc/ansible/hosts)
+remote_user: remote user we going to operate(i.e ansible user which is a privileged user)
+become: yes(means root user, as the command we want to execute on remote host need root privilege. it excute the task as root user)
+become_method: sudo(it’s optional and default)
+ask_pass: true (if we apply means it wil ask for password whenever you run  the ansible playbook it will prompt for password)
+connection: ssh(by default connection type is ssh we can use parimiko or local connection)
+gather_facts: yes(facts that are returned when it started running playbook against the hosts eg:OS)
+###using debug in playbook#######
+debug: 
+  1. msg "{{ }}" -- jinga template 
+  2. var
+  3. verbosity
 
+##Call the variable from the file to the playbook 
+var_files:
+  - ./variable.yml ##give the path variable file 
+`
 ##varible ansible playbook
 Varible list are represent with "var" key value.
 varible always sequence or mapps.
@@ -148,13 +208,42 @@ $vim variable.yml
     my_content: "this add from playbook"
   tasks:  
    - name: This the copy from content of varible
-      copy:
-        src: /var/www/html/
-      	content: "{{ my_content }}"
+     copy:
+       src: /var/www/html/
+       content: "{{ my_content }}"
+     tags: copy_file 
 :wq
-
 ##To check the ansible playbook syntax error
 $ ansible-playbook variable.yml --syntax-check
+###To check the all tags in the playbook 
+$ ansible-playbook variable.yml --list-tags
+##Run using particular tag 
+$ ansible-palybook variable.yml --tags copy-file
+###ansible vault ####
+ansible vault is feature that allows you to keep senstive data suh as password or keys in encrypt file rather than a plain text in playbooks
+note:
+--ask-vault-pass: --> to provide a password while running playbook 
+--vault-password-file: --> to pass vault passwor through file 
+
+###To encrypte the playbook using ansible vault 
+$ ansible-valut encrypt  variable.yml
+###To decrypte the playbook using ansible vault 
+$ ansible-valut decrypt  variable.yml 
+###To view encrypt file 
+$ ansible-vault view variable.yml
+###To edit encrypt file 
+$ ansible-vault view variable.yml
+###To run  the encrypt playbook file using --ask-valut-pass parameter
+$ ansible-palybook variable.yml --ask-vault-pass
+###run encrypt vault palybook withou asking password
+##first create file and store the password in that file 
+$ vim ansible_vault_password 
+Redhat@16
+:wq
+$ ansible-palybook variable.yml --vault-password-file <mention the your vaulgt password file path>
+$ ansible-palybook variable.yml --vault-password-file /etc/ansible/ansible_vault_password 
+##To change vault-password 
+$ ansible-vault rekey variable.yml
 
 ##To create more directory with variable
 $vim multiple-directory.yml
@@ -163,11 +252,13 @@ $vim multiple-directory.yml
     - name: This the copy from content of varible
       command: mkdir "/opt/{{ item}}"
 	    with_item:
+       #or 
+      #loop
 	      - folder1
         - folder2
         - folder3
 :wq
-
+note:  with_item deprecated in latest version. we can loop inthe place "with_item"
 ##To create a file
 $ vim file.yml
 - hosts: all
@@ -264,22 +355,11 @@ $ vim nginx.yml
   notify: Restart Nginx
 :wq
 
-## Privilege Escalation & Remote user
-$ ansible web -m user -a 'name=test' -b --become-user=dhanapal -K
-Note:
-If you given --become-usr=dhanapal means when ypu run playbook it will run that palybook with given "--become-user=dhanapal"
 
-##Let’s go through playbook step by step
-1.This defined our hosts section
-hosts: which hosts I want to run this playbook(generally we run it on groups defined under /etc/ansible/hosts)
-remote_user: remote user we going to operate(i.e ansible user which is a privileged user)
-become: yes(means root user, as the command we want to execute on remote host need root privilege. it excute the task as root user)
-become_method: sudo(it’s optional and default)
-ask_pass: true (if we apply means it wil ask for password whenever you run  the ansible playbook it will prompt for password)
-connection: ssh(by default connection type is ssh we can use parimiko or local connection)
-gather_facts: yes(facts that are returned when it started running playbook against the hosts eg:OS)
 
-2. A role directory structure contains directories: 
+
+###Anisble Role########
+A role directory structure contains directories: 
 1.defaults, 
 2.vars, 
 3.tasks, 

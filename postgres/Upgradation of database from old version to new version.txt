@@ -1,0 +1,17 @@
+###Upgradation of database from old version(12.x) to new version(14.x) ###
+step1:
+We have already existing old version postgres database with data 
+step2:
+Now install our required  new version  postgres on same server.
+step3:
+Stop the both the version postgres service 
+step4:
+Check the compability for upgrade from old version to new version using below command
+$ /usr/pgsql-14/bin/pg_upgrade -d  /var/lib/pgsql1/12/data/ -D /var/lib/pgsql/14/data/ -b /usr/local/pgsql/bin/ -B /usr/pgsql-14/bin/  -c
+Note:
+-c for checking 
+Here it will show ok status for upgradae
+step5:
+Now upgrade from old version to new version  using below command 
+/usr/pgsql-14/bin/pg_upgrade -d  /var/lib/pgsql1/12/data/ -D /var/lib/pgsql/14/data/ -b /usr/local/pgsql/bin/ -B /usr/pgsql-14/bin/  
+

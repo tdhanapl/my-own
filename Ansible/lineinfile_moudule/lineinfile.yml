@@ -1,0 +1,11 @@
+- name: using lineinfile module
+  hosts: localhost
+  tasks:
+    - name: add line in the file 
+      lineinfile:
+        path: /tmp/test.conf
+        line: |
+              the is first line
+              the is second line
+        state: present
+        create: true  # Note if file  is not exists  means then create a file and add the lines.

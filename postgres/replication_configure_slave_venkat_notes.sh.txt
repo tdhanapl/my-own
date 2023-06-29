@@ -1,0 +1,15 @@
+## on master server side
+
+listen_addresses = '*'  
+port = 5432                           
+max_connections = 2000
+wal_level = 'hot_standby'
+archive_mode = on               
+archive_command = 'cp %p /var/lib/pgsql/archivedir/%f'
+max_wal_senders = 3  
+
+wal_keep_segments = 0  
+*********************************************************
+## on slave side take the base backup
+
+nohup /usr/edb/as12/bin/pg_basebackup -h 10.10.19.65 -U edbreplication -p 5444 -D /pgsql_data/data -c fast -X stream -R &

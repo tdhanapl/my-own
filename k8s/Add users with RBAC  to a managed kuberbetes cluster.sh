@@ -1,4 +1,4 @@
-######Add users to a managed kuberbetes cluster###
+######Add users with RBAC to a managed kuberbetes cluster###
 ##Generate private key
 $ openssl genrsa -out vikas.key 2048
 ##Generate the csr
@@ -59,4 +59,25 @@ J1rocrg2Bhr0uGrHeIVkHho1tsYTdNZUq8EyywR1xp2KUwqui6wRr3EbGOo7y3A1
 +6hHiLbwNu/MYr1D8XnI6NEnRkBE2zS6fvojgdXZEe1B5arciUsh20Pq6Fj41SaG
 hIsERdrCG5Mf0xkwhytmTJJS5Y1q4ZDmzz42US5Km7I1KSx0x0/Bydf5UhmxiUg=
 -----END CERTIFICATE REQUEST-----
+
+##set credentials for user in cluster 
+$ kubectl config set-credentials vikas --client-key=vikas.key --client-certificate=vikas.cert --embed-certs=true
+
+##create context map to the cluster
+$ kubectl config set-context vikas --cluster=do-ams3-vikas-personal --user=vikas
+Note:
+do-ams3-vikas-personal--->it is cluster name
+
+##To check the current context
+$ kubectl config get-contexts
+##To swicth from one cotext to another context
+$ kubectl config use-context vikas
+
+##Now create a role 
+$ kubectl role podrole --resource pods --verb get,list,create
+
+##Add the role to rolebinding 
+$ kubectl rolebinding vikaspodrole --role podrole  --user vikas
+##now login with vikas or switch to do-ams3-vikas-personal context
+$ kubectl get pods
 

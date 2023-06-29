@@ -2,7 +2,7 @@
   hosts: all
   become: true
   tasks:
-    - name: create partition
+    - name: 
       community.general.parted:
         device: /dev/sdb
         number: 1

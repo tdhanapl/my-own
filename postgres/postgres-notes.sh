@@ -6,6 +6,31 @@ Relationl database  means relation between one or more tables
 store data in tables and it contain columns and rows. 
 ## what is postgres ?
 PostgreSQL is powerful, open source object-relational database. object-relational database management system
+###type of queries in sql
+1. DDL(Data Definition Language)
+#Data Definition Language(DDL) helps you to define the database structure or schema.
+create
+alter 
+drop
+truncate 
+rename
+2. DML(Data Manipulation Language)
+#Data Manipulation Language (DML) allows you to modify the database instance by inserting, modifying, and deleting its data.
+insert
+update 
+delete
+3. DCL(Data Control Language)
+#DCL (Data Control Language) includes commands like GRANT and REVOKE, which are useful to give “rights & permissions.”
+grant
+revoke
+4. TCL(Transaction Control Language)
+#Transaction control language or TCL commands deal with the transaction within the database.
+commit
+rollback
+saveprint
+5. DQL(Data Query Language)
+#Data Query Language (DQL) is used to fetch the data from the database.
+select
 
 ## Connect to the postgres database 
 $ psql
@@ -47,6 +72,7 @@ postgres=# show ident_file;
 --------------------------------------
  /var/lib/pgsql/14/data/pg_ident.conf
 (1 row)
+
 ##List of user roles 
 test=# \du
                                    List of roles
@@ -65,6 +91,8 @@ postgres=# show server_version;
 ----------------------------------------------------------------------------------------------------------
  PostgreSQL 14.7 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 11.3.1 20220421 (Red Hat 11.3.1-2), 64-bit
 (1 row)
+
+
 ### Check archive status
 postgres=# select name,setting from pg_settings where name like 'archive%';
           name           |  setting
@@ -74,6 +102,29 @@ postgres=# select name,setting from pg_settings where name like 'archive%';
  archive_mode            | off
  archive_timeout         | 0
 (4 rows)
+##To check replication status between master and salve
+postgres=# select * from pg_stat_replication;
+-[ RECORD 1 ]----+------------------------------
+pid              | 1434
+usesysid         | 10
+usename          | postgres
+application_name | walreceiver
+client_addr      | 10.10.1.88
+client_hostname  |
+client_port      | 52514
+backend_start    | 2023-05-10 09:33:11.599093+00
+backend_xmin     |
+state            | streaming
+sent_lsn         | 0/4001230
+write_lsn        | 0/4001230
+flush_lsn        | 0/4001230
+replay_lsn       | 0/4001230
+write_lag        |
+flush_lag        |
+replay_lag       |
+sync_priority    | 0
+sync_state       | async
+reply_time       | 2023-05-10 09:53:10.17635+00
 
 ##To list of database
 postgres=# \l
@@ -86,12 +137,14 @@ postgres=# \l
  template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
            |          |          |             |             | postgres=CTc/postgres
 (3 rows)
+
 ##View existing connection limit setting:( datconnlimit )
 test=# select datname,datallowconn,datconnlimit from pg_database where datname='postgres';
 -[ RECORD 1 ]+---------
 datname      | postgres
 datallowconn | t
 datconnlimit | -1           -- >Means unlimited connections allowed
+
 ##To restrict all the connections to db
  test_dev=# alter database test connection limit 0;
 ALTER DATABASE
@@ -159,12 +212,20 @@ test=# create table person (
 );
 CREATE TABLE
 ##To list the tables
-CREATE TABLE
 test=# \d
          List of relations
  Schema |  Name  | Type  |  Owner
 --------+--------+-------+----------
  public | person | table | postgres
+(1 row)
+
+##List of schemas
+test=# \dn+
+                          List of schemas
+  Name  |  Owner   |  Access privileges   |      Description
+--------+----------+----------------------+------------------------
+ public | postgres | postgres=UC/postgres+| standard public schema
+        |          | =UC/postgres         |
 (1 row)
 
 #### list the table with size 
@@ -247,17 +308,62 @@ postgres=# select * from data where gender='Male' and (id='99'  or id='90' or id
  90 | Weidar     | OHartnedy | wohartnedy2h@walmart.com     | Male
  93 | Tull       | Isakowicz  | tisakowicz2k@apache.org      | Male
  99 | Griswold   | Cabera     | gcabera2q@washingtonpost.com | Male
+
+## select column in  table using where between 5 and 8
+postgres=# select * from data where id between 5 and  8;
+ id | first_name | last_name |          email           |   gender
+----+------------+-----------+--------------------------+------------
+  5 | Selia      | Brodbin   | sbrodbin4@bigcartel.com  | Female
+  6 | Sharyl     | Showell   | sshowell5@globo.com      | Female
+  7 | Andra      | Trinder   | atrinder6@indiatimes.com | Non-binary
+  8 | Marylou    | Odda      | modda7@berkeley.edu      | Female
+
 (3 rows)
-##List of schemas
-test=# \dn+
-                          List of schemas
-  Name  |  Owner   |  Access privileges   |      Description
---------+----------+----------------------+------------------------
- public | postgres | postgres=UC/postgres+| standard public schema
-        |          | =UC/postgres         |
+## select column in table using where like '%.de'
+postgres=# select * from data where email like '%.de';
+ id | first_name | last_name |         email          | gender
+----+------------+-----------+------------------------+---------
+ 68 | Woodman    | Connochie | wconnochie1v@amazon.de | Agender
 (1 row)
+## select column in table using where case senstive letter with ILIKE string
+postgres=# select * from data where first_name ilike 'borg';
+ id | first_name | last_name |       email        | gender
+----+------------+-----------+--------------------+--------
+ 46 | Borg       | Perell    | bperell19@1688.com | Male
+(1 row)
+##select cloumn count of gender using group by.
+postgres=# select gender, count(*) from data group by gender;
+   gender   | count
+------------+-------
+ Male       |    38
+ Polygender |     2
+ Non-binary |     1
+ Female     |    43
+ Agender    |     6
+(5 rows)
+##select cloumn count of gender using group by and assgin alphabet order vice.
+postgres=# select gender, count(*) from data group by gender order by gender;
+   gender   | count
+------------+-------
+ Agender    |     6
+ Female     |    43
+ Male       |    38
+ Non-binary |     1
+ Polygender |     2
+(5 rows)
+##select cloumn count of gender using group by, assgin alphabet order vice and show greater then 5 count.
+postgres=# select gender, count(*) from data group by gender having count(*) > 5 order by gender;
+ gender  | count
+---------+-------
+ Agender |     6
+ Female  |    43
+ Male    |    38
+(3 rows)
 
 ##
+
+
+
 
 
 

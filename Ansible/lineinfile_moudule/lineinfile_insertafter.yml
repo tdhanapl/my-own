@@ -1,0 +1,12 @@
+- name:  add line into sudoers using lineinfile with insertafter 
+  hosts: localhost
+  tasks:
+    - name: add line in sudoers file 
+      lineinfile:
+        path: /etc/sudoers
+        state: present      
+        line: "dhana ALL=(ALL)  ALL" 
+        #regexp: "^root ALL=(ALL)  ALL$"
+        validate: 'visudo -cf %s'
+        insertafter: '^root'
+

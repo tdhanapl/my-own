@@ -15,6 +15,21 @@ OR
 OR 
 service --status-all -----in rhel 6
 
+#####remove non-adjacent duplicates and print the unique IPaddresses######
+awk '!seen[$0]++' ip_addresses.txt
+Note:
+This command creates an associative array seen and keeps track of the number of times an IP address has been seen. 
+It only prints the first occurrence of each IP address and ignores subsequent duplicates.
+
+
+######block the ip using iptables in redhat/centos-6####
+ $ iptables -L
+ $ iptables -I INPUT -s 64.226.80.213 -j DROP
+ $ service iptables save
+##In loop list ip block through script 
+$ sh failed_login_attempts_users.sh |grep -i "`date +%b" "%d`" |grep -iv dhanapal.ikt |awk -F "|" '{print $3}'  |grep -iv "IP address" | awk '!seen[$0]++' | while read ip ; do iptables -I INPUT -s $ip -j DROP ; done
+$ service iptables save 
+
 #####tcp dump log#########
 $ tcpdump -A -ni any port 530
 
@@ -23,13 +38,22 @@ $ tcpdump -A -ni any port 530
 $ yum install speedtest-cli
 ##run the speedtest command 
 $ speedtest-cli
+
 ########To remove the hostname#########
 $ hostnamectl  set-hostname ""
+
+###To check cpu and memory utilization of particular day###
+$ cd /var/log/sa
+$ ll
+$ sar -ru -f /var/log/sa/sa08
+
+####How to create the duplicate root user####
+$ useradd -o -u 0 -g root <user name>
 
 #########To filter particular field  with cut command #######
 $ cut -d ":" -f1,3 /etc/passwd
 $ cut -f 1 -d":" /etc/passwd
-$ cat /etc/passwd  | grep /bin/bash | cut -f1 -d ":"
+$ cat /etc/passwd  | grep -i  /bin/bash | cut -f1 -d ":"
 
 ########################Top command#######################################
 1)Top Command After Specific repetition:
@@ -61,6 +85,7 @@ Ex:-
 	 
 #######Entry hostname with FQDN and ip address  in /etc/hosts############
 echo `hostname -i | awk '{print $NF}'`" "`hostname`" "`hostname -s`  >> /etc/hosts
+cat /etc/hosts
 
 ################filter the disk usage percentage for shell scripit####################
 $ df -h  |grep -ivE "filesystem|tmpfs" | sed 's/%//gI' | awk '{print $5}'
@@ -73,7 +98,12 @@ LABEL=cloudimg-rootfs   		/        ext4   			defaults,discard       0	 		1
 device name 		    mountpoint    file system type		permission            backup  		fsck(File System Consistency Check)
 
 $ du -hs * | sort -rh | head -10
- 
+
+####Finding the length of a string########
+var=12345678901234567890$
+echo ${#var}
+21
+
 #################How to Change Runlevels (targets) in Systemd##############################
 Systemd is a modern init system for Linux: a system and service manager which is compatible with the popular SysV init system and LSB init scripts. It was intended to overcome the shortcomings of SysV init as explained in the following article.
 The Story Behind ‘init’ and ‘systemd’: Why ‘init’ Needed to be Replaced with ‘systemd’ in Linux
@@ -145,6 +175,12 @@ $ subscription-manager repos --disable <repo>
 ##To disable custom repositories:
 $ yum-config-manager --disable <repo>
 
+#####Download the latest patch update into folder########
+$ yum check-update | awk '{ print $1}' | grep -iE '*.x86_64|*.noarch' | while read update; do yumdownloader $update --downloaddir=/tmp/patch ; done
+	here it will downloaded latest patch in the  folder 
+##Install downloaded package
+$ yum localinstall  ./*.rpm
+
 ############ installing the rpm pacakage using yum########################
 $ yum install local ./python27-python-pip-7.1.0-2.el7.noarch.rpm
 
@@ -211,7 +247,7 @@ IPV6_PRIVACY=no
 :wq
 
 $ systemctl restart network
-$ 
+ 
 #######################################add route table######################################
 https://www.redhat.com/sysadmin/route-ip-route
 ############create temporary route table#################################################
@@ -220,11 +256,11 @@ https://www.redhat.com/sysadmin/route-ip-route
 # route add -net 17.16.4.0 netmask 255.255.254.0 gw 172.16.4.251
 # route add -net 172.16.100.0 netmask 255.255.255.0 gw 172.16.100.1
 # route add -net 192.168.85.0 netmask 255.255.255.0 gw 192.168.85.99
-# route  add -net 10.33.58.0 netmask 255.255.255.0 gw  10.32.39.254
+# route add -net 10.33.58.0 netmask 255.255.255.0 gw  10.32.39.254
 
 ####################################Create Permanent Static Routes#########################################
 The static routes configured in the previous section are all transient, in that they are lost on reboot.
- To configure a permanent static route for an interface, create a file with the following format "/etc/sysconfig/network-scripts/route-<INTERFACE>". 
+To configure a permanent static route for an interface, create a file with the following format "/etc/sysconfig/network-scripts/route-<INTERFACE>". 
 1. For example, we could create the "/etc/sysconfig/network-scripts/route-eth0" file with the following entries.
 172.168.2.0/24 via 192.168.0.1 dev eth0
 172.168.4.0/24 via 192.168.0.1 dev eth0
@@ -284,7 +320,7 @@ $ renice -10 16995
 ########what is range of nice value####################
 from -20 to +20 
 
-#########################Find Top Running Processes by Highest Memory and CPU Usage in Linux##################
+#########################Find Top Running Processes using  Highest Memory and CPU Usage in Linux##################
 #Find Top Running Processes by Highest Memory and CPU Usage in Linux
  $ ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head
  $ ps -eo pid,ppid,%cpu,%mem,cmd --sort=-%mem | head
@@ -337,7 +373,30 @@ sudo vim /etc/pam.d/sshd
 Next, add the configuration below in both files.
 auth    required       pam_listfile.so \
         onerr=succeed  item=user  sense=deny  file=/etc/ssh/deniedusers
-		
+
+####configure raid 5 ####
+##add 3 hard disk required for raid 5 
+##create raid 5
+$ mdadm --create /dev/md5 --level=5 --raid-device=3 /dev/sd[b-d]
+##Raid or meta device information 
+$ mdadm -D /dev/md5
+##Format the raid devices
+$ mkfs.ext4 /dev/md5
+##To check raid device
+$ mdadm --detail --scan
+			or 
+$ cat /etc/mdadm.conf
+
+##Add hard disk to raid5
+$ mdadm --add /dev/sde /dev/sdj /dev/sdf
+$ mdadm --grow /dev/md5 --raid-device=5
+##To update size add disk 
+$ resizefs /dev/md5
+
+##To remove raid5
+$ umount /Raid5
+$ mdadm --stop /dev/md5 && mdadm --remove /dev/md5
+ 
 ##########################Logical voulme Creation############################
 $ fdisk /dev/sda
 $ pvcreate /dev/sda
@@ -448,14 +507,31 @@ Configuration file of selinux
 1 /etc/selinux/config ----main configuration file
 2 /etc/sysconfig/seliux ---link file for above configuration 
 SELINUX= can take one of these three values
-#####temporary SElimux##########
+##Configure Permanent  selinux 
+##Set the selinux policy in Enfrocing mode
+$ vim /etc/sysconfig/selinux 
+SELINUX=Enforcing
+:wq
+Note:
+After Editing  selinux configuration we  have to reboot machine.
+	or 
+##Configure temporary selinux	
 # enforcing - SELinux security policy is enforced.
 # permissive - SELinux prints warnings instead of enforcing.
 # disabled - No SELinux policy is loaded
 To change the mode from enforcing to permissive type:
-sudo setenforce 0
+$ sudo setenforce 0
 To turn the enforcing mode back on, enter:
-sudo setenforce 1
+$ sudo setenforce 1
+$ getenforce 
+##To check selinux context of /etc/ssh/sshd_config
+$ ll -Z /etc/ssh/sshd_config
+##Apply selinux on port of service 
+# If you want to change the port on a SELinux system, you have to tell
+# SELinux about this change.
+$ semanage port -a -t ssh_port_t -p tcp #PORTNUMBER
+##To check default  the semange(selinux) ports for the services
+$ semanage port -l
 
 ########################Zombie process #################################
 Zombie process which is running without child process .it is identified  with 'z' 
@@ -469,7 +545,7 @@ Zombie process which is running without child process .it is identified  with 'z
 6-RUN LEVELS-when the Linux booting up in run levels check deafult then services in the up
 
 ###################Getting the Server Model###############
-$ dmidecode -t1 | grep "Product Name" | cut -d':' -f2 | cut -d'-' -f1 | sed 's/^[ \t]//;s/[ \t]$//'
+$ dmidecode -t1 | grep -i "Product Name" | cut -d':' -f2 | cut -d'-' -f1 | sed 's/^[ \t]//;s/[ \t]$//'
 
 ##########################Linux system information###############################
 lspci------------To check mechine is physical or virtual server 
@@ -477,7 +553,7 @@ demicode---------To chek hardware information
 dmesg------------message log 
 lscpu------------To check cpu information
 vmstat-----------To check virtual memory statics
-iostat-----------To check i/p, o/p static disk
+iostat-----------To check in/p, out/p static disk
 sar--------------To check load average
 top--------------To check cpu utilization
 
@@ -580,6 +656,7 @@ Keywords can be used instead of type numbers with --type.  Each keyword is equiv
        · dmidecode --type bios
 
        · dmidecode --type BIOS
+	   
 $ dmidecode (to see the complete hardware information of the system)
 $ dmidecode -t memory (to see the memory information of the system)
 $ dmidecode -t bios (to see the systems bios information)
@@ -716,13 +793,15 @@ $ yum autoremove httpd
 $nmap -A <remote-sever-ip>
 $nmap -A 192.168.1.5
 
+######differences between while and until loop######
+1.The while loop executes the given commands until the given condition remains true.
+2.The until loop executes until a given condition becomes true.
 ######################################creation Swap Space########################################
 # Scan new lun on server with below command
 $ ls /sys/class/scsi_host/ | while read host ; do echo "- - -" > /sys/class/scsi_host/$host/scan ; done
+Note:
+"- - -" {-= HBA channel,-=scsi id,-=lun}
 
-
-#############echo "---" > /sys/class/scsi_host/host{x}/scan
-#"---" {-=channel,-=scsi id,-=lun} In the above command means CTL["channel on HBA" "Target Scsi id" "LUN"] 
 # Vertify the new lun [ to check the new assaign to the system with size]
 pvs -a -o +dev_size
 systool -c fc_host | grep "port"
@@ -1329,19 +1408,6 @@ ANSWER:
 $ hostnamectl set-hostname servero.example.com
 $ bash or exec bash ##forcelly update the kernel
 
-#####################Configure Selinux ####################
-##Configure Permanent  selinux 
-##Set the selinux policy in Enfrocing mode
-$ vim /etc/sysconfig/selinux 
-SELINUX=Enforcing
-:wq
-Note:
-After Editing  selinux configuration we  have to reboot machine.
-	or 
-##Configure temporary selinux	
-$ sestatus
-$ setenforce 1
-
 #######################################LVM_Restore####################################
 ##scan the new hard disk
  $ ls /sys/class/scsi_host/ | while read host ; do echo "- - -"  > /sys/class/scsi_host/$host/scan ; done
@@ -1535,6 +1601,37 @@ timedatectl set-time 17:00:00
 ##stop ntp synchronization
 $ timedatectl set-ntp  false
 
+########find command#####################
+##How would you find all files by user “barray” that are older than 10 days, a third word of the
+filename is “L”? 
+$ find /path/to/directory -type f -user barray -name '* * L*-*' -mtime +10
+Lets break down the command:
+/path/to/directory: Replace this with the actual directory path where you want to search for files. This can be the root directory ("/") or any specific directory.
+-type f: Limits the search to regular files only (excluding directories and other file types).
+-user barray: Filters files owned by the user "barray".
+-name '* * L*-*': Specifies the filename pattern. The * * L*-* pattern matches filenames that have a third word starting with "L" and contains a hyphen ("-") somewhere in the filename. Adjust the pattern as needed to match your specific filename format.
+-mtime +10: Filters files that are older than 10 days. The +10 indicates a time interval of more than 10 days. Modify the number as required to meet your specific criteria.
+
+###############Ldap server ######################
+Ldap is directory  service protocol for centralized auhentication for clients over a network.
+##package for ldap server
+$ yum install *openldap* mifrationtools 
+##
+##To check ladp configuration error 
+$ slaptest -v 
+
+##To check all ldap user information 
+$ ldapsearh -x -b 'dc=cntech,dc=local' '(objectclass=*)'
+
+##To check particular ldap  user 
+$ ldapsearch  -x  cn=ram -b 'dc=cntech,dc=local'
+##add the user sai using the users file to the ldapdatabase
+$ ldapadd -x -w -D "cn=manager,dc=cntech,dclocal" -f /user/ldif
+note:
+ldif --> ldap data interction format
+##Reset the passwd for newly added user 
+$ ldappasswd -s redhat@123 -w -D "cn=manager,dc=cntech,dc=local" -x "uid=ram,ou=people,dc=cntech,dc=local"
+
 #####Join the Linux machine into active directory of windows server##################
 #Prerequisites
 This article presupposes that you have at least some introductory-level experience with Active Directory, especially around user and computer account management. Aside from that, the following obvious requirements need to be met:
@@ -1574,6 +1671,15 @@ How to verify or check the integrity of the group file?
 Below site clear steps for LVM swap extend 
 https://www.thegeekdiary.com/how-to-extend-an-lvm-swap-partition-in-linux/
 
+#################Cursor movement##############
+1. Ctrl + A Go to the beginning of the line you are currently typing on.
+2. Ctrl + E Go to the end of the line you are currently typing on.
+3. Ctrl + XX Move between the beginning of the line and the current position of the cursor.
+4. Alt + F Move cursor forward one word on the current line.
+5. Alt + B Move cursor backward one word on the current line.
+6. Ctrl + F Move cursor forward one character on the current line.
+7. Ctrl + B Move cursor backward one character on the current line
+
 #############interveiw question############
 *Linux* ✓ *(RHEL)*
 ############
@@ -1602,7 +1708,7 @@ https://www.thegeekdiary.com/how-to-extend-an-lvm-swap-partition-in-linux/
 * How many types of permissions are there ? What is chmod ?
 * What is sticky bit ?
 * What is ACLs ?
-* What is SetGID, SetUID & Stickybit ?
+* What is SetGID, SetUID & Stickybit?
 * Location where all the user information are stored ?
 * File where user password are stored ?
 * What is the default permission of a file ?
@@ -1666,7 +1772,7 @@ This helps the system to run faster because disk information is already in memor
 * How to check the logs ?
 * Difference between Journalctl & tail command ?
 * What does the subscription-manager do ?
-* How to archive a file ?
+* How to archive a file?
 * What is umask ?
 * How to kill a process ?
 * How to assign IP address manually ?
@@ -1687,10 +1793,14 @@ This helps the system to run faster because disk information is already in memor
 * What is nfsnobody ?
 * What is SSHFS ?
 * What is Kerberos ?
-* How to secure NFS with Kerberos ?
-###########Promethus##############
-https://computingforgeeks.com/monitor-linux-server-with-prometheus-grafana/
-https://lightsail.aws.amazon.com/ls/docs/en_us/articles/amazon-lightsail-install-prometheus
+* How to secure NFS with Kerberos?
+
+#####kunernetes online partices#######
+https://killercoda.com/playgrounds/scenario/kubernetes
+https://labs.play-with-k8s.com/
+
+###praveendevops##
+https://github.com/devops-with-web-dev
 
 ##############100days devops ##################
 https://github.com/100daysofdevops

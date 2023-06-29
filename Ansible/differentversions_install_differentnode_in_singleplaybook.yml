@@ -1,0 +1,16 @@
+---
+- name: Install Python on Nodes
+  hosts: node1,node2 ##node1 and node2 are groups not hostname 
+  become: true
+  vars:
+    python_version_node1: "3.9.5"  # Desired Python version for node1
+    python_version_node2: "3.8.10"  # Desired Python version for node2
+
+  tasks:
+    - name: Install Python on Node 1
+      shell: "sudo apt-get install python{{ python_version_node1 }} -y"
+      when: inventory_hostname == "node1"
+
+    - name: Install Python on Node 2
+      shell: "sudo apt-get install python{{ python_version_node2 }} -y"
+      when: inventory_hostname == "node2"
