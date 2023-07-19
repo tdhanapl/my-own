@@ -1037,8 +1037,7 @@ RHEL7: 20 sec
 2.MAXIMUM SIZE OF SINGLE PARTITION
 RHEL6: 50TB(EXT4)
 RHEL7: 500TB(XFS)
-signin password=Venky@0451
-transcation password=venkatesh@0451
+
 3.BOOT LOADER
 RHEL6:  /boot/grub/grub.conf
 RHEL7: /boot/grub2/grub.cfg
