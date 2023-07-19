@@ -1155,7 +1155,6 @@ This url for the futher reference purpose https://linuxopsys.com/topics/exclude-
 # installing start from here
 
 #####installation#####
-baapt0706r
 1.#yum update --security ---------download and apply all available security updates from Red Hat Setwork hosted or Rent Network Satellite
 
 2.#yum update-minimal security --------To install the package that have a security errate use
@@ -1562,7 +1561,7 @@ refresh-services,refs	Refresh all services.	    					zypper refs
 list-updates, lu		List available updates.	    					zypper lu
 list-patches, lp	    List needed patches.	    					zypper lp
 update, up				Update installed packages with newer versions.	zypper up
-ps	List running processes which might still use files and libraries deleted by recent upgrades.	zypper ps -s
+ps List running processes which might still use files and libraries deleted by recent upgrades.	zypper ps -s
 
 ###refresh all repositories
 $ zypper refresh
