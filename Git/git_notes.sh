@@ -1,22 +1,20 @@
 ##########################################Git ################################
-
 ##VCS(version control systems)
 1.Track the changes
 2.Coleberative Development
 3.Revert the changes
 4.Who and When changes are made
 
-###################
 ##Types of VCS
 1.Local VCS
 2.Centralized VCS ----subversion
-3.Distributed VCS ----Gitlab, github, Bitbucket
+3.Distributed VCS ----Gitlab, Github, Bitbucket
 
 ## security on branches rules
 https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/managing-a-branch-protection-rule
 
 ##git branching strages
-                  master(production code which is  stable)
+master(production code which is  stable)
 					|______________ 
 					               |
 							 development(pre-poduction code)
@@ -25,28 +23,25 @@ https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-
 											 feature(when we are assign with new feature to add-on then we  create branch from development branch) 
 												|___________
 															|
-									#not using			    #release(it support to release preparation  new  production release) 
+									#not using #release(it support to release preparation  new  production release) 
 														     |___________
 																		 |
 																		hot-fix/bug-fix  (it is just patch  to production release, we create branch from master branch)	
-
-#########git command####
+                 
+#########git commands####
 #To check git vsersion
 $ git --version
 x.X.X
 major.minor.hostfix
-#########git command####
-#To check git vsersion
-$ git --vsersion
 
 ##Add the our username and gamil to git 
 $ git config --global user.name "dhanapal"
-$ git config --global user.email "dhanapal703278@gmail.com"
+$ git config --global user.email "dhanapal@gmail.com"
 
 ##To check username and email information
 $ git config --list
 
-###git configuration file
+##git configuration file
 #It is present in 3 level
 1.user level
 2.system level
@@ -56,7 +51,7 @@ $ git config --list
 $ mkdir test-git
 $ cd test-git
 $ git init .
-	--we need enter that particular folder then initalize it.
+	--we need enter in that particular folder then initalize it.
 
 ##How to know current directory is repository or not
 #go that folder then ll -al
@@ -90,7 +85,8 @@ $ git push origin main file1
 
 ##To know how many commit we did
 $ git  log	
-
+	or 
+$ git log --oneline  -->
 ##To pull file from remote repository(github) to local repository
 $ git pull origin main
 	or 
@@ -147,7 +143,8 @@ $ git add *
 $ git commit -m "create feature3"
 $ git push origin feature3 ##feature3=branch name
 ##To check remote(github) branch
-$ git branch -r
+$ git branch -r 
+
 ##To delete remote repository branch
 $ git push origin -d feature3
 
@@ -156,23 +153,24 @@ $ git branch
 * main-->we present in main branch
  feature3
 $ git merge feature3 
--- we are merge feature3 to main feature3
+-->we are merge feature3 to main feature3
 Note:-
 1.when you merge one branch to another branch Sometime merge conflict will occur.
  we  resolve the issue in two ways 1. manually and 2.git mergetool (tool)
 2.I want merge all my changes from feature3 to main branch but in company we will not merge directly.
 Before merge our code we need get code reviewed  or requried approval by our team lead or manager then only  we can merge our code from feature3 to main branch.
-##After merge conflict reslove using git mergetool
-##when conflict occur then mergetool	 use 
+
+##when conflict occur then we can use  mergetool	 
 $ git mergetool
+
 ##To rebase from feature3 branch to main branch
 $ git branch
 * main-->we present in main branch
  feature3
 $ git rebase feature3 
--- we are merge feature3 to main 
+-->we are merge feature3 to main 
 $ git status 
---here history or commit id will not create.
+-->After rebase here history or commit id will not create.
 
 ## To merge the particular	commit id from one branch to another branch
 By using cheerypick we can merge the particular commit id from one branch to another branch
@@ -201,16 +199,6 @@ Note:-Perviously it is in staging/index area after using above command it comes 
 $ git restore 	<filename> or $ git checkout file1.txt
 $ git restore file1.txt
 Note:-After this it delete current modified in working directory of file.
-
-##Tagging the git
-##git tagging developer use this functionality to mark release point (v1.0, v1.1)
-$ vim file1.txt
-creating tagging
-:wq!
-$ git add *
-$ git commit -m "add tagging for git"
-$ git tag -a v1.0 -m "release the latest changes"
-
 ##revert the chanage of files from local repository to staging area(reset ---soft)
 If one file in local repository you want to that file from  local repository to staging area then use this command.
 $ git reset --soft <commit id or latest commit>
@@ -240,6 +228,15 @@ $ git reset --hard 3f45
 Note:
 It will  move   files from local repository  to working area, remove the content  and  clean commit id also.
 
+##Tagging the git
+git tagging developer use this functionality to mark release point (v1.0, v1.1)
+##adding tags before commit 
+$ vim file1.txt
+creating tagging
+:wq!
+$ git add *
+$ git tag -a v1.0 -m "release the latest changes"
+$ git commit -m "add tagging for git"
 ##To check git tag version
 $ git tag
 	--here dispaly version
@@ -260,45 +257,29 @@ $ git tag -d $(git tag -l)
 $ git  push origin -d v1.0
 #To delete the all  tags of remote repository
 $ git push origin -d $(git tag -l)
+
 ##git stash
 stash meaning is store file(something) safely in a hidden place.
-We can stashing  file if its in staging/index. If file is not in staging/index area then we can notstashing  file.
+We can stashing  file if its in staging/index. If file is not in staging/index area then we can not stashing  file.
 $ git stash save "add new file"
 #To check stash  file list
 $ git stash list
+#Apply a Specific Stash
 $ git stash apply stash@{0}
+#Remove Stashed Changes
+$ git statsh drop 
+#Clear All Stashes
+$ git statsh clear 
 
-===============================
-1. sonarqube (source code anysis) by using rule that giving 
-2. build
-3. nexus
-4. build docker image and push nexus
-5. kubernetes
--------------------
-1. git webhook
-2. git runner
-3. master
-    |___________
-	            |
-	           test
-4. jenkins
-   test   -  sonar
-   build  -  maven
-   elk    -   
-   docker -  jboss
-
-
-ansible push mechanism:  
-
-----------------------------
-Site reliability engineering mainly focuses on enhancing to  manage systems  availability and reliability , solve problems, and automate operations tasks.
-SRE teams are responsible for how code is deployed, configured, and monitored, as well as the availability, latency, change management, emergency response, and capacity management of services in production.
-SRE uses three Service Level Commitments to measure how well a system performs:
-
-Service level agreements (SLAs) define the required reliability, performance, and latency of the system as desired by end users.
-Service level objectives (SLOs) target values and goals set by SRE teams that should be met to satisfy SLAs.
-Service level indicators (SLIs) measure specific metrics and aspects that show how much a system conforms to the SLOs. Typical SLIs include request latency, system throughput, lead time, development frequency, mean time to restore (MTTR), and availability error rate.
-Key principles of SRE include:
-
-Principles Of SRE
-================================== 
+## git diff 
+git diff command in Git is used to show the differences between different states of a Git repository.
+#Compare Working Directory with Staging Area (Index)
+$ git diff 
+#Compare Staging Area (Index) with Last Commit
+$ git diff --staged 
+#Compare Two Commits
+$ git diff  <commit-hash-1> <commit-hash-2>
+#Compare a Commit with the Working Directory
+$ git diff <commit-hash>
+#Compare Branches
+$ git diff <branch1> <branch2>

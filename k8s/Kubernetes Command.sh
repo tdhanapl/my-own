@@ -943,6 +943,12 @@ $kubectl cp /tmp/foo <some-namespace>/<some-pod>:/tmp/bar
 
 
 
+####kubernetes prometheus 
+
+https://itnext.io/aws-eks-monitoring-stack-building-a-complete-solution-with-grafana-prometheus-alertmanager-adb9948e5951
+
+
+
 
 
 

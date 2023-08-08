@@ -1,8 +1,7 @@
 ##Creating   the username, password    and sudo access using ansible
 - name: adding the line in the /etc/sudoers
   hosts: localhost
-  tasks:
-        
+  tasks:  
     - name: Add a line to a file if the file does not exist, without passing regexp
       lineinfile:
         path: /etc/sudoers
@@ -33,7 +32,5 @@
         line: "{{ username }} ALL=(ALL)  ALL"
         validate: 'visudo -cf %s'
         insertafter: "^root"
-
-    - name: 
 
 ## this yaml file working for creating user and adding in sudoers file 100%

@@ -13,7 +13,8 @@ bin:x:1:1:bin:/bin:/sbin/nologin
 daemon:x:2:2:daemon:/sbin:/sbin/nologin
 adm:x:3:4:adm:/var/adm:/sbin/nologin
 lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin
-##########To path of normal user home directory######
+
+##########To check normal user home directory######
 $cd /home/<username>
 Ex:
 cd /home/thulasi
@@ -70,10 +71,10 @@ $ useradd <username>
 ######TO create a user in ubuntu linux  server  ################
 $ adduser <username>
 
-########## To assgin the password for created user in Linux server#######
+########## To assgin the password for user in Linux server#######
 $ passwd <username>
 	
-######### To check user account information or user details  in Linux server###########
+######### To check user account information ###########
 $ cat /etc/passwd
 my passwd is thulasi
 $ cat /etc/passwd |grep root
@@ -132,7 +133,7 @@ $ scp -rv    patch_precheck.sh thulasi@100.20.247.8:/home/thulasi/
 ########To dispaly or read file in Linux server######
 $ cat <filename>
 	 
-$ cat thulasi
+$ cat ram
 #######sysmbol indication of users#################
 $------>normal user
 #------>root user
@@ -201,7 +202,7 @@ $ cat /etc/passwd |grep root
 $ hostnamectl set-hostname <hostname>
 $ bash
 Note:
-we need enter this "bash" command must and should to updated kernel
+we need enter this "bash" command must and its should to updated kernel
 
 ##### To check services status  in server###################
 $ systemctl status <services name>
@@ -264,8 +265,9 @@ $ rpm -qa |grep <package name>
 EX:-
 $ rpm -qa |grep -i basesystem-11-5.el8.noarch
 
-########### To check server  uptime or how many server is running############
+########### To check server  uptime ##############
 $ uptime
+
 ####To create tar File###############
 Tar is used to bundle multiple file and directory as single file 
 $ tar -cvf <tar_filename.tar> <source file and directories>
@@ -283,10 +285,10 @@ $ netstat -nutlp
 $ less
 ####used to view the text files in the command prompt, displaying one screen at a time in case the file is large########
 $ more
-######## 
+######## zip and unzip the file 
 $ gzip <file or directory>
 $gunzip <file or directory>
-########
+######## create a file using cat#######
 $cat >> ram
 Enter
 $ctrl+d
@@ -294,13 +296,13 @@ $ctrl+d
 $head -->the head command will output the first part of the file.
 $tail -->the tail command will print the last part of the file.
 
-$ last --> It is showing  lastlogin the server
+$last --> It is showing  lastlogin the server
 $top -->top command is used to show the Linux processes. It provides a dynamic real-time view of the running system. Usually, this command shows the summary information of the system and the list of processes or threads which are currently managed by the Linux Kernel.
 
 #######To run the shell scripts ########
 $ sh < script file name> -->ex:shram.sh
        or
-$ ./ < script file name> -->ex:./ram.sh
+$ ./< script file name> -->ex:./ram.sh
 ######## option  (-i) is case sensitive######
 [root@ip-172-31-9-171 ~]# egrep -i 'chown|chmod' linux_commands
 Ex:chown
@@ -317,17 +319,3 @@ Run levels is 7 types
 4-unused                     	= init 4
 5-GUI(Graphical User Interface) = init 5   
 6-reboot                     	= init 6
-
-
-
-
-
-  
-  
-  
-  
-
-
-
-
-

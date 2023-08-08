@@ -14,6 +14,56 @@ OR
 # systemctl list-unit-files
 OR 
 service --status-all -----in rhel 6
+######Redhat 6 vs Redhat 7 of service enable, disable, start, restart and stop###
+1. List all Services in RHEL/Centos/Redhat Linux.
+On RHEL 6:
+$ service --status-all
+On RHEL 7:
+$ systemctl list-unit-files
+
+2. Check Individual Service status
+On RHEL 6:
+$ service httpd status
+On RHEL 7:
+$ systemctl status httpd
+
+3. Start/Stop a Service
+On RHEL 6:
+$ service httpd start
+On RHEL 7:
+$ systemctl status httpd
+
+4. Enable/Disable a Service
+On RHEL 6:
+$ chkconfig --list ##To check enable and disabled 
+$ chkconfig --level 35 httpd on
+Note:
+For example, to enable the Apache HTTP server to start at runlevels 3 (multi-user text mode with networking) and 5 (graphical mode), 
+On RHEL 7:
+$ systemctl is-enabled httpd
+$ systemctl enable httpd
+$ systemctl disable 
+
+5. Check failed Services
+On RHEL 6:
+$ service --status-all | grep -i stopped
+Note:
+There is no command way to get failed services in RHEL 6.
+On RHEL 7:
+$ systemctl --failed --all
+	or
+$ systemctl --failed 
+
+###Allow  incoming TCP/UDp traffic on ports in Rehel 6########
+$ iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+###To block incoming traffic on a specific port in Rehel 6########
+$ iptables -A INPUT -p tcp --dport 8080 -j DROP
+##can also use the REJECT target to send a rejection response to the sender instead of dropping packets
+$ iptables -A INPUT -p tcp --dport 8080 -j REJECT
+##use the service command to save the iptables rules
+$ service iptables save
+##Restart the iptables service
+service iptables restart
 
 #####remove non-adjacent duplicates and print the unique IPaddresses######
 awk '!seen[$0]++' ip_addresses.txt
@@ -22,7 +72,7 @@ This command creates an associative array seen and keeps track of the number of 
 It only prints the first occurrence of each IP address and ignores subsequent duplicates.
 
 
-######block the ip using iptables in redhat/centos-6####
+######block the ip using iptables in redhat/centos########
  $ iptables -L
  $ iptables -I INPUT -s 64.226.80.213 -j DROP
  $ service iptables save
@@ -36,6 +86,7 @@ $ tcpdump -A -ni any port 530
 ####To check speed test in Linux#####
 ##install the speedtest-cli package	
 $ yum install speedtest-cli
+
 ##run the speedtest command 
 $ speedtest-cli
 
@@ -54,6 +105,12 @@ $ useradd -o -u 0 -g root <user name>
 $ cut -d ":" -f1,3 /etc/passwd
 $ cut -f 1 -d":" /etc/passwd
 $ cat /etc/passwd  | grep -i  /bin/bash | cut -f1 -d ":"
+
+########To clear the cache in linux server########
+$ free && sync && echo 3 > /proc/sys/vm/drop_caches && free
+$ sudo sh -c 'echo 1 >/proc/sys/vm/drop_caches'
+$ sudo sh -c 'echo 2 >/proc/sys/vm/drop_caches'
+$ sudo sh -c 'echo 3 >/proc/sys/vm/drop_caches'
 
 ########################Top command#######################################
 1)Top Command After Specific repetition:
@@ -145,7 +202,7 @@ p   -> proces id file
 /dev/hda -> IDE hard disk 
 /dev/vda -> Virtual hard disk
 
-##To check openport ruuning in the server##################
+##To check openport running in the server##################
 $netstat -nutlp 
 Note:
 	--n=numeric 
@@ -198,8 +255,8 @@ find /var/log -type f -mtime +30 -exec ls -lrth {} \;  ##f--means file
 find /var/log -type f -mtime +30 -exec rem -rvf {} \;     ## +30--means more than 30 days rem=rm
 find /var/log -type f -mtime +7 -exec rem -rvf  {} \;
 find /var/log -type d -mtime +90 -exec ls -lrth {} \;  ###d--means directory,  +90--means more than 90 days
-find /var/log -type d -mtime +30 -exec ls -rv {} \;
-find /var/dtpdev/tmp/ -type f -mtime +15 -exec r3m -f {} +
+find /var/log -type d -mtime +30 -exec ls -rv {} \; 
+find /var/dtpdev/tmp/ -type f -mtime +15 -exec r3m -f {} \;
 find /path/to/files/ -type f -name *.php  -mtime +30 -exec rm {} \;
 find /home/apps/fcs_resumes -type d -mtime +547 -exec ls -lrth {} \; | wc -l
 
@@ -525,7 +582,7 @@ To turn the enforcing mode back on, enter:
 $ sudo setenforce 1
 $ getenforce 
 ##To check selinux context of /etc/ssh/sshd_config
-$ ll -Z /etc/ssh/sshd_config
+$ ll -ldZ /etc/ssh/sshd_config
 ##Apply selinux on port of service 
 # If you want to change the port on a SELinux system, you have to tell
 # SELinux about this change.
@@ -932,6 +989,7 @@ swapon -a /dev/sda2
   -U, --user-group              create a group with the same name as the user
   -Z, --selinux-user SEUSER     use a specific SEUSER for the SELinux user mapping
       --extrausers              Use the extra users database
+
 #chage --help
 Usage: chage [options] LOGIN
 
@@ -1037,8 +1095,7 @@ RHEL7: 20 sec
 2.MAXIMUM SIZE OF SINGLE PARTITION
 RHEL6: 50TB(EXT4)
 RHEL7: 500TB(XFS)
-signin password=Venky@0451
-transcation password=venkatesh@0451
+
 3.BOOT LOADER
 RHEL6:  /boot/grub/grub.conf
 RHEL7: /boot/grub2/grub.cfg
@@ -1582,15 +1639,10 @@ $ sudo zypper update
 #zypper 1p-a-cve-CVE2020-14621 ---see security cve
 
 ##Open a root shell.
->Run "zypper ref " to refresh all repositories. 
->Run "zypper update" to install package management updates.
->Reboot the server
-
-http://192.168.166.240/sles15/packi
-01246165722
-CRN no 328538997
-accno. 2913388890
-sudo SUSEConnect -r REGISTRATION_CODE -e EMAIL _ADDRESS
+-->Run "zypper ref " to refresh all repositories. 
+-->Run "zypper update" to install package management updates.
+-->Reboot the server
+-->sudo SUSEConnect -r REGISTRATION_CODE -e EMAIL _ADDRESS
 
 #####To set Time and date ##########
 ##set timezone
@@ -1679,6 +1731,15 @@ https://www.thegeekdiary.com/how-to-extend-an-lvm-swap-partition-in-linux/
 5. Alt + B Move cursor backward one word on the current line.
 6. Ctrl + F Move cursor forward one character on the current line.
 7. Ctrl + B Move cursor backward one character on the current line
+
+################Journalctl Command################
+journalctl -n 5 (to display last five lines of all the log files)
+journalctl -p err (to display all the error messages)
+journalctl -f (to watch journalctl messages continuously)
+journalctl --since<today> or <yesterday> (to see all the journalctl messages since today or yesterday) 
+journalctl --since "date" --until "date" (to see the journal messages between the specified two dates) 
+journalctl -pid=1 (to see the pid=1 process name)
+auditctl (to see the audit report)
 
 #############interveiw question############
 *Linux* ✓ *(RHEL)*
@@ -1804,7 +1865,8 @@ https://github.com/devops-with-web-dev
 
 ##############100days devops ##################
 https://github.com/100daysofdevops
-------------------
+
+----------------------------------
 https://hc.apache.org/httpcomponents-client-4.5.x/current/httpclient/apidocs/org/apache/http/conn/DnsResolver.html
 
 ###prometheus and grafana###########

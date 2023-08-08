@@ -75,7 +75,8 @@ Chhat
 Syntax:
 $ cut -f FIELD_LIST filename
 $cut -d "delimiter" -f (field number) file.txt
-Like in the file state.txt fields are separated by space if -d option is not used then it prints whole line:
+
+#Like in the file state.txt fields are separated by space if -d option is not used then it prints whole line:
 
 $ cut -f 1 state.txt
 	or

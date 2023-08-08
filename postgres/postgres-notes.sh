@@ -92,6 +92,9 @@ postgres=# show server_version;
  PostgreSQL 14.7 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 11.3.1 20220421 (Red Hat 11.3.1-2), 64-bit
 (1 row)
 
+###securely change the password for a user
+postgres=# \password  postgres
+Enter new password for user "postgres":
 
 ### Check archive status
 postgres=# select name,setting from pg_settings where name like 'archive%';
@@ -228,19 +231,18 @@ test=# \dn+
         |          | =UC/postgres         |
 (1 row)
 
-#### list the table with size 
-test=# \d+
-                                          List of relations
- Schema |     Name     |   Type   |  Owner   | Persistence | Access method |    Size    | Description
---------+--------------+----------+----------+-------------+---------------+------------+-------------
- public | data         | table    | postgres | permanent   | heap          | 8192 bytes |
- public | data_id_seq  | sequence | postgres | permanent   |               | 8192 bytes |
- public | dhana        | table    | postgres | permanent   | heap          | 8192 bytes |
- public | dhana_id_seq | sequence | postgres | permanent   |               | 8192 bytes |
-(4 rows)
+##To delete the table 
+test=# drop table person;
+DROP TABLE
+#Note: Never use in producation envoriment
+####To delete the database
+postgres=# drop database test;
+DROP DATABASE
+
+
 
 ## create table with constraints
-test=# create table data  (
+postgres=# create table data  (
     id BIGSERIAL NOT NULL PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
@@ -252,7 +254,7 @@ Note:
 If you using NOT NULL means in column and row must need fill.
 
 ##insert record into tables
-test=#  INSERT INTO dhana (
+postgres=#  INSERT INTO data (
     first_name,
     last_name,
     gender,
@@ -261,15 +263,13 @@ test=#  INSERT INTO dhana (
     VALUES ('venky', 'k', 'Male', DATE '1999-11-09', 'venky@gmail.com');
 
 ## To check or list the create tables 
-test=# \d+
+postgres=# \d+
                                           List of relations
  Schema |     Name     |   Type   |  Owner   | Persistence | Access method |    Size    | Description
 --------+--------------+----------+----------+-------------+---------------+------------+-------------
  public | data         | table    | postgres | permanent   | heap          | 8192 bytes |
  public | data_id_seq  | sequence | postgres | permanent   |               | 8192 bytes |
- public | dhana        | table    | postgres | permanent   | heap          | 8192 bytes |
- public | dhana_id_seq | sequence | postgres | permanent   |               | 8192 bytes |
-(4 rows)
+(2 rows)
 
 ##select particular columns  from table
 postgres=#   select id, first_name, email from data;
@@ -360,7 +360,31 @@ postgres=# select gender, count(*) from data group by gender having count(*) > 5
  Male    |    38
 (3 rows)
 
-##
+##Add new column to table d
+postgres=# alter table data add phonenumber varchar(20);
+ALTER TABLE
+postgres=# select * from data;
+ id | first_name | last_name | gender | date_of_birth | email | phonenumber
+----+------------+-----------+--------+---------------+-------+-------------
+(0 rows)
+
+###Add values to newly added  column/ Update table
+dhana=# update data set phonenumber='0987654321' where id=1;
+UPDATE 1
+dhana=# select * from data;
+ id | first_name | last_name | gender | date_of_birth |      email      | phonenumber
+----+------------+-----------+--------+---------------+-----------------+-------------
+  1 | venky      | k         | Male   | 1999-11-09    | venky@gmail.com | 0987654321
+(1 row)
+
+###Delete a column from the table
+dhana=# alter table data drop column  phonenumber;
+ALTER TABLE
+dhana=# select * from data;
+ id | first_name | last_name | gender | date_of_birth |      email
+----+------------+-----------+--------+---------------+-----------------
+  1 | venky      | k         | Male   | 1999-11-09    | venky@gmail.com
+(1 row)
 
 
 
@@ -375,21 +399,6 @@ postgres=# select gender, count(*) from data group by gender having count(*) > 5
 
 
 
-
-
-
-
-
-
-
-
-##To delete the database
-postgres=# drop database test;
-DROP DATABASE
-##To delete the table 
-test=# drop table person;
-DROP TABLE
-#Note: Never use in producation envoriment
 
 ##url for database command 
 https://dbaclass.com/postgres-db-scripts/

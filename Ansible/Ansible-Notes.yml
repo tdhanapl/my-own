@@ -179,6 +179,7 @@ $ vim /etc/ansible/ansible.cfg
 stdout_callback = unixy
 bin_ansible_callbacks = True
 :wq
+
 #######
 ########Let’s go through playbook step by step############
 This defined our hosts section
@@ -246,7 +247,7 @@ $ ansible-palybook variable.yml --vault-password-file /etc/ansible/ansible_vault
 $ ansible-vault rekey variable.yml
 
 ##To create more directory with variable
-$vim multiple-directory.yml
+$ vim multiple-directory.yml
 - hosts: all
   tasks:
     - name: This the copy from content of varible
