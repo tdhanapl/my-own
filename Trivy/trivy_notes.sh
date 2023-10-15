@@ -4,11 +4,12 @@
 
 $ trivy image  <docker image>
 
-##HTML format output
-$ trivy image --format template --template "@contrib/html.tpl" -o report.html golang:1.12-alpine
 
 ##The following example shows use of default HTML template when Trivy is installed using rpm.
-$ trivy image --format template --template "@/usr/local/share/trivy/templates/html.tpl" -o report.html golang:1.12-alpine
+$ trivy image --format template --template "@/usr/local/share/trivy/templates/html.tpl" -o report.html redhat/ubi9
+Note:
+default tempaltes available in this path /usr/local/share/trivy/templates/
+
 ##Docker tar files 
 $ docker save ruby:2.3.0-alpine3.9 -o ruby-2.3.0.tar
 $ trivy image --input ruby-2.3.0.tar
