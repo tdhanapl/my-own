@@ -24,6 +24,7 @@
         password: "{{ password | password_hash('sha512') }}"
         shell: /bin/bash
         createhome: yes
+        
     # Add user to sudoers after root user
     - name: Add user to sudoers after root user
       lineinfile:

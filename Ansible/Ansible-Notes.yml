@@ -29,12 +29,9 @@ colection of the plays are nothing but playbook
 $ sudo yum install ansible-core python-pip python-devel 
 ## Now we need install boto and boto3
 $ pip install boto
-
 $ pip install boto3 
 ## install aws modules 
 $ ansible-galaxy collection install amazon.aws
-
-
 
 ##To disbale the hostkeychecking
 1.method1(temporary):
@@ -88,7 +85,7 @@ Now no need to -i inventory because we add in ansible.cfg for inventory.
 1. ANSIBLE_CONFIG --environment variable 
 2. ./ansible.cfg  --from current directory 
 3. ~/.ansible.cfg --present in the home directory 
-4. /et/ansible/ansible.cfg --default location
+4. /etc/ansible/ansible.cfg --default location
 
 #############Important modules in Ansible##################### 
 1 command: This is used to execute linux commands on the remote managed
@@ -171,7 +168,7 @@ $ ansible webserver -m cpoy -a "content='create file with content for index.html
 ## Privilege Escalation & Remote user
 $ ansible web -m user -a 'name=test' -b --become-user=dhanapal -K
 Note:
-If you given --become-usr=dhanapal means when ypu run playbook it will run that palybook with given "--become-user=dhanapal"
+If you given --become-usr=dhanapal means when  run playbook it will run that palybook with given "--become-user=dhanapal"
 ##Ansible stdout Formatting
 https://stackoverflow.com/questions/50009505/ansible-stdout-formatting
 ##add in configuration 
@@ -180,7 +177,6 @@ stdout_callback = unixy
 bin_ansible_callbacks = True
 :wq
 
-#######
 ########Let’s go through playbook step by step############
 This defined our hosts section
 hosts: which hosts I want to run this playbook(generally we run it on groups defined under /etc/ansible/hosts)
@@ -224,7 +220,7 @@ $ ansible-palybook variable.yml --tags copy-file
 ansible vault is feature that allows you to keep senstive data suh as password or keys in encrypt file rather than a plain text in playbooks
 note:
 --ask-vault-pass: --> to provide a password while running playbook 
---vault-password-file: --> to pass vault passwor through file 
+--vault-password-file: --> to pass vault password through file 
 
 ###To encrypte the playbook using ansible vault 
 $ ansible-valut encrypt  variable.yml
@@ -276,11 +272,11 @@ $ vim file.yml
 ##Register playbook 
 $ vim register.yml
   - hosts: all
-  tasks:
-    - name: create the file
-      command: uptime
-      register: up_time
-      debug: var=up_time.stdout
+    tasks:
+      - name: create the file
+        command: uptime
+        register: up_time
+        debug: var=up_time.stdout
 :wq
 
 $ vim register.yml
@@ -313,7 +309,7 @@ $ vim docker_repo.yml
     yum_repository:
      name: docker
      description: DOCKER YUM repo
-     file: docker_repo
+     file: docker.repo
      baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
      enabled: 1
      gpgcheck: 1
@@ -355,9 +351,6 @@ $ vim nginx.yml
     - nginx
   notify: Restart Nginx
 :wq
-
-
-
 
 ###Anisble Role########
 A role directory structure contains directories: 
