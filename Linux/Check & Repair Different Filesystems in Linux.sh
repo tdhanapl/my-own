@@ -63,7 +63,7 @@ $ fsck -A -y
 ##To disable the root file system check, we will use the option ‘R’
 $ fsck -AR -y
 
-C##heck only partition with mentioned filesystem
+##Check only partition with mentioned filesystem
 In order to run fsck on all the partitions with mentioned filesystem type, for example ‘ext4’, use fsck with option ‘t’ followed by filesystem type,
 
 $ fsck -t ext4 /dev/sdb1
