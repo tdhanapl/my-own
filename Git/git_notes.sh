@@ -1,4 +1,4 @@
-##########################################Git ################################
+d ##########################################Git ################################
 ##VCS(version control systems)
 1.Track the changes
 2.Coleberative Development
@@ -175,7 +175,10 @@ $ git status
 ## To merge the particular	commit id from one branch to another branch
 By using cheerypick we can merge the particular commit id from one branch to another branch
 $ git cheerypick <commit id>
-
+##To revert the last commit in github from cli
+$  git revert HEAD
+$ git push
+now you check in github that it changed to previous commit.
 ## To recover the delete file in git 
 Case 1:-
 ##you delete file but didn't commit(staging area) then follow below command.
