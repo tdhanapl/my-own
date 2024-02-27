@@ -280,3 +280,5 @@ $ git diff  <commit-hash-1> <commit-hash-2>
 $ git diff <commit-hash>
 #Compare Branches
 $ git diff <branch1> <branch2>
+##To squash multiple commits into a single commit in Git?
+ Use git rebase -i HEAD~n (where n is the number of commits to squash). In the interactive rebase, mark commits as "squash" to combine them into a single commit.
