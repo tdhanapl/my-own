@@ -216,12 +216,6 @@ $ git reset --mixed <commit id or latest commit>
 $ git reset --mixed HEAD~1
 # revert with particular   commit id from local repository to working directory(reset --mixed)
 $ git reset --mixed 3f45
-##revert the chanage of files from local repository to working directory(reset --mixed)
-If one file in local repository you want to that file from  local repository to working area then use this command.
-$ git reset --mixed <commit id or latest commit>
-#For latest commit 
-$ git reset --mixed HEAD~1
-
 ##revert the chanage of files from local repository to delete the content of the particular commit and it will clean commit id history also(reset --hard)
 $ git reset --hard <commit id or latest commit>
 #For latest commit 
