@@ -1,4 +1,4 @@
-- name: creating directory file  and loop 
+- name: creating directory and file  using loop 
   hosts: webserver
   become: true
   tasks:
@@ -7,7 +7,7 @@
       file:
        path: "/opt/{{ item }}"
        state: directory
-     # with_item is now depricated and now we are using loop  in place of with_item
+     # with_item is now deprecated and now we are using a loop  in place of with_item
       loop:                                                    
         - folder111
         - folder211
