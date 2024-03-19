@@ -1,19 +1,37 @@
 #########################To known all  services status##########################
-# systemctl list-units --type=service --state=active
-OR
-# systemctl daemon-reload
-# systemctl --type=service --state=active
-# systemctl list-units --type=service
-# systemctl --type=service --state=enbaled
-# systemctl --type=service --state=active 
-# systemctl --type=service --state=stop
-# systemctl --type=service --state=disabled
-OR
-# systemctl --type=service 
-OR
-# systemctl list-unit-files
+systemctl list-unit-files
 OR 
+# systemctl list-units --type=service --state=active
+OR 
+# systemctl --type=service --state=active
+# systemctl  list-units   --type=service
+###In Rhel 6 
 service --status-all -----in rhel 6
+
+######To capture of which particlar procces taking high cpu usage ##########
+$ yum install perf
+$ perf record -F 99 -a -g -- sleep 10
+$ perf report -n --stdio 
+
+##################add line in last of file using sed############
+$sed -i -e '$a\
+adding new line1
+adding new line2
+adding new line3' <filename>
+Note:
+Use sed 'append (a)' command. For example, to append two lines at the end of 
+
+#############Boot the system into rescue Mode######
+->now boot the machine in rescue mode select the kernal  press "e". 
+->go to linux16 th word line, go to end  
+-->$ systemd.unit=rescue.target
+-->ctrl+x
+-->Now system will go to rescue mode.
+
+##########To Flush the DNS cache in Linux##########################
+-->DNS cache with "systemd-resolve --flush-caches", which can resolve some conflicts
+$ systemd-resolve --flush-caches
+
 ######Redhat 6 vs Redhat 7 of service enable, disable, start, restart and stop###
 1. List all Services in RHEL/Centos/Redhat Linux.
 On RHEL 6:
@@ -31,7 +49,7 @@ $ systemctl status httpd
 On RHEL 6:
 $ service httpd start
 On RHEL 7:
-$ systemctl status httpd
+$ systemctl start httpd
 
 4. Enable/Disable a Service
 On RHEL 6:
@@ -42,8 +60,8 @@ For example, to enable the Apache HTTP server to start at runlevels 3 (multi-use
 On RHEL 7:
 $ systemctl is-enabled httpd
 $ systemctl enable httpd
-$ systemctl disable 
-
+$ systemctl disable httpd
+ 
 5. Check failed Services
 On RHEL 6:
 $ service --status-all | grep -i stopped
@@ -63,7 +81,8 @@ $ iptables -A INPUT -p tcp --dport 8080 -j REJECT
 ##use the service command to save the iptables rules
 $ service iptables save
 ##Restart the iptables service
-service iptables restart
+$ service iptables restart
+$ iptables -L
 
 #####remove non-adjacent duplicates and print the unique IPaddresses######
 awk '!seen[$0]++' ip_addresses.txt
@@ -71,17 +90,21 @@ Note:
 This command creates an associative array seen and keeps track of the number of times an IP address has been seen. 
 It only prints the first occurrence of each IP address and ignores subsequent duplicates.
 
-
 ######block the ip using iptables in redhat/centos########
  $ iptables -L
  $ iptables -I INPUT -s 64.226.80.213 -j DROP
  $ service iptables save
-##In loop list ip block through script 
+##In while  loop list ip block through script 
 $ sh failed_login_attempts_users.sh |grep -i "`date +%b" "%d`" |grep -iv dhanapal.ikt |awk -F "|" '{print $3}'  |grep -iv "IP address" | awk '!seen[$0]++' | while read ip ; do iptables -I INPUT -s $ip -j DROP ; done
 $ service iptables save 
 
 #####tcp dump log#########
 $ tcpdump -A -ni any port 530
+$ tcpdump
+$ ngrep -q -c 64 Linux port 80
+
+##watches for a binary stream from an HTTPS connection
+$ ngrep -xX '1703030034' port 443
 
 ####To check speed test in Linux#####
 ##install the speedtest-cli package	
@@ -89,6 +112,11 @@ $ yum install speedtest-cli
 
 ##run the speedtest command 
 $ speedtest-cli
+
+####Finding the length of a string########
+var= software	 
+echo ${#var}   
+8    
 
 ########To remove the hostname#########
 $ hostnamectl  set-hostname ""
@@ -105,14 +133,14 @@ $ useradd -o -u 0 -g root <user name>
 $ cut -d ":" -f1,3 /etc/passwd
 $ cut -f 1 -d":" /etc/passwd
 $ cat /etc/passwd  | grep -i  /bin/bash | cut -f1 -d ":"
-
+ 
 ########To clear the cache in linux server########
 $ free && sync && echo 3 > /proc/sys/vm/drop_caches && free
 $ sudo sh -c 'echo 1 >/proc/sys/vm/drop_caches'
 $ sudo sh -c 'echo 2 >/proc/sys/vm/drop_caches'
 $ sudo sh -c 'echo 3 >/proc/sys/vm/drop_caches'
 
-########################Top command#######################################
+#################Top command ################################
 1)Top Command After Specific repetition:
 With below command top command will automatically exit after 10 number of repetition.
 $ top -n 10
@@ -150,16 +178,11 @@ option:
   -E, --extended-regexp     PATTERN is an extended regular expression (ERE)
   -v, --invert-match        select non-matching lines(string word will not display)
 
-###################Fstab configurtion Fromat################################
+###############Fstab configurtion Fromat#####################
 LABEL=cloudimg-rootfs   		/        ext4   			defaults,discard       0	 		1
 device name 		    mountpoint    file system type		permission            backup  		fsck(File System Consistency Check)
 
 $ du -hs * | sort -rh | head -10
-
-####Finding the length of a string########
-var=12345678901234567890$
-echo ${#var}
-21
 
 #################How to Change Runlevels (targets) in Systemd##############################
 Systemd is a modern init system for Linux: a system and service manager which is compatible with the popular SysV init system and LSB init scripts. It was intended to overcome the shortcomings of SysV init as explained in the following article.
@@ -236,19 +259,21 @@ $ yum-config-manager --disable <repo>
 $ yum check-update | awk '{ print $1}' | grep -iE '*.x86_64|*.noarch' | while read update; do yumdownloader $update --downloaddir=/tmp/patch ; done
 	here it will downloaded latest patch in the  folder 
 ##Install downloaded package
-$ yum localinstall  ./*.rpm
+$ yum localinstall  ./*.rpm --->it is in redhat 8 & redhat 9
 
 ############ installing the rpm pacakage using yum########################
-$ yum install local ./python27-python-pip-7.1.0-2.el7.noarch.rpm
+$ yum install local ./python27-python-pip-7.1.0-2.el7.noarch.rpm -->it is used rehel 7
 
 ############## To check yum installed list package ########
 $ yum list installed httpd 
 
 ##############To check latest patch update in the server########
-$ yum check-update
+$ yum check-update 
 
 ###########To check last update of particular package###########
 $ rpm -qa --last | grep kernel
+#####To set the particular version to not upgrade for higher version###########
+$ subscription-manager release --set 7.8
 
 ##############################Find old 90 or 30 days and remove that files#####################
 find /var/log -type f -mtime +30 -exec ls -lrth {} \;  ##f--means file 
@@ -265,17 +290,6 @@ find /var/ -type f -size +100M -exec ls -ltr {} \;
 
 ####################find empty file####################################################
 find / -empty
-
-#######################################realtime issue###################################
-1#application is not working and kubernetes pod unable start because of security team blocked /bin/get_secret defaultdb_user_password then we asked va 
-team unblocked the path then pod start to run fine then application running fine.
-File name: get_secret
-File path: /bin/get_secret
-Command line: /bin/get_secret defaultdb_user_password
-2.#Zenworker is not able acess admin page because pervious the application restart but my assumption is application is not restart praperally that why i 
-suggested to restart again .
-we taken approval and we restart the application then admin is able login
-3.#application is unable to access due to cpu utilization high the application  is able access  after cpu utillization  under stable.
 
 ############################Assgine static IP Address############################
 $ vi /etc/sysconfig/network-scripts/ifcfg-ens33
@@ -309,17 +323,18 @@ $ systemctl restart network
 https://www.redhat.com/sysadmin/route-ip-route
 ############create temporary route table#################################################
 # route add default gw 192.168.4.254
-# route add -i net 192.169.1.0/24 netmask  255.255.0.9 gateway 192.168.1.1
-# route add -net 17.16.4.0 netmask 255.255.254.0 gw 172.16.4.251
+# route add -net 192.169.1.0/24 netmask  255.255.0.9 gateway 192.168.1.1
+# route add -net 172.16.4.0 netmask 255.255.254.0 gw 172.16.4.254
 # route add -net 172.16.100.0 netmask 255.255.255.0 gw 172.16.100.1
 # route add -net 192.168.85.0 netmask 255.255.255.0 gw 192.168.85.99
 # route add -net 10.33.58.0 netmask 255.255.255.0 gw  10.32.39.254
 
-####################################Create Permanent Static Routes#########################################
+################################Create Permanent Static Routes#########################################
 The static routes configured in the previous section are all transient, in that they are lost on reboot.
 To configure a permanent static route for an interface, create a file with the following format "/etc/sysconfig/network-scripts/route-<INTERFACE>". 
+
 1. For example, we could create the "/etc/sysconfig/network-scripts/route-eth0" file with the following entries.
-172.168.2.0/24 via 192.168.0.1 dev eth0
+172.168.2.0/24 via 192.168.0.1 dev eth0 
 172.168.4.0/24 via 192.168.0.1 dev eth0
      #or
 2.#NM: 172.16.4.0/24 via 172.16.4.254
@@ -336,10 +351,18 @@ GATEWAY0=172.16.4.254
     to something that is perceived to be a client error 
     (for example, malformed request syntax, invalid request message framing, or deceptive request routing).
 
+#########Generate a Self-Signed Certificate(ssl)########
+$ openssl req -new -x509  -days 365 -sha256 --newkey rsa:2048 -nodes -in cntech.csr.pem -keyout cntech.key.pem-out cntech.cert.pem
+Note:
+You should now this three files:
+key.pem: The private key.
+csr.pem: The certificate signing request.
+cert.pem: The self-signed certificate.
+
 ##################################replace a word in file in vi mode####################################
 vim Dockerfile
 FROM alpine as build
-LABEL owner="dhanapal"
+LABEL owner="dhanapal" 
 LABEL Description="creating image with git, maven, java for docker-jenkins-slave"
 RUN  apk update  \
      && apk add git  \
@@ -448,7 +471,7 @@ $ cat /etc/mdadm.conf
 $ mdadm --add /dev/sde /dev/sdj /dev/sdf
 $ mdadm --grow /dev/md5 --raid-device=5
 ##To update size add disk 
-$ resizefs /dev/md5
+$ resize2fs /dev/md5
 
 ##To remove raid5
 $ umount /Raid5
@@ -483,7 +506,7 @@ $ lvextend -L +5G /dev/vgikt/logical
 Note:-
 we have to give  +5G  addtional sysmbol mention if not mention + it will reduce to 5GB only not adding 5GB and data will also lose.
 # To update the resize LV
-$ resize /dev/vgikt/logical
+$ resize2fs /dev/vgikt/logical
 $ df -h
 # To change name of logical volume
 $ lvrename vgikt logical lvdisk
@@ -743,6 +766,84 @@ When there are stopped jobs and want to exit from the terminal then, a warning m
 displayed. If we try again to exit from the terminal,then the stopped or suspended jobs will be
 killed automatically.
 
+####Check & Repair Different Filesystems  Ext2, Ext3, Ext4, XFS Repair in Linux###########
+#stands for File System Consistency Check & most of the times, it runs at boot time but can also be started manually by super user, if need arises.
+#It can be used with 3 modes of operation;
+1- Check for errors & let the user decide what should be done with each error.
+2- Check for errors & make repairs automatically.
+3- Check for errors & display the error but does not perform any repairs.
+
+We can use the FSCK command manually with the following syntax:
+$ fsck options drives
+#The options that can be used with fsck command are,
+-p      Automatic repair (no questions)
+-n      Make no changes to the filesystem
+-y      Assume “yes” to all questions
+-c      Check for bad blocks and add them to the badblock list
+-f      Force checking even if filesystem is marked clean
+-v     Be verbose
+-b     superblock Use alternative superblock
+-B     blocksize Force blocksize when looking for superblock
+-j      external_journal Set location of the external journal
+-l      bad_blocks_file Add to badblocks list
+-L     bad_blocks_file Set badblocks list
+
+We can use any of the following options, depending on the operation we need to perform. 
+we must un-mount the drive with the following command,
+$ umount drivename
+e.g.
+$ umount /dev/sdb
+
+#You can check the partition number with the following command,
+$ fdisk -l
+
+Now let’s discuss usage of fsck command with examples,
+To perform a file check on a single partition, run the following command from the terminal,
+$ umount /dev/sdc1
+$ fsck /dev/sdc1
+ 
+Check filesystem for errors & repair them automatically
+Run the fsck command with ‘a’ option to perform consistency check & to repair them automatically, execute the following command. We can also use ‘y’ option in place of option ‘a’.
+$ fsck -a /dev/sdb1
+
+Check filesystem for errors but don’t repair them
+In case we only need to see the error that are occurring on our file system & dont need to repair them, than we should run fsck with option ‘n’,
+$ fsck -n /dev/sdb1
+
+Perform an error check on all partitions
+To perform a filesystem check for all partitions in single go, use fsck with ‘A’ option, You can check all the filesystems in a single run of fsck using this option. This checks the file system in the order given by the fs_passno mentioned for each filesystem in /etc/fstab.
+Please note that the filesystem with a fs_passno value of 0 are skipped, and greater than 0 are checked in the order.
+The /etc/fstab contains the entries as listed below,
+
+# cat /etc/fstab
+/dev/mapper/rhel-root   /                       xfs     defaults        0 0
+UUID=91890bfd-31c5-44a1-b75a-3a3fe2de0e68 /boot                   xfs     defaults        0 0
+/dev/mapper/rhel-swap   swap                    swap    defaults        0 0
+/dev/sdb  /ext3_data  ext3  defaults 0 1
+/dev/sdc1  /ext2_data  ext2  defaults  0 2
+#/dev/sdc2  /xfs_data  xfs defaults 0 3
+
+Here, the filesystem with the same fs_passno are checked in parallel in your system.
+$ fsck -A -y
+
+To disable the root file system check, we will use the option ‘R’
+$ fsck -AR -y
+
+Check only partition with mentioned filesystem
+In order to run fsck on all the partitions with mentioned filesystem type, for example ‘ext4’, use fsck with option ‘t’ followed by filesystem type,
+
+$ fsck -t ext4 /dev/sdb1
+or
+$ fsck -t -A ext4
+
+Perform consistency check only on unmounted drives
+To make sure that the fsck is performed only on unmounted drives, we will use option ‘M’ while running fsck,
+$ fsck -AM -y 
+Repair a XFS filesystem using xfs_repair
+The xfs_repair utility can be used to repair a corrupted or damaged XFS file system. The basic syntax used by xfs_repair is as follows:
+$ xfs_repair /mount/point
+$ xfs_repair /dev/sdc2
+
 ####### List Mounted Drives on Linux###############
 1) Listing from /proc/mounts using cat command
    #cat /proc/mounts
@@ -767,7 +868,7 @@ alias custom='/usr/bin/ps -aux'
 ##########################How to Send a Message to Logged Users in Linux Terminal###############
 echo "server is down from 12-3 pm " | wall
  
-############################################### yum repository redhat 8 version ########################################
+############################## yum repository redhat 8 version #######################################
 mkdir  /opt/yum-repository/BaseOs  /opt/yum-repository/Appstream
 mount /dev/sr0 /mnt
 cp -rvf /mnt/BaseOs/* /opt/yum-repository/BaseOs
@@ -846,6 +947,7 @@ $yum remove httpd
 	--here it does not removes the dependencies
 $ yum autoremove httpd
 	--here it removes all dependencies with packages 
+	
 ##############how to check open port in remote server##################
 $nmap -A <remote-sever-ip>
 $nmap -A 192.168.1.5
@@ -853,9 +955,10 @@ $nmap -A 192.168.1.5
 ######differences between while and until loop######
 1.The while loop executes the given commands until the given condition remains true.
 2.The until loop executes until a given condition becomes true.
+
 ######################################creation Swap Space########################################
 # Scan new lun on server with below command
-$ ls /sys/class/scsi_host/ | while read host ; do echo "- - -" > /sys/class/scsi_host/$host/scan ; done
+$ ls /sys/class/scsi_host/ |   host ; do echo "- - -" > /sys/class/scsi_host/$host/scan ; done
 Note:
 "- - -" {-= HBA channel,-=scsi id,-=lun}
 
@@ -1125,7 +1228,7 @@ RHEL7:   xfs_repair
 
 10.RESIZE A FILE SYSTEM
 RHEL6:   #resize2fs -p /dev/vg00/lv1
-RHEL7:    #xfs_growfs  /dev/vg00/lv1
+RHEL7:   #xfs_growfs  /dev/vg00/lv1
 
 11.TUNE A FILE SYSTEM
 RHEL6: tune2fs
@@ -1154,7 +1257,7 @@ RHEL6:
 #chkconfig sshd on
 RHEL7:
 #systemctl restart sshd
-#systemctl enable shhd SANKET
+#systemctl enable shhd 
 
 15.Kernel Version
 RHEL6 default kernel version is 2.6 while RHEL7 is 3.10
@@ -1166,7 +1269,8 @@ But this can be changed if required by editing /etc/login.defs file.
 17.Change in file system structure
 In rhel6 /bin,/sbin,/lib and /lib64 are usually under /
 In rhel7, now /bin,/sbin,/lib and /lib64 are nested under /usr.
-#############patching on ubuntu os ########
+
+#####################patching on ubuntu os #####################
 ##Run the command To refresh package database. 
 $ sudo apt update  
 
@@ -1210,9 +1314,6 @@ This url for the futher reference purpose https://linuxopsys.com/topics/exclude-
 
 #yum updateinfo info security --------->To lint all available security updates with verboat descriptions of the Lasus they apply
 
-# installing start from here
-
-#####installation#####
 1.#yum update --security ---------download and apply all available security updates from Red Hat Setwork hosted or Rent Network Satellite
 
 2.#yum update-minimal security --------To install the package that have a security errate use
@@ -1460,8 +1561,8 @@ ANSWER:
 #nmcliconnection modify "System eth0" connection.autoconnect yes
 #nmcli connection modify "System eth0" ipv4.dns-search "example.com"
 
-###################Setup an HostName and your hostname as "serverx.example.com"################
-$ hostnamectl set-hostname servero.example.com
+###################Setup an HostName and your hostname as "server.example.com"################
+$ hostnamectl set-hostname server.example.com
 $ bash or exec bash ##forcelly update the kernel
 
 #######################################LVM_Restore####################################
@@ -1539,14 +1640,14 @@ it dispaly bash shell
 bash-4.2# mount -o remount rw /
 bash-4.2# mount /dev/sr0 /mnt
 bash-4.2# cd /mnt
-bash-4.2#grub2-install /dev/sda #/dev/sda is /boot partition or other file system means we have mention that file system /boot present
+bash-4.2# grub2-install /dev/sda #/dev/sda is /boot partition or other file system means we have mention that file system /boot present
 bash-4.2# grub2-mkconfig -o /boot/grub2/grub.cfg
 here display generating grub configuration file
-bash-4.2#exit
-sh-4.2#exit
+bash-4.2# exit
+sh-4.2# exit
 After above step it sucessful load
 
-######################################### vmlinuz error or kernel boot error########################
+#########################################vmlinuz error or kernel boot error########################
 $ press continue #
 $ select troubleshooting
 $ select recuse mode
@@ -1567,7 +1668,7 @@ sh-4.2#exit
 After above step it sucessful load
 
 -----------------------------------------------------------------------------------------------------------------------------
-######################Kernel Panic Error Resolution of  initramfs image is missing or corrupted in RHEL 7/8##################
+##########Kernel Panic Error Resolution of  initramfs image is missing or corrupted in RHEL 7/8##################
 -----------------------------------------------------------------------------------------------------------------------------
 1. See the details of Kernel Panic Error (Identify the reason behind it eg. New Kernel, Corrupted initramfs, New Packages after Patching, Hardware change etc.)
 2. Login the system with root credentials through rescue mode.
@@ -1619,7 +1720,7 @@ refresh-services,refs	Refresh all services.	    					zypper refs
 list-updates, lu		List available updates.	    					zypper lu
 list-patches, lp	    List needed patches.	    					zypper lp
 update, up				Update installed packages with newer versions.	zypper up
-ps List running processes which might still use files and libraries deleted by recent upgrades.	zypper ps -s
+ps	List running processes which might still use files and libraries deleted by recent upgrades.	zypper ps -s
 
 ###refresh all repositories
 $ zypper refresh
@@ -1717,6 +1818,19 @@ How to verify or check the integrity of the group file?
 # grpck <options> /etc/gshadow 
  * The options are, -r -----> read only
 					-s -----> sort the contents by gidin /etc/group and /etc/gshadow files.
+
+##############Load average################
+
+#Load average: 0.00 0.01 0.05
+Each number in the load average represents the system load over a different time interval:
+1-minute Load Average: This number represents the average number of processes in the run queue (waiting for CPU time) over the past 1 minute. It provides a quick snapshot of the immediate system load.
+5-minute Load Average: This number represents the average load over the past 5 minutes. It offers a slightly longer-term view of the systems workload.
+15-minute Load Average: This number represents the average load over the past 15 minutes. It provides a more extended perspective on the systems resource usage.
+
+Interpreting Load Average:
+Low Load (e.g., 0.00 - 0.99): Indicates that the system is mostly idle, with few processes in the run queue.
+Moderate Load (e.g., 1.00 - 1.99): Suggests that the system is handling its workload efficiently, but there might be occasional spikes of higher activity.
+High Load (e.g., 2.00 and above): Implies that the system is under significant load, and processes are frequently waiting for CPU time. High load can lead to slower response times and reduced performance.
 
 #############extend an LVM swap partition in Linux#####
 Below site clear steps for LVM swap extend 
@@ -1868,6 +1982,6 @@ https://github.com/100daysofdevops
 ----------------------------------
 https://hc.apache.org/httpcomponents-client-4.5.x/current/httpclient/apidocs/org/apache/http/conn/DnsResolver.html
 
-###prometheus and grafana###########
+####prometheus and grafana###########
 https://computingforgeeks.com/monitor-linux-server-with-prometheus-grafana/
 https://lightsail.aws.amazon.com/ls/docs/en_us/articles/amazon-lightsail-install-prometheus
