@@ -7,7 +7,13 @@
 ->anible by deafult will excute a task on 5 servers parallel. If we want run tasks parallel on more servers change forks=20 in ansible.cfg 
 
 #####moudle#### 
-moudle is predefine program that program able to excute the task on managed nodes.
+moudle is a predefine program that program able to excute the task on managed nodes.
+##Ansible having two type modules.
+1. core module built by Redhat. It will install by deafult 
+2. Extra modules built by community.
+##To install extra module in ansible
+$ ansible-galaxy collection install [collecetion.name]
+
 ###task##
 task is nothing but provide the modules.
 ##play##
