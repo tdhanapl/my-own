@@ -257,11 +257,11 @@ $ vim multiple-directory.yml
 	    with_item:
        #or 
       #loop
-	      - folder1
+	- folder1
         - folder2
         - folder3
 :wq
-note:  with_item deprecated in latest version. we can loop inthe place "with_item"
+Note:  with_item deprecated in the latest version. we can use  a "loop" in the place "with_item"
 ##To create a file
 $ vim file.yml
 - hosts: all
@@ -307,7 +307,7 @@ $ vim register.yml
 :wq
 
 #####
-1.Configuration of yum for Docker and Installing Docker
+1. Configuration of yum for Docker and Installing Docker
 $ vim docker_repo.yml
 - hosts: all
   tasks:
@@ -325,7 +325,7 @@ $ vim docker_repo.yml
     command: yum install docker-ce --nobest -y
 :wq
 
-2.Installing Nginx
+2. Installing Nginx
 $ vim nginx.yml
 - name: Install Nginx web server
   apt:
