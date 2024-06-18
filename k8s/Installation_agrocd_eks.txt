@@ -1,0 +1,33 @@
+##references url
+https://archive.eksworkshop.com/intermediate/290_argocd/configure/
+https://argo-cd.readthedocs.io/en/stable/?_gl=1*1ac31n1*_ga*MTM5ODYwMzA2MC4xNzA1NTg5NDEw*_ga_5Z1VTPDL73*MTcwNjA5MDk0MC4zLjAuMTcwNjA5MDk0MC4wLjAuMA..
+###installation agrocd in k8s#
+$ kubectl create namespace argocd
+$kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+##After suucessfully install need change service type from clusterip to loadbalancer with following commands
+$ kubectl get svc -n argocd
+##select argocd-server 
+$ kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
+	or 
+  kubectl edit svc argocd-server -n argocd 
+##change in edit mode of server type from clusterip to loadbalancer
+
+$ export ARGOCD_SERVER=`kubectl get svc argocd-server -n argocd -o json | jq --raw-output '.status.loadBalancer.ingress[0].hostname'`
+$ echo $ARGOCD_SERVER
+#here it dispaly loadbalancer url
+
+##get argocd password and store in variable
+$  export ARGO_PWD=`kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d`
+$  echo $ARGO_PWD
+	or 
+$ kubectl edit secret argocd-initial-admin-secret -n argocd #copy the value at data.password and decode with 64bit
+$ echo d1whTreJA682S-= |base64 --decode
+ here you will get argocd password
+
+##here we get argocd passwd for login
+$ curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+$  chmod +x /usr/local/bin/argocd
+$argocd login $ARGOCD_SERVER --username admin --password $ARGO_PWD --insecure
+$  echo $ARGO_PWD
+
+
