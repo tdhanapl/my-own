@@ -1,36 +1,20 @@
+https://access.redhat.com/discussions/2941211
 #########################To known all  services status##########################
-systemctl list-unit-files
-OR 
 # systemctl list-units --type=service --state=active
-OR 
+OR
+# systemctl daemon-reload
 # systemctl --type=service --state=active
-# systemctl  list-units   --type=service
-###In Rhel 6 
+# systemctl  list-units --type=service
+# systemctl --type=service --state=enbaled
+# systemctl --type=service --state=active 
+# systemctl --type=service --state=stop
+# systemctl --type=service --state=disabled
+OR
+# systemctl --type=service 
+OR
+# systemctl list-unit-files
+OR 
 service --status-all -----in rhel 6
-
-######To capture of which particlar procces taking high cpu usage ##########
-$ yum install perf
-$ perf record -F 99 -a -g -- sleep 10
-$ perf report -n --stdio 
-
-##################add line in last of file using sed############
-$sed -i -e '$a\
-adding new line1
-adding new line2
-adding new line3' <filename>
-Note:
-Use sed 'append (a)' command. For example, to append two lines at the end of 
-
-#############Boot the system into rescue Mode######
-->now boot the machine in rescue mode select the kernal  press "e". 
-->go to linux16 th word line, go to end  
--->$ systemd.unit=rescue.target
--->ctrl+x
--->Now system will go to rescue mode.
-
-##########To Flush the DNS cache in Linux##########################
--->DNS cache with "systemd-resolve --flush-caches", which can resolve some conflicts
-$ systemd-resolve --flush-caches
 
 ######Redhat 6 vs Redhat 7 of service enable, disable, start, restart and stop###
 1. List all Services in RHEL/Centos/Redhat Linux.
@@ -83,7 +67,6 @@ $ service iptables save
 ##Restart the iptables service
 $ service iptables restart
 $ iptables -L
-
 #####remove non-adjacent duplicates and print the unique IPaddresses######
 awk '!seen[$0]++' ip_addresses.txt
 Note:
@@ -94,7 +77,7 @@ It only prints the first occurrence of each IP address and ignores subsequent du
  $ iptables -L
  $ iptables -I INPUT -s 64.226.80.213 -j DROP
  $ service iptables save
-##In while  loop list ip block through script 
+##In loop list ip block through script 
 $ sh failed_login_attempts_users.sh |grep -i "`date +%b" "%d`" |grep -iv dhanapal.ikt |awk -F "|" '{print $3}'  |grep -iv "IP address" | awk '!seen[$0]++' | while read ip ; do iptables -I INPUT -s $ip -j DROP ; done
 $ service iptables save 
 
@@ -114,9 +97,9 @@ $ yum install speedtest-cli
 $ speedtest-cli
 
 ####Finding the length of a string########
-var= software	 
-echo ${#var}   
-8    
+var= A?3sFDt_Vx
+echo ${#var}
+12
 
 ########To remove the hostname#########
 $ hostnamectl  set-hostname ""
@@ -140,7 +123,7 @@ $ sudo sh -c 'echo 1 >/proc/sys/vm/drop_caches'
 $ sudo sh -c 'echo 2 >/proc/sys/vm/drop_caches'
 $ sudo sh -c 'echo 3 >/proc/sys/vm/drop_caches'
 
-#################Top command ################################
+########################Top command#######################################
 1)Top Command After Specific repetition:
 With below command top command will automatically exit after 10 number of repetition.
 $ top -n 10
@@ -178,7 +161,7 @@ option:
   -E, --extended-regexp     PATTERN is an extended regular expression (ERE)
   -v, --invert-match        select non-matching lines(string word will not display)
 
-###############Fstab configurtion Fromat#####################
+###################Fstab configurtion Fromat################################
 LABEL=cloudimg-rootfs   		/        ext4   			defaults,discard       0	 		1
 device name 		    mountpoint    file system type		permission            backup  		fsck(File System Consistency Check)
 
@@ -291,6 +274,17 @@ find /var/ -type f -size +100M -exec ls -ltr {} \;
 ####################find empty file####################################################
 find / -empty
 
+#######################################realtime issue###################################
+1#application is not working and kubernetes pod unable start because of security team blocked /bin/get_secret defaultdb_user_password then we asked va 
+team unblocked the path then pod start to run fine then application running fine.
+File name: get_secret
+File path: /bin/get_secret
+Command line: /bin/get_secret defaultdb_user_password
+2.#Zenworker is not able acess admin page because pervious the application restart but my assumption is application is not restart praperally that why i 
+suggested to restart again .
+we taken approval and we restart the application then admin is able login
+3.#application is unable to access due to cpu utilization high the application  is able access  after cpu utillization  under stable.
+
 ############################Assgine static IP Address############################
 $ vi /etc/sysconfig/network-scripts/ifcfg-ens33
 
@@ -323,18 +317,17 @@ $ systemctl restart network
 https://www.redhat.com/sysadmin/route-ip-route
 ############create temporary route table#################################################
 # route add default gw 192.168.4.254
-# route add -net 192.169.1.0/24 netmask  255.255.0.9 gateway 192.168.1.1
-# route add -net 172.16.4.0 netmask 255.255.254.0 gw 172.16.4.254
+# route add -i net 192.169.1.0/24 netmask  255.255.0.9 gateway 192.168.1.1
+# route add -net 17.16.4.0 netmask 255.255.254.0 gw 172.16.4.251
 # route add -net 172.16.100.0 netmask 255.255.255.0 gw 172.16.100.1
 # route add -net 192.168.85.0 netmask 255.255.255.0 gw 192.168.85.99
 # route add -net 10.33.58.0 netmask 255.255.255.0 gw  10.32.39.254
 
-################################Create Permanent Static Routes#########################################
+####################################Create Permanent Static Routes#########################################
 The static routes configured in the previous section are all transient, in that they are lost on reboot.
 To configure a permanent static route for an interface, create a file with the following format "/etc/sysconfig/network-scripts/route-<INTERFACE>". 
-
 1. For example, we could create the "/etc/sysconfig/network-scripts/route-eth0" file with the following entries.
-172.168.2.0/24 via 192.168.0.1 dev eth0 
+172.168.2.0/24 via 192.168.0.1 dev eth0
 172.168.4.0/24 via 192.168.0.1 dev eth0
      #or
 2.#NM: 172.16.4.0/24 via 172.16.4.254
@@ -351,18 +344,10 @@ GATEWAY0=172.16.4.254
     to something that is perceived to be a client error 
     (for example, malformed request syntax, invalid request message framing, or deceptive request routing).
 
-#########Generate a Self-Signed Certificate(ssl)########
-$ openssl req -new -x509  -days 365 -sha256 --newkey rsa:2048 -nodes -in cntech.csr.pem -keyout cntech.key.pem-out cntech.cert.pem
-Note:
-You should now this three files:
-key.pem: The private key.
-csr.pem: The certificate signing request.
-cert.pem: The self-signed certificate.
-
 ##################################replace a word in file in vi mode####################################
 vim Dockerfile
 FROM alpine as build
-LABEL owner="dhanapal" 
+LABEL owner="dhanapal"
 LABEL Description="creating image with git, maven, java for docker-jenkins-slave"
 RUN  apk update  \
      && apk add git  \
@@ -868,7 +853,7 @@ alias custom='/usr/bin/ps -aux'
 ##########################How to Send a Message to Logged Users in Linux Terminal###############
 echo "server is down from 12-3 pm " | wall
  
-############################## yum repository redhat 8 version #######################################
+############################################### yum repository redhat 8 version ########################################
 mkdir  /opt/yum-repository/BaseOs  /opt/yum-repository/Appstream
 mount /dev/sr0 /mnt
 cp -rvf /mnt/BaseOs/* /opt/yum-repository/BaseOs
@@ -947,7 +932,6 @@ $yum remove httpd
 	--here it does not removes the dependencies
 $ yum autoremove httpd
 	--here it removes all dependencies with packages 
-	
 ##############how to check open port in remote server##################
 $nmap -A <remote-sever-ip>
 $nmap -A 192.168.1.5
@@ -955,10 +939,9 @@ $nmap -A 192.168.1.5
 ######differences between while and until loop######
 1.The while loop executes the given commands until the given condition remains true.
 2.The until loop executes until a given condition becomes true.
-
 ######################################creation Swap Space########################################
 # Scan new lun on server with below command
-$ ls /sys/class/scsi_host/ |   host ; do echo "- - -" > /sys/class/scsi_host/$host/scan ; done
+$ ls /sys/class/scsi_host/ | while read host ; do echo "- - -" > /sys/class/scsi_host/$host/scan ; done
 Note:
 "- - -" {-= HBA channel,-=scsi id,-=lun}
 
@@ -1269,8 +1252,7 @@ But this can be changed if required by editing /etc/login.defs file.
 17.Change in file system structure
 In rhel6 /bin,/sbin,/lib and /lib64 are usually under /
 In rhel7, now /bin,/sbin,/lib and /lib64 are nested under /usr.
-
-#####################patching on ubuntu os #####################
+#############patching on ubuntu os ########
 ##Run the command To refresh package database. 
 $ sudo apt update  
 
@@ -1314,6 +1296,10 @@ This url for the futher reference purpose https://linuxopsys.com/topics/exclude-
 
 #yum updateinfo info security --------->To lint all available security updates with verboat descriptions of the Lasus they apply
 
+# installing start from here
+
+#####installation#####
+baapt0706r
 1.#yum update --security ---------download and apply all available security updates from Red Hat Setwork hosted or Rent Network Satellite
 
 2.#yum update-minimal security --------To install the package that have a security errate use
@@ -1561,8 +1547,8 @@ ANSWER:
 #nmcliconnection modify "System eth0" connection.autoconnect yes
 #nmcli connection modify "System eth0" ipv4.dns-search "example.com"
 
-###################Setup an HostName and your hostname as "server.example.com"################
-$ hostnamectl set-hostname server.example.com
+###################Setup an HostName and your hostname as "serverx.example.com"################
+$ hostnamectl set-hostname servero.example.com
 $ bash or exec bash ##forcelly update the kernel
 
 #######################################LVM_Restore####################################
@@ -1668,7 +1654,7 @@ sh-4.2#exit
 After above step it sucessful load
 
 -----------------------------------------------------------------------------------------------------------------------------
-##########Kernel Panic Error Resolution of  initramfs image is missing or corrupted in RHEL 7/8##################
+######################Kernel Panic Error Resolution of  initramfs image is missing or corrupted in RHEL 7/8##################
 -----------------------------------------------------------------------------------------------------------------------------
 1. See the details of Kernel Panic Error (Identify the reason behind it eg. New Kernel, Corrupted initramfs, New Packages after Patching, Hardware change etc.)
 2. Login the system with root credentials through rescue mode.
@@ -1982,6 +1968,6 @@ https://github.com/100daysofdevops
 ----------------------------------
 https://hc.apache.org/httpcomponents-client-4.5.x/current/httpclient/apidocs/org/apache/http/conn/DnsResolver.html
 
-####prometheus and grafana###########
+###prometheus and grafana###########
 https://computingforgeeks.com/monitor-linux-server-with-prometheus-grafana/
 https://lightsail.aws.amazon.com/ls/docs/en_us/articles/amazon-lightsail-install-prometheus
