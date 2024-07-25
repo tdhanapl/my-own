@@ -134,7 +134,7 @@ Note:-
 $ git branch -D feature2
 note: 
 -D or --delete --force
-##To push local repository to remote remote(github)
+##To push from local repository to remote repository of feature3 branch (github)
 $ git  branch feature3
 $ vim file1.txt
 this  branch feature3
@@ -153,7 +153,7 @@ $ git branch
 * main-->we present in main branch
  feature3
 $ git merge feature3 
--->we are merge feature3 to main feature3
+-->we are merge from feature3 to main branch. 
 Note:-
 1.when you merge one branch to another branch Sometime merge conflict will occur.
  we  resolve the issue in two ways 1. manually and 2.git mergetool (tool)
@@ -176,7 +176,7 @@ $ git status
 By using cheerypick we can merge the particular commit id from one branch to another branch
 $ git cheerypick <commit id>
 ##To revert the last commit in github from cli
-$  git revert HEAD
+$ git revert HEAD
 $ git push
 now you check in github that it changed to previous commit.
 ## To recover the delete file in git 
